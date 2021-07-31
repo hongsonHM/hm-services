@@ -48,6 +48,18 @@ public class CacheConfiguration {
             createCache(cm, com.overnetcontact.dvvs.domain.User.class.getName());
             createCache(cm, com.overnetcontact.dvvs.domain.Authority.class.getName());
             createCache(cm, com.overnetcontact.dvvs.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.overnetcontact.dvvs.domain.OrgUser.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.OrgGroup.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcContract.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcContract.class.getName() + ".targets");
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcTarget.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcTarget.class.getName() + ".childs");
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcTargetType.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcSchedulePlan.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcScheduleUnit.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcClient.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcUnit.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.SvcGroup.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

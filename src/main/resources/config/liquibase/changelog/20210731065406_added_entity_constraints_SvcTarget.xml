@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity SvcTarget.
+    -->
+    <changeSet id="20210731065406-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="type_id"
+                                 baseTableName="svc_target"
+                                 constraintName="fk_svc_target__type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="svc_target_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="svc_target_id"
+                                 baseTableName="svc_target"
+                                 constraintName="fk_svc_target__svc_target_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="svc_target"/>
+
+        <addForeignKeyConstraint baseColumnNames="svc_contract_id"
+                                 baseTableName="svc_target"
+                                 constraintName="fk_svc_target__svc_contract_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="svc_contract"/>
+    </changeSet>
+</databaseChangeLog>

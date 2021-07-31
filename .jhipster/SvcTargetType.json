@@ -1,0 +1,23 @@
+{
+  "name": "SvcTargetType",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    }
+  ],
+  "relationships": [],
+  "javadoc": "TargetType(what type of target) entity of SVC.\\n@author KagariV.",
+  "entityTableName": "svc_target_type",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210731065407"
+}

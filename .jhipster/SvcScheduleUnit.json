@@ -1,0 +1,69 @@
+{
+  "name": "SvcScheduleUnit",
+  "fields": [
+    {
+      "fieldName": "startFrom",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "endAt",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "actualStartFrom",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "actualEndAt",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "scheduleQuantity",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "actualQuantity",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "appliedDate",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "ScheduleStatus",
+      "fieldValues": "PLANED,FINISHED,UNFINISHED,CANCEL",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "planedNote",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "laborerNote",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "supervisorNote",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "javadoc": "ScheduleUnit for each unit (break down) entity of SVC.\\n@author KagariV.",
+  "entityTableName": "svc_schedule_unit",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210731065409"
+}

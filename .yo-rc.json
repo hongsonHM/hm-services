@@ -42,6 +42,19 @@
     "clientTheme": "none",
     "clientThemeVariant": "",
     "withAdminUi": true,
-    "languages": ["en", "fr"]
+    "languages": ["en", "fr"],
+    "entities": [
+      "OrgUser",
+      "OrgGroup",
+      "SvcContract",
+      "SvcTarget",
+      "SvcTargetType",
+      "SvcSchedulePlan",
+      "SvcScheduleUnit",
+      "SvcClient",
+      "SvcUnit",
+      "SvcGroup"
+    ],
+    "lastLiquibaseTimestamp": 1627714452000
   }
 }

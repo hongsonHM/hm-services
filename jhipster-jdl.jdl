@@ -138,7 +138,7 @@ relationship OneToMany {
 }
 
 // Set pagination options
-paginate User, OrgGroup with infinite-scroll
+paginate OrgUser, OrgGroup with infinite-scroll
 paginate * with pagination
 
 // Use Data Transfer Objects (DTO)

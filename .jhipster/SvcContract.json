@@ -1,0 +1,58 @@
+{
+  "name": "SvcContract",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "effectiveDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "expirationDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "svcTarget",
+      "otherEntityRelationshipName": "svcContract",
+      "relationshipName": "targets"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "svcUnit",
+      "otherEntityRelationshipName": "svcContract",
+      "relationshipName": "unit"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "orgUser",
+      "otherEntityRelationshipName": "svcContract",
+      "relationshipName": "saler"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "svcClient",
+      "otherEntityRelationshipName": "svcContract",
+      "relationshipName": "client"
+    }
+  ],
+  "javadoc": "SvcContract entity of SVC.\\n@author KagariV.",
+  "entityTableName": "svc_contract",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210731065405"
+}

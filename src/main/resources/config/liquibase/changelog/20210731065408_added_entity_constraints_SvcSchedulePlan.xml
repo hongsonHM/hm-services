@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity SvcSchedulePlan.
+    -->
+    <changeSet id="20210731065408-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="service_manager_id"
+                                 baseTableName="svc_schedule_plan"
+                                 constraintName="fk_svc_schedule_plan__service_manager_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="org_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="default_supervisor_id"
+                                 baseTableName="svc_schedule_plan"
+                                 constraintName="fk_svc_schedule_plan__default_supervisor_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="org_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="contract_id"
+                                 baseTableName="svc_schedule_plan"
+                                 constraintName="fk_svc_schedule_plan__contract_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="svc_contract"/>
+
+        <addForeignKeyConstraint baseColumnNames="schedule_unit_id"
+                                 baseTableName="svc_schedule_plan"
+                                 constraintName="fk_svc_schedule_plan__schedule_unit_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="svc_schedule_unit"/>
+    </changeSet>
+</databaseChangeLog>

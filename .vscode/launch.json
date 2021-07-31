@@ -1,0 +1,17 @@
+{
+	"configurations": [
+		{
+			"type": "java",
+			"name": "Spring Boot-DvvsApp<dvvs>",
+			"request": "launch",
+			"cwd": "${workspaceFolder}",
+			"console": "internalConsole",
+			"mainClass": "com.overnetcontact.dvvs.DvvsApp",
+			"projectName": "dvvs",
+			"args": "",
+			"env": {
+				"spring.profiles.active": "dev"
+			}
+		}
+	]
+}

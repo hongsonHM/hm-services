@@ -1,0 +1,54 @@
+{
+  "name": "OrgUser",
+  "fields": [
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "password",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "phoneNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "10",
+      "fieldValidateRulesMaxlength": "11"
+    },
+    {
+      "fieldName": "role",
+      "fieldType": "Role",
+      "fieldValues": "SERVICE_MANAGER,SUPERVISOR,SALE",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "orgUser",
+      "relationshipName": "internalUser",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "orgGroup",
+      "otherEntityRelationshipName": "orgUser",
+      "relationshipName": "group"
+    }
+  ],
+  "javadoc": "SERVICE_MANAGER entity of Organization.\\n@author KagariV.",
+  "entityTableName": "org_user",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210731065403"
+}

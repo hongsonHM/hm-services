@@ -1,6 +1,12 @@
 package com.overnetcontact.dvvs;
 
 import com.overnetcontact.dvvs.config.ApplicationProperties;
+import io.swagger.annotations.ApiKeyAuthDefinition;
+import io.swagger.annotations.ApiKeyAuthDefinition.ApiKeyLocation;
+import io.swagger.annotations.Contact;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.SecurityDefinition;
+import io.swagger.annotations.SwaggerDefinition;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -20,6 +26,16 @@ import tech.jhipster.config.JHipsterConstants;
 
 @SpringBootApplication
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
+@SwaggerDefinition(
+    info = @Info(
+        title = "DVVS-Demo API",
+        contact = @Contact(name = "vinhnvq", email = "vinhcht@gmail.com", url = "overnetcontact.com"),
+        version = "0.0.1"
+    ),
+    securityDefinition = @SecurityDefinition(
+        apiKeyAuthDefinitions = { @ApiKeyAuthDefinition(key = "token", name = "Authorization", in = ApiKeyLocation.HEADER) }
+    )
+)
 public class DvvsApp {
 
     private static final Logger log = LoggerFactory.getLogger(DvvsApp.class);
