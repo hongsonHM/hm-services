@@ -15,11 +15,18 @@ public class SvcClientDTO implements Serializable {
 
     @NotNull
     @Size(min = 6, max = 40)
-    private String name;
+    private String customerName;
+
+    @NotNull
+    private String customerCity;
 
     @NotNull
     @Size(min = 10, max = 11)
     private String phoneNumber;
+
+    @NotNull
+    @Size(max = 300)
+    private String type;
 
     @NotNull
     @Size(max = 300)
@@ -33,12 +40,20 @@ public class SvcClientDTO implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerCity() {
+        return customerCity;
+    }
+
+    public void setCustomerCity(String customerCity) {
+        this.customerCity = customerCity;
     }
 
     public String getPhoneNumber() {
@@ -47,6 +62,14 @@ public class SvcClientDTO implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getAddress() {
@@ -83,8 +106,10 @@ public class SvcClientDTO implements Serializable {
     public String toString() {
         return "SvcClientDTO{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
+            ", customerName='" + getCustomerName() + "'" +
+            ", customerCity='" + getCustomerCity() + "'" +
             ", phoneNumber='" + getPhoneNumber() + "'" +
+            ", type='" + getType() + "'" +
             ", address='" + getAddress() + "'" +
             "}";
     }

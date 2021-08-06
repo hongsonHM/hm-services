@@ -1,7 +1,9 @@
 package com.overnetcontact.dvvs.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.overnetcontact.dvvs.domain.enumeration.SvcContractStatus;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,17 +27,61 @@ public class SvcContract implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Size(max = 100)
-    @Column(name = "name", length = 100)
-    private String name;
+    @NotNull
+    @Column(name = "order_number", nullable = false)
+    private Long orderNumber;
+
+    @Column(name = "document_id")
+    private String documentId;
+
+    @Column(name = "appendices_number")
+    private String appendicesNumber;
+
+    @Column(name = "file_id")
+    private String fileId;
+
+    @Column(name = "content")
+    private String content;
 
     @NotNull
-    @Column(name = "effective_date", nullable = false)
-    private Instant effectiveDate;
+    @Column(name = "effective_time_from", nullable = false)
+    private Instant effectiveTimeFrom;
 
     @NotNull
-    @Column(name = "expiration_date", nullable = false)
-    private Instant expirationDate;
+    @Column(name = "effective_time_to", nullable = false)
+    private Instant effectiveTimeTo;
+
+    @NotNull
+    @Column(name = "duration_month", nullable = false)
+    private Integer durationMonth;
+
+    @NotNull
+    @Column(name = "value", precision = 21, scale = 2, nullable = false)
+    private BigDecimal value;
+
+    @NotNull
+    @Column(name = "contract_value", precision = 21, scale = 2, nullable = false)
+    private BigDecimal contractValue;
+
+    @Column(name = "human_resources")
+    private Integer humanResources;
+
+    @Column(name = "human_resources_weekend")
+    private Integer humanResourcesWeekend;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private SvcContractStatus status;
+
+    @Column(name = "subject_count")
+    private Long subjectCount;
+
+    @Column(name = "value_per_person", precision = 21, scale = 2)
+    private BigDecimal valuePerPerson;
+
+    @Column(name = "year")
+    private Integer year;
 
     @OneToMany(mappedBy = "svcContract")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -47,7 +93,7 @@ public class SvcContract implements Serializable {
     private SvcUnit unit;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "internalUser", "group" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "internalUser", "notifications", "group" }, allowSetters = true)
     private OrgUser saler;
 
     @ManyToOne
@@ -67,43 +113,212 @@ public class SvcContract implements Serializable {
         return this;
     }
 
-    public String getName() {
-        return this.name;
+    public Long getOrderNumber() {
+        return this.orderNumber;
     }
 
-    public SvcContract name(String name) {
-        this.name = name;
+    public SvcContract orderNumber(Long orderNumber) {
+        this.orderNumber = orderNumber;
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOrderNumber(Long orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
-    public Instant getEffectiveDate() {
-        return this.effectiveDate;
+    public String getDocumentId() {
+        return this.documentId;
     }
 
-    public SvcContract effectiveDate(Instant effectiveDate) {
-        this.effectiveDate = effectiveDate;
+    public SvcContract documentId(String documentId) {
+        this.documentId = documentId;
         return this;
     }
 
-    public void setEffectiveDate(Instant effectiveDate) {
-        this.effectiveDate = effectiveDate;
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 
-    public Instant getExpirationDate() {
-        return this.expirationDate;
+    public String getAppendicesNumber() {
+        return this.appendicesNumber;
     }
 
-    public SvcContract expirationDate(Instant expirationDate) {
-        this.expirationDate = expirationDate;
+    public SvcContract appendicesNumber(String appendicesNumber) {
+        this.appendicesNumber = appendicesNumber;
         return this;
     }
 
-    public void setExpirationDate(Instant expirationDate) {
-        this.expirationDate = expirationDate;
+    public void setAppendicesNumber(String appendicesNumber) {
+        this.appendicesNumber = appendicesNumber;
+    }
+
+    public String getFileId() {
+        return this.fileId;
+    }
+
+    public SvcContract fileId(String fileId) {
+        this.fileId = fileId;
+        return this;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public SvcContract content(String content) {
+        this.content = content;
+        return this;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Instant getEffectiveTimeFrom() {
+        return this.effectiveTimeFrom;
+    }
+
+    public SvcContract effectiveTimeFrom(Instant effectiveTimeFrom) {
+        this.effectiveTimeFrom = effectiveTimeFrom;
+        return this;
+    }
+
+    public void setEffectiveTimeFrom(Instant effectiveTimeFrom) {
+        this.effectiveTimeFrom = effectiveTimeFrom;
+    }
+
+    public Instant getEffectiveTimeTo() {
+        return this.effectiveTimeTo;
+    }
+
+    public SvcContract effectiveTimeTo(Instant effectiveTimeTo) {
+        this.effectiveTimeTo = effectiveTimeTo;
+        return this;
+    }
+
+    public void setEffectiveTimeTo(Instant effectiveTimeTo) {
+        this.effectiveTimeTo = effectiveTimeTo;
+    }
+
+    public Integer getDurationMonth() {
+        return this.durationMonth;
+    }
+
+    public SvcContract durationMonth(Integer durationMonth) {
+        this.durationMonth = durationMonth;
+        return this;
+    }
+
+    public void setDurationMonth(Integer durationMonth) {
+        this.durationMonth = durationMonth;
+    }
+
+    public BigDecimal getValue() {
+        return this.value;
+    }
+
+    public SvcContract value(BigDecimal value) {
+        this.value = value;
+        return this;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+
+    public BigDecimal getContractValue() {
+        return this.contractValue;
+    }
+
+    public SvcContract contractValue(BigDecimal contractValue) {
+        this.contractValue = contractValue;
+        return this;
+    }
+
+    public void setContractValue(BigDecimal contractValue) {
+        this.contractValue = contractValue;
+    }
+
+    public Integer getHumanResources() {
+        return this.humanResources;
+    }
+
+    public SvcContract humanResources(Integer humanResources) {
+        this.humanResources = humanResources;
+        return this;
+    }
+
+    public void setHumanResources(Integer humanResources) {
+        this.humanResources = humanResources;
+    }
+
+    public Integer getHumanResourcesWeekend() {
+        return this.humanResourcesWeekend;
+    }
+
+    public SvcContract humanResourcesWeekend(Integer humanResourcesWeekend) {
+        this.humanResourcesWeekend = humanResourcesWeekend;
+        return this;
+    }
+
+    public void setHumanResourcesWeekend(Integer humanResourcesWeekend) {
+        this.humanResourcesWeekend = humanResourcesWeekend;
+    }
+
+    public SvcContractStatus getStatus() {
+        return this.status;
+    }
+
+    public SvcContract status(SvcContractStatus status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(SvcContractStatus status) {
+        this.status = status;
+    }
+
+    public Long getSubjectCount() {
+        return this.subjectCount;
+    }
+
+    public SvcContract subjectCount(Long subjectCount) {
+        this.subjectCount = subjectCount;
+        return this;
+    }
+
+    public void setSubjectCount(Long subjectCount) {
+        this.subjectCount = subjectCount;
+    }
+
+    public BigDecimal getValuePerPerson() {
+        return this.valuePerPerson;
+    }
+
+    public SvcContract valuePerPerson(BigDecimal valuePerPerson) {
+        this.valuePerPerson = valuePerPerson;
+        return this;
+    }
+
+    public void setValuePerPerson(BigDecimal valuePerPerson) {
+        this.valuePerPerson = valuePerPerson;
+    }
+
+    public Integer getYear() {
+        return this.year;
+    }
+
+    public SvcContract year(Integer year) {
+        this.year = year;
+        return this;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Set<SvcTarget> getTargets() {
@@ -200,9 +415,22 @@ public class SvcContract implements Serializable {
     public String toString() {
         return "SvcContract{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", effectiveDate='" + getEffectiveDate() + "'" +
-            ", expirationDate='" + getExpirationDate() + "'" +
+            ", orderNumber=" + getOrderNumber() +
+            ", documentId='" + getDocumentId() + "'" +
+            ", appendicesNumber='" + getAppendicesNumber() + "'" +
+            ", fileId='" + getFileId() + "'" +
+            ", content='" + getContent() + "'" +
+            ", effectiveTimeFrom='" + getEffectiveTimeFrom() + "'" +
+            ", effectiveTimeTo='" + getEffectiveTimeTo() + "'" +
+            ", durationMonth=" + getDurationMonth() +
+            ", value=" + getValue() +
+            ", contractValue=" + getContractValue() +
+            ", humanResources=" + getHumanResources() +
+            ", humanResourcesWeekend=" + getHumanResourcesWeekend() +
+            ", status='" + getStatus() + "'" +
+            ", subjectCount=" + getSubjectCount() +
+            ", valuePerPerson=" + getValuePerPerson() +
+            ", year=" + getYear() +
             "}";
     }
 }

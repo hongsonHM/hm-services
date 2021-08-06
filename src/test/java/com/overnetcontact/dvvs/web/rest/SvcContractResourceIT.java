@@ -1,5 +1,6 @@
 package com.overnetcontact.dvvs.web.rest;
 
+import static com.overnetcontact.dvvs.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -7,9 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.overnetcontact.dvvs.IntegrationTest;
 import com.overnetcontact.dvvs.domain.SvcContract;
+import com.overnetcontact.dvvs.domain.enumeration.SvcContractStatus;
 import com.overnetcontact.dvvs.repository.SvcContractRepository;
 import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
 import com.overnetcontact.dvvs.service.mapper.SvcContractMapper;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -33,14 +36,53 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class SvcContractResourceIT {
 
-    private static final String DEFAULT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
+    private static final Long DEFAULT_ORDER_NUMBER = 1L;
+    private static final Long UPDATED_ORDER_NUMBER = 2L;
 
-    private static final Instant DEFAULT_EFFECTIVE_DATE = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_EFFECTIVE_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final String DEFAULT_DOCUMENT_ID = "AAAAAAAAAA";
+    private static final String UPDATED_DOCUMENT_ID = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_EXPIRATION_DATE = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_EXPIRATION_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final String DEFAULT_APPENDICES_NUMBER = "AAAAAAAAAA";
+    private static final String UPDATED_APPENDICES_NUMBER = "BBBBBBBBBB";
+
+    private static final String DEFAULT_FILE_ID = "AAAAAAAAAA";
+    private static final String UPDATED_FILE_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
+    private static final String UPDATED_CONTENT = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_EFFECTIVE_TIME_FROM = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_EFFECTIVE_TIME_FROM = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final Instant DEFAULT_EFFECTIVE_TIME_TO = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_EFFECTIVE_TIME_TO = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final Integer DEFAULT_DURATION_MONTH = 1;
+    private static final Integer UPDATED_DURATION_MONTH = 2;
+
+    private static final BigDecimal DEFAULT_VALUE = new BigDecimal(1);
+    private static final BigDecimal UPDATED_VALUE = new BigDecimal(2);
+
+    private static final BigDecimal DEFAULT_CONTRACT_VALUE = new BigDecimal(1);
+    private static final BigDecimal UPDATED_CONTRACT_VALUE = new BigDecimal(2);
+
+    private static final Integer DEFAULT_HUMAN_RESOURCES = 1;
+    private static final Integer UPDATED_HUMAN_RESOURCES = 2;
+
+    private static final Integer DEFAULT_HUMAN_RESOURCES_WEEKEND = 1;
+    private static final Integer UPDATED_HUMAN_RESOURCES_WEEKEND = 2;
+
+    private static final SvcContractStatus DEFAULT_STATUS = SvcContractStatus.SUCCESS;
+    private static final SvcContractStatus UPDATED_STATUS = SvcContractStatus.PENDING;
+
+    private static final Long DEFAULT_SUBJECT_COUNT = 1L;
+    private static final Long UPDATED_SUBJECT_COUNT = 2L;
+
+    private static final BigDecimal DEFAULT_VALUE_PER_PERSON = new BigDecimal(1);
+    private static final BigDecimal UPDATED_VALUE_PER_PERSON = new BigDecimal(2);
+
+    private static final Integer DEFAULT_YEAR = 1;
+    private static final Integer UPDATED_YEAR = 2;
 
     private static final String ENTITY_API_URL = "/api/svc-contracts";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -70,9 +112,22 @@ class SvcContractResourceIT {
      */
     public static SvcContract createEntity(EntityManager em) {
         SvcContract svcContract = new SvcContract()
-            .name(DEFAULT_NAME)
-            .effectiveDate(DEFAULT_EFFECTIVE_DATE)
-            .expirationDate(DEFAULT_EXPIRATION_DATE);
+            .orderNumber(DEFAULT_ORDER_NUMBER)
+            .documentId(DEFAULT_DOCUMENT_ID)
+            .appendicesNumber(DEFAULT_APPENDICES_NUMBER)
+            .fileId(DEFAULT_FILE_ID)
+            .content(DEFAULT_CONTENT)
+            .effectiveTimeFrom(DEFAULT_EFFECTIVE_TIME_FROM)
+            .effectiveTimeTo(DEFAULT_EFFECTIVE_TIME_TO)
+            .durationMonth(DEFAULT_DURATION_MONTH)
+            .value(DEFAULT_VALUE)
+            .contractValue(DEFAULT_CONTRACT_VALUE)
+            .humanResources(DEFAULT_HUMAN_RESOURCES)
+            .humanResourcesWeekend(DEFAULT_HUMAN_RESOURCES_WEEKEND)
+            .status(DEFAULT_STATUS)
+            .subjectCount(DEFAULT_SUBJECT_COUNT)
+            .valuePerPerson(DEFAULT_VALUE_PER_PERSON)
+            .year(DEFAULT_YEAR);
         return svcContract;
     }
 
@@ -84,9 +139,22 @@ class SvcContractResourceIT {
      */
     public static SvcContract createUpdatedEntity(EntityManager em) {
         SvcContract svcContract = new SvcContract()
-            .name(UPDATED_NAME)
-            .effectiveDate(UPDATED_EFFECTIVE_DATE)
-            .expirationDate(UPDATED_EXPIRATION_DATE);
+            .orderNumber(UPDATED_ORDER_NUMBER)
+            .documentId(UPDATED_DOCUMENT_ID)
+            .appendicesNumber(UPDATED_APPENDICES_NUMBER)
+            .fileId(UPDATED_FILE_ID)
+            .content(UPDATED_CONTENT)
+            .effectiveTimeFrom(UPDATED_EFFECTIVE_TIME_FROM)
+            .effectiveTimeTo(UPDATED_EFFECTIVE_TIME_TO)
+            .durationMonth(UPDATED_DURATION_MONTH)
+            .value(UPDATED_VALUE)
+            .contractValue(UPDATED_CONTRACT_VALUE)
+            .humanResources(UPDATED_HUMAN_RESOURCES)
+            .humanResourcesWeekend(UPDATED_HUMAN_RESOURCES_WEEKEND)
+            .status(UPDATED_STATUS)
+            .subjectCount(UPDATED_SUBJECT_COUNT)
+            .valuePerPerson(UPDATED_VALUE_PER_PERSON)
+            .year(UPDATED_YEAR);
         return svcContract;
     }
 
@@ -111,9 +179,22 @@ class SvcContractResourceIT {
         List<SvcContract> svcContractList = svcContractRepository.findAll();
         assertThat(svcContractList).hasSize(databaseSizeBeforeCreate + 1);
         SvcContract testSvcContract = svcContractList.get(svcContractList.size() - 1);
-        assertThat(testSvcContract.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testSvcContract.getEffectiveDate()).isEqualTo(DEFAULT_EFFECTIVE_DATE);
-        assertThat(testSvcContract.getExpirationDate()).isEqualTo(DEFAULT_EXPIRATION_DATE);
+        assertThat(testSvcContract.getOrderNumber()).isEqualTo(DEFAULT_ORDER_NUMBER);
+        assertThat(testSvcContract.getDocumentId()).isEqualTo(DEFAULT_DOCUMENT_ID);
+        assertThat(testSvcContract.getAppendicesNumber()).isEqualTo(DEFAULT_APPENDICES_NUMBER);
+        assertThat(testSvcContract.getFileId()).isEqualTo(DEFAULT_FILE_ID);
+        assertThat(testSvcContract.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testSvcContract.getEffectiveTimeFrom()).isEqualTo(DEFAULT_EFFECTIVE_TIME_FROM);
+        assertThat(testSvcContract.getEffectiveTimeTo()).isEqualTo(DEFAULT_EFFECTIVE_TIME_TO);
+        assertThat(testSvcContract.getDurationMonth()).isEqualTo(DEFAULT_DURATION_MONTH);
+        assertThat(testSvcContract.getValue()).isEqualByComparingTo(DEFAULT_VALUE);
+        assertThat(testSvcContract.getContractValue()).isEqualByComparingTo(DEFAULT_CONTRACT_VALUE);
+        assertThat(testSvcContract.getHumanResources()).isEqualTo(DEFAULT_HUMAN_RESOURCES);
+        assertThat(testSvcContract.getHumanResourcesWeekend()).isEqualTo(DEFAULT_HUMAN_RESOURCES_WEEKEND);
+        assertThat(testSvcContract.getStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(testSvcContract.getSubjectCount()).isEqualTo(DEFAULT_SUBJECT_COUNT);
+        assertThat(testSvcContract.getValuePerPerson()).isEqualByComparingTo(DEFAULT_VALUE_PER_PERSON);
+        assertThat(testSvcContract.getYear()).isEqualTo(DEFAULT_YEAR);
     }
 
     @Test
@@ -139,10 +220,10 @@ class SvcContractResourceIT {
 
     @Test
     @Transactional
-    void checkEffectiveDateIsRequired() throws Exception {
+    void checkOrderNumberIsRequired() throws Exception {
         int databaseSizeBeforeTest = svcContractRepository.findAll().size();
         // set the field null
-        svcContract.setEffectiveDate(null);
+        svcContract.setOrderNumber(null);
 
         // Create the SvcContract, which fails.
         SvcContractDTO svcContractDTO = svcContractMapper.toDto(svcContract);
@@ -159,10 +240,110 @@ class SvcContractResourceIT {
 
     @Test
     @Transactional
-    void checkExpirationDateIsRequired() throws Exception {
+    void checkEffectiveTimeFromIsRequired() throws Exception {
         int databaseSizeBeforeTest = svcContractRepository.findAll().size();
         // set the field null
-        svcContract.setExpirationDate(null);
+        svcContract.setEffectiveTimeFrom(null);
+
+        // Create the SvcContract, which fails.
+        SvcContractDTO svcContractDTO = svcContractMapper.toDto(svcContract);
+
+        restSvcContractMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(svcContractDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<SvcContract> svcContractList = svcContractRepository.findAll();
+        assertThat(svcContractList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkEffectiveTimeToIsRequired() throws Exception {
+        int databaseSizeBeforeTest = svcContractRepository.findAll().size();
+        // set the field null
+        svcContract.setEffectiveTimeTo(null);
+
+        // Create the SvcContract, which fails.
+        SvcContractDTO svcContractDTO = svcContractMapper.toDto(svcContract);
+
+        restSvcContractMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(svcContractDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<SvcContract> svcContractList = svcContractRepository.findAll();
+        assertThat(svcContractList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkDurationMonthIsRequired() throws Exception {
+        int databaseSizeBeforeTest = svcContractRepository.findAll().size();
+        // set the field null
+        svcContract.setDurationMonth(null);
+
+        // Create the SvcContract, which fails.
+        SvcContractDTO svcContractDTO = svcContractMapper.toDto(svcContract);
+
+        restSvcContractMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(svcContractDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<SvcContract> svcContractList = svcContractRepository.findAll();
+        assertThat(svcContractList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkValueIsRequired() throws Exception {
+        int databaseSizeBeforeTest = svcContractRepository.findAll().size();
+        // set the field null
+        svcContract.setValue(null);
+
+        // Create the SvcContract, which fails.
+        SvcContractDTO svcContractDTO = svcContractMapper.toDto(svcContract);
+
+        restSvcContractMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(svcContractDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<SvcContract> svcContractList = svcContractRepository.findAll();
+        assertThat(svcContractList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkContractValueIsRequired() throws Exception {
+        int databaseSizeBeforeTest = svcContractRepository.findAll().size();
+        // set the field null
+        svcContract.setContractValue(null);
+
+        // Create the SvcContract, which fails.
+        SvcContractDTO svcContractDTO = svcContractMapper.toDto(svcContract);
+
+        restSvcContractMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(svcContractDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<SvcContract> svcContractList = svcContractRepository.findAll();
+        assertThat(svcContractList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkStatusIsRequired() throws Exception {
+        int databaseSizeBeforeTest = svcContractRepository.findAll().size();
+        // set the field null
+        svcContract.setStatus(null);
 
         // Create the SvcContract, which fails.
         SvcContractDTO svcContractDTO = svcContractMapper.toDto(svcContract);
@@ -189,9 +370,22 @@ class SvcContractResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(svcContract.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].effectiveDate").value(hasItem(DEFAULT_EFFECTIVE_DATE.toString())))
-            .andExpect(jsonPath("$.[*].expirationDate").value(hasItem(DEFAULT_EXPIRATION_DATE.toString())));
+            .andExpect(jsonPath("$.[*].orderNumber").value(hasItem(DEFAULT_ORDER_NUMBER.intValue())))
+            .andExpect(jsonPath("$.[*].documentId").value(hasItem(DEFAULT_DOCUMENT_ID)))
+            .andExpect(jsonPath("$.[*].appendicesNumber").value(hasItem(DEFAULT_APPENDICES_NUMBER)))
+            .andExpect(jsonPath("$.[*].fileId").value(hasItem(DEFAULT_FILE_ID)))
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT)))
+            .andExpect(jsonPath("$.[*].effectiveTimeFrom").value(hasItem(DEFAULT_EFFECTIVE_TIME_FROM.toString())))
+            .andExpect(jsonPath("$.[*].effectiveTimeTo").value(hasItem(DEFAULT_EFFECTIVE_TIME_TO.toString())))
+            .andExpect(jsonPath("$.[*].durationMonth").value(hasItem(DEFAULT_DURATION_MONTH)))
+            .andExpect(jsonPath("$.[*].value").value(hasItem(sameNumber(DEFAULT_VALUE))))
+            .andExpect(jsonPath("$.[*].contractValue").value(hasItem(sameNumber(DEFAULT_CONTRACT_VALUE))))
+            .andExpect(jsonPath("$.[*].humanResources").value(hasItem(DEFAULT_HUMAN_RESOURCES)))
+            .andExpect(jsonPath("$.[*].humanResourcesWeekend").value(hasItem(DEFAULT_HUMAN_RESOURCES_WEEKEND)))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].subjectCount").value(hasItem(DEFAULT_SUBJECT_COUNT.intValue())))
+            .andExpect(jsonPath("$.[*].valuePerPerson").value(hasItem(sameNumber(DEFAULT_VALUE_PER_PERSON))))
+            .andExpect(jsonPath("$.[*].year").value(hasItem(DEFAULT_YEAR)));
     }
 
     @Test
@@ -206,9 +400,22 @@ class SvcContractResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(svcContract.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.effectiveDate").value(DEFAULT_EFFECTIVE_DATE.toString()))
-            .andExpect(jsonPath("$.expirationDate").value(DEFAULT_EXPIRATION_DATE.toString()));
+            .andExpect(jsonPath("$.orderNumber").value(DEFAULT_ORDER_NUMBER.intValue()))
+            .andExpect(jsonPath("$.documentId").value(DEFAULT_DOCUMENT_ID))
+            .andExpect(jsonPath("$.appendicesNumber").value(DEFAULT_APPENDICES_NUMBER))
+            .andExpect(jsonPath("$.fileId").value(DEFAULT_FILE_ID))
+            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT))
+            .andExpect(jsonPath("$.effectiveTimeFrom").value(DEFAULT_EFFECTIVE_TIME_FROM.toString()))
+            .andExpect(jsonPath("$.effectiveTimeTo").value(DEFAULT_EFFECTIVE_TIME_TO.toString()))
+            .andExpect(jsonPath("$.durationMonth").value(DEFAULT_DURATION_MONTH))
+            .andExpect(jsonPath("$.value").value(sameNumber(DEFAULT_VALUE)))
+            .andExpect(jsonPath("$.contractValue").value(sameNumber(DEFAULT_CONTRACT_VALUE)))
+            .andExpect(jsonPath("$.humanResources").value(DEFAULT_HUMAN_RESOURCES))
+            .andExpect(jsonPath("$.humanResourcesWeekend").value(DEFAULT_HUMAN_RESOURCES_WEEKEND))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
+            .andExpect(jsonPath("$.subjectCount").value(DEFAULT_SUBJECT_COUNT.intValue()))
+            .andExpect(jsonPath("$.valuePerPerson").value(sameNumber(DEFAULT_VALUE_PER_PERSON)))
+            .andExpect(jsonPath("$.year").value(DEFAULT_YEAR));
     }
 
     @Test
@@ -230,7 +437,23 @@ class SvcContractResourceIT {
         SvcContract updatedSvcContract = svcContractRepository.findById(svcContract.getId()).get();
         // Disconnect from session so that the updates on updatedSvcContract are not directly saved in db
         em.detach(updatedSvcContract);
-        updatedSvcContract.name(UPDATED_NAME).effectiveDate(UPDATED_EFFECTIVE_DATE).expirationDate(UPDATED_EXPIRATION_DATE);
+        updatedSvcContract
+            .orderNumber(UPDATED_ORDER_NUMBER)
+            .documentId(UPDATED_DOCUMENT_ID)
+            .appendicesNumber(UPDATED_APPENDICES_NUMBER)
+            .fileId(UPDATED_FILE_ID)
+            .content(UPDATED_CONTENT)
+            .effectiveTimeFrom(UPDATED_EFFECTIVE_TIME_FROM)
+            .effectiveTimeTo(UPDATED_EFFECTIVE_TIME_TO)
+            .durationMonth(UPDATED_DURATION_MONTH)
+            .value(UPDATED_VALUE)
+            .contractValue(UPDATED_CONTRACT_VALUE)
+            .humanResources(UPDATED_HUMAN_RESOURCES)
+            .humanResourcesWeekend(UPDATED_HUMAN_RESOURCES_WEEKEND)
+            .status(UPDATED_STATUS)
+            .subjectCount(UPDATED_SUBJECT_COUNT)
+            .valuePerPerson(UPDATED_VALUE_PER_PERSON)
+            .year(UPDATED_YEAR);
         SvcContractDTO svcContractDTO = svcContractMapper.toDto(updatedSvcContract);
 
         restSvcContractMockMvc
@@ -245,9 +468,22 @@ class SvcContractResourceIT {
         List<SvcContract> svcContractList = svcContractRepository.findAll();
         assertThat(svcContractList).hasSize(databaseSizeBeforeUpdate);
         SvcContract testSvcContract = svcContractList.get(svcContractList.size() - 1);
-        assertThat(testSvcContract.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testSvcContract.getEffectiveDate()).isEqualTo(UPDATED_EFFECTIVE_DATE);
-        assertThat(testSvcContract.getExpirationDate()).isEqualTo(UPDATED_EXPIRATION_DATE);
+        assertThat(testSvcContract.getOrderNumber()).isEqualTo(UPDATED_ORDER_NUMBER);
+        assertThat(testSvcContract.getDocumentId()).isEqualTo(UPDATED_DOCUMENT_ID);
+        assertThat(testSvcContract.getAppendicesNumber()).isEqualTo(UPDATED_APPENDICES_NUMBER);
+        assertThat(testSvcContract.getFileId()).isEqualTo(UPDATED_FILE_ID);
+        assertThat(testSvcContract.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testSvcContract.getEffectiveTimeFrom()).isEqualTo(UPDATED_EFFECTIVE_TIME_FROM);
+        assertThat(testSvcContract.getEffectiveTimeTo()).isEqualTo(UPDATED_EFFECTIVE_TIME_TO);
+        assertThat(testSvcContract.getDurationMonth()).isEqualTo(UPDATED_DURATION_MONTH);
+        assertThat(testSvcContract.getValue()).isEqualTo(UPDATED_VALUE);
+        assertThat(testSvcContract.getContractValue()).isEqualTo(UPDATED_CONTRACT_VALUE);
+        assertThat(testSvcContract.getHumanResources()).isEqualTo(UPDATED_HUMAN_RESOURCES);
+        assertThat(testSvcContract.getHumanResourcesWeekend()).isEqualTo(UPDATED_HUMAN_RESOURCES_WEEKEND);
+        assertThat(testSvcContract.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testSvcContract.getSubjectCount()).isEqualTo(UPDATED_SUBJECT_COUNT);
+        assertThat(testSvcContract.getValuePerPerson()).isEqualTo(UPDATED_VALUE_PER_PERSON);
+        assertThat(testSvcContract.getYear()).isEqualTo(UPDATED_YEAR);
     }
 
     @Test
@@ -327,7 +563,15 @@ class SvcContractResourceIT {
         SvcContract partialUpdatedSvcContract = new SvcContract();
         partialUpdatedSvcContract.setId(svcContract.getId());
 
-        partialUpdatedSvcContract.effectiveDate(UPDATED_EFFECTIVE_DATE).expirationDate(UPDATED_EXPIRATION_DATE);
+        partialUpdatedSvcContract
+            .documentId(UPDATED_DOCUMENT_ID)
+            .appendicesNumber(UPDATED_APPENDICES_NUMBER)
+            .fileId(UPDATED_FILE_ID)
+            .effectiveTimeFrom(UPDATED_EFFECTIVE_TIME_FROM)
+            .durationMonth(UPDATED_DURATION_MONTH)
+            .status(UPDATED_STATUS)
+            .subjectCount(UPDATED_SUBJECT_COUNT)
+            .valuePerPerson(UPDATED_VALUE_PER_PERSON);
 
         restSvcContractMockMvc
             .perform(
@@ -341,9 +585,22 @@ class SvcContractResourceIT {
         List<SvcContract> svcContractList = svcContractRepository.findAll();
         assertThat(svcContractList).hasSize(databaseSizeBeforeUpdate);
         SvcContract testSvcContract = svcContractList.get(svcContractList.size() - 1);
-        assertThat(testSvcContract.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testSvcContract.getEffectiveDate()).isEqualTo(UPDATED_EFFECTIVE_DATE);
-        assertThat(testSvcContract.getExpirationDate()).isEqualTo(UPDATED_EXPIRATION_DATE);
+        assertThat(testSvcContract.getOrderNumber()).isEqualTo(DEFAULT_ORDER_NUMBER);
+        assertThat(testSvcContract.getDocumentId()).isEqualTo(UPDATED_DOCUMENT_ID);
+        assertThat(testSvcContract.getAppendicesNumber()).isEqualTo(UPDATED_APPENDICES_NUMBER);
+        assertThat(testSvcContract.getFileId()).isEqualTo(UPDATED_FILE_ID);
+        assertThat(testSvcContract.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testSvcContract.getEffectiveTimeFrom()).isEqualTo(UPDATED_EFFECTIVE_TIME_FROM);
+        assertThat(testSvcContract.getEffectiveTimeTo()).isEqualTo(DEFAULT_EFFECTIVE_TIME_TO);
+        assertThat(testSvcContract.getDurationMonth()).isEqualTo(UPDATED_DURATION_MONTH);
+        assertThat(testSvcContract.getValue()).isEqualByComparingTo(DEFAULT_VALUE);
+        assertThat(testSvcContract.getContractValue()).isEqualByComparingTo(DEFAULT_CONTRACT_VALUE);
+        assertThat(testSvcContract.getHumanResources()).isEqualTo(DEFAULT_HUMAN_RESOURCES);
+        assertThat(testSvcContract.getHumanResourcesWeekend()).isEqualTo(DEFAULT_HUMAN_RESOURCES_WEEKEND);
+        assertThat(testSvcContract.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testSvcContract.getSubjectCount()).isEqualTo(UPDATED_SUBJECT_COUNT);
+        assertThat(testSvcContract.getValuePerPerson()).isEqualByComparingTo(UPDATED_VALUE_PER_PERSON);
+        assertThat(testSvcContract.getYear()).isEqualTo(DEFAULT_YEAR);
     }
 
     @Test
@@ -358,7 +615,23 @@ class SvcContractResourceIT {
         SvcContract partialUpdatedSvcContract = new SvcContract();
         partialUpdatedSvcContract.setId(svcContract.getId());
 
-        partialUpdatedSvcContract.name(UPDATED_NAME).effectiveDate(UPDATED_EFFECTIVE_DATE).expirationDate(UPDATED_EXPIRATION_DATE);
+        partialUpdatedSvcContract
+            .orderNumber(UPDATED_ORDER_NUMBER)
+            .documentId(UPDATED_DOCUMENT_ID)
+            .appendicesNumber(UPDATED_APPENDICES_NUMBER)
+            .fileId(UPDATED_FILE_ID)
+            .content(UPDATED_CONTENT)
+            .effectiveTimeFrom(UPDATED_EFFECTIVE_TIME_FROM)
+            .effectiveTimeTo(UPDATED_EFFECTIVE_TIME_TO)
+            .durationMonth(UPDATED_DURATION_MONTH)
+            .value(UPDATED_VALUE)
+            .contractValue(UPDATED_CONTRACT_VALUE)
+            .humanResources(UPDATED_HUMAN_RESOURCES)
+            .humanResourcesWeekend(UPDATED_HUMAN_RESOURCES_WEEKEND)
+            .status(UPDATED_STATUS)
+            .subjectCount(UPDATED_SUBJECT_COUNT)
+            .valuePerPerson(UPDATED_VALUE_PER_PERSON)
+            .year(UPDATED_YEAR);
 
         restSvcContractMockMvc
             .perform(
@@ -372,9 +645,22 @@ class SvcContractResourceIT {
         List<SvcContract> svcContractList = svcContractRepository.findAll();
         assertThat(svcContractList).hasSize(databaseSizeBeforeUpdate);
         SvcContract testSvcContract = svcContractList.get(svcContractList.size() - 1);
-        assertThat(testSvcContract.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testSvcContract.getEffectiveDate()).isEqualTo(UPDATED_EFFECTIVE_DATE);
-        assertThat(testSvcContract.getExpirationDate()).isEqualTo(UPDATED_EXPIRATION_DATE);
+        assertThat(testSvcContract.getOrderNumber()).isEqualTo(UPDATED_ORDER_NUMBER);
+        assertThat(testSvcContract.getDocumentId()).isEqualTo(UPDATED_DOCUMENT_ID);
+        assertThat(testSvcContract.getAppendicesNumber()).isEqualTo(UPDATED_APPENDICES_NUMBER);
+        assertThat(testSvcContract.getFileId()).isEqualTo(UPDATED_FILE_ID);
+        assertThat(testSvcContract.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testSvcContract.getEffectiveTimeFrom()).isEqualTo(UPDATED_EFFECTIVE_TIME_FROM);
+        assertThat(testSvcContract.getEffectiveTimeTo()).isEqualTo(UPDATED_EFFECTIVE_TIME_TO);
+        assertThat(testSvcContract.getDurationMonth()).isEqualTo(UPDATED_DURATION_MONTH);
+        assertThat(testSvcContract.getValue()).isEqualByComparingTo(UPDATED_VALUE);
+        assertThat(testSvcContract.getContractValue()).isEqualByComparingTo(UPDATED_CONTRACT_VALUE);
+        assertThat(testSvcContract.getHumanResources()).isEqualTo(UPDATED_HUMAN_RESOURCES);
+        assertThat(testSvcContract.getHumanResourcesWeekend()).isEqualTo(UPDATED_HUMAN_RESOURCES_WEEKEND);
+        assertThat(testSvcContract.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testSvcContract.getSubjectCount()).isEqualTo(UPDATED_SUBJECT_COUNT);
+        assertThat(testSvcContract.getValuePerPerson()).isEqualByComparingTo(UPDATED_VALUE_PER_PERSON);
+        assertThat(testSvcContract.getYear()).isEqualTo(UPDATED_YEAR);
     }
 
     @Test

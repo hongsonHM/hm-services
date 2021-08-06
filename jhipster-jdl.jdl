@@ -3,20 +3,17 @@
  * @author KagariV.
  */
 entity OrgUser {
-	email String required unique,
-    password String required,
-    phoneNumber String required minlength(10) maxlength(11),
-    role Role required
+	deviceId String
+	phone String required minlength(10) maxlength(11)
+	role Role required
 }
-
 /*
-* User Role
-* @author KagariV
-*/
+ * User Role
+ * @author KagariV
+ */
 enum Role {
-    SERVICE_MANAGER, SUPERVISOR, SALE
+	SERVICE_MANAGER, SUPERVISOR, SALE
 }
-
 /**
  * Group entity of Organization.
  * @author KagariV.
@@ -25,127 +22,104 @@ entity OrgGroup {
 	name String maxlength(100)
 }
 
+entity OrgNotification {
+	title String required
+	desc String required
+	data String
+	isRead Boolean required
+	status NotificationStatus required
+}
+
+enum NotificationStatus {
+	PROCESS, SUCCESS, WARNING, ERROR, INFOMATION
+}
 /**
  * SvcContract entity of SVC.
  * @author KagariV.
  */
 entity SvcContract {
-	name String maxlength(100),
-	effectiveDate Instant required,
-	expirationDate Instant required
+	orderNumber Long required
+	documentId String
+	appendicesNumber String
+	fileId String
+	content String
+	effectiveTimeFrom Instant required
+	effectiveTimeTo Instant required
+	durationMonth Integer required
+	value BigDecimal required
+	contractValue BigDecimal required
+	humanResources Integer
+	humanResourcesWeekend Integer
+	status SvcContractStatus required
+	subjectCount Long
+	valuePerPerson BigDecimal
+	year Integer
 }
-
+enum SvcContractStatus {
+	SUCCESS, PENDING, TIMEOUT, UNREQUEST, WORKING
+}
 /**
  * Target(which will be work on) entity of SVC.
  * @author KagariV.
  */
 entity SvcTarget {
-	name String maxlength(100),
+	name String maxlength(100)
 }
-
 /**
  * TargetType(what type of target) entity of SVC.
  * @author KagariV.
  */
 entity SvcTargetType {
-	name String maxlength(100),
-}
-
-/**
- * SchedulePlan (big plan) entity of SVC.
- * @author KagariV.
- */
-entity SvcSchedulePlan {
-	active Boolean required
-}
-
-/**
- * ScheduleUnit for each unit (break down) entity of SVC.
- * @author KagariV.
- */
-entity SvcScheduleUnit {
-	startFrom ZonedDateTime required,
-    endAt ZonedDateTime required,
-	actualStartFrom ZonedDateTime required,
-    actualEndAt ZonedDateTime required,
-    scheduleQuantity BigDecimal required,
-    actualQuantity BigDecimal,
-    appliedDate LocalDate required,
-    status ScheduleStatus required,
-    planedNote String,
-    laborerNote String,
-    supervisorNote String
-}
-
-enum ScheduleStatus {
-	PLANED, FINISHED, UNFINISHED, CANCEL
+	name String maxlength(100)
 }
 // SVC unit
-
 /**
  * Client entity of SVC.
  * @author KagariV.
  */
 entity SvcClient {
-	name String required minlength(6) maxlength(40),
-	phoneNumber String required minlength(10) maxlength(11),
-    address String required maxlength(300)
+	customerName String required minlength(6) maxlength(40)
+	customerCity String required
+	phoneNumber String required minlength(10) maxlength(11)
+	type String maxlength(300) required
+	address String required maxlength(300)
 }
-
 /**
  * Unit entity of SVC.
  * @author KagariV.
  */
 entity SvcUnit {
-	name String required maxlength(40),
+	name String required maxlength(40)
 	description String required maxlength(300)
 }
-
 /**
  * Group entity of SVC.
  * @author KagariV.
  */
 entity SvcGroup {
-	name String unique required maxlength(40),
-	description String required maxlength(300),
-    address String required maxlength(300)
+	name String unique required maxlength(40)
+	description String required maxlength(300)
+	address String required maxlength(300)
 }
-
 /**
-* Schedule
-*
-*/
+ * Schedule
+ * 
+ */
 relationship OneToOne {
-	SvcSchedulePlan{serviceManager} to OrgUser,
-    SvcSchedulePlan{defaultSupervisor} to OrgUser,
 	OrgUser{internalUser} to User
 }
-
 relationship ManyToOne {
-	OrgUser{group} to OrgGroup,
-	SvcUnit{group} to SvcGroup,
-	SvcContract{unit} to SvcUnit,
-	SvcContract{saler} to OrgUser,
-	SvcContract{client} to SvcClient,
-    SvcTarget{type} to SvcTargetType,
-    SvcSchedulePlan{contract} to SvcContract,
-    SvcSchedulePlan{scheduleUnit} to SvcScheduleUnit
+	OrgUser{group} to OrgGroup , SvcUnit{group} to SvcGroup , SvcContract{unit} to SvcUnit , SvcContract{saler} to OrgUser , SvcContract{client} to SvcClient , SvcTarget{type} to SvcTargetType
 }
-
 relationship OneToMany {
-    SvcTarget{childs} to SvcTarget,
-    SvcContract{targets} to SvcTarget,
+	SvcTarget{childs} to SvcTarget , SvcContract{targets} to SvcTarget, OrgUser{notifications} to OrgNotification
 }
-
 // Set pagination options
 paginate OrgUser, OrgGroup with infinite-scroll
 paginate * with pagination
-
 // Use Data Transfer Objects (DTO)
 dto * with mapstruct
-
 // Set service options to all except few
 service all with serviceImpl except OrgUser, OrgGroup
-
 // Set an angular suffix
 // angularSuffix * with mySuffix

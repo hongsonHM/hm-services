@@ -53,8 +53,9 @@
       "SvcScheduleUnit",
       "SvcClient",
       "SvcUnit",
-      "SvcGroup"
+      "SvcGroup",
+      "OrgNotification"
     ],
-    "lastLiquibaseTimestamp": 1627714452000
+    "lastLiquibaseTimestamp": 1628286228000
   }
 }

@@ -2,20 +2,76 @@
   "name": "SvcContract",
   "fields": [
     {
-      "fieldName": "name",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "100"
+      "fieldName": "orderNumber",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "effectiveDate",
+      "fieldName": "documentId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "appendicesNumber",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fileId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "effectiveTimeFrom",
       "fieldType": "Instant",
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "expirationDate",
+      "fieldName": "effectiveTimeTo",
       "fieldType": "Instant",
       "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "durationMonth",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "value",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "contractValue",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "humanResources",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "humanResourcesWeekend",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "SvcContractStatus",
+      "fieldValues": "SUCCESS,PENDING,TIMEOUT,UNREQUEST,WORKING",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "subjectCount",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "valuePerPerson",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "year",
+      "fieldType": "Integer"
     }
   ],
   "relationships": [

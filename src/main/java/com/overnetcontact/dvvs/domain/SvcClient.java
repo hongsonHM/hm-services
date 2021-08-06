@@ -23,13 +23,22 @@ public class SvcClient implements Serializable {
 
     @NotNull
     @Size(min = 6, max = 40)
-    @Column(name = "name", length = 40, nullable = false)
-    private String name;
+    @Column(name = "customer_name", length = 40, nullable = false)
+    private String customerName;
+
+    @NotNull
+    @Column(name = "customer_city", nullable = false)
+    private String customerCity;
 
     @NotNull
     @Size(min = 10, max = 11)
     @Column(name = "phone_number", length = 11, nullable = false)
     private String phoneNumber;
+
+    @NotNull
+    @Size(max = 300)
+    @Column(name = "type", length = 300, nullable = false)
+    private String type;
 
     @NotNull
     @Size(max = 300)
@@ -50,17 +59,30 @@ public class SvcClient implements Serializable {
         return this;
     }
 
-    public String getName() {
-        return this.name;
+    public String getCustomerName() {
+        return this.customerName;
     }
 
-    public SvcClient name(String name) {
-        this.name = name;
+    public SvcClient customerName(String customerName) {
+        this.customerName = customerName;
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerCity() {
+        return this.customerCity;
+    }
+
+    public SvcClient customerCity(String customerCity) {
+        this.customerCity = customerCity;
+        return this;
+    }
+
+    public void setCustomerCity(String customerCity) {
+        this.customerCity = customerCity;
     }
 
     public String getPhoneNumber() {
@@ -74,6 +96,19 @@ public class SvcClient implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public SvcClient type(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getAddress() {
@@ -113,8 +148,10 @@ public class SvcClient implements Serializable {
     public String toString() {
         return "SvcClient{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
+            ", customerName='" + getCustomerName() + "'" +
+            ", customerCity='" + getCustomerCity() + "'" +
             ", phoneNumber='" + getPhoneNumber() + "'" +
+            ", type='" + getType() + "'" +
             ", address='" + getAddress() + "'" +
             "}";
     }

@@ -60,6 +60,8 @@ public class CacheConfiguration {
             createCache(cm, com.overnetcontact.dvvs.domain.SvcClient.class.getName());
             createCache(cm, com.overnetcontact.dvvs.domain.SvcUnit.class.getName());
             createCache(cm, com.overnetcontact.dvvs.domain.SvcGroup.class.getName());
+            createCache(cm, com.overnetcontact.dvvs.domain.OrgUser.class.getName() + ".notifications");
+            createCache(cm, com.overnetcontact.dvvs.domain.OrgNotification.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -14,14 +14,53 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(100)">
+            <column name="order_number" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="document_id" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="effective_date" type="${datetimeType}">
+            <column name="appendices_number" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="file_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="content" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="effective_time_from" type="${datetimeType}">
                 <constraints nullable="false" />
             </column>
-            <column name="expiration_date" type="${datetimeType}">
+            <column name="effective_time_to" type="${datetimeType}">
                 <constraints nullable="false" />
+            </column>
+            <column name="duration_month" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="value" type="decimal(21,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="contract_value" type="decimal(21,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="human_resources" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="human_resources_weekend" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="subject_count" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="value_per_person" type="decimal(21,2)">
+                <constraints nullable="true" />
+            </column>
+            <column name="year" type="integer">
+                <constraints nullable="true" />
             </column>
             <column name="unit_id" type="bigint">
                 <constraints nullable="true" />
@@ -34,8 +73,8 @@
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-        <dropDefaultValue tableName="svc_contract" columnName="effective_date" columnDataType="${datetimeType}"/>
-        <dropDefaultValue tableName="svc_contract" columnName="expiration_date" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="svc_contract" columnName="effective_time_from" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="svc_contract" columnName="effective_time_to" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -54,9 +93,22 @@
                   separator=";"
                   tableName="svc_contract">
             <column name="id" type="numeric"/>
-            <column name="name" type="string"/>
-            <column name="effective_date" type="${datetimeType}"/>
-            <column name="expiration_date" type="${datetimeType}"/>
+            <column name="order_number" type="numeric"/>
+            <column name="document_id" type="string"/>
+            <column name="appendices_number" type="string"/>
+            <column name="file_id" type="string"/>
+            <column name="content" type="string"/>
+            <column name="effective_time_from" type="${datetimeType}"/>
+            <column name="effective_time_to" type="${datetimeType}"/>
+            <column name="duration_month" type="numeric"/>
+            <column name="value" type="numeric"/>
+            <column name="contract_value" type="numeric"/>
+            <column name="human_resources" type="numeric"/>
+            <column name="human_resources_weekend" type="numeric"/>
+            <column name="status" type="string"/>
+            <column name="subject_count" type="numeric"/>
+            <column name="value_per_person" type="numeric"/>
+            <column name="year" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

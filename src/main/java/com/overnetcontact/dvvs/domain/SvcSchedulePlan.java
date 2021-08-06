@@ -26,12 +26,12 @@ public class SvcSchedulePlan implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @JsonIgnoreProperties(value = { "internalUser", "group" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "internalUser", "notifications", "group" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private OrgUser serviceManager;
 
-    @JsonIgnoreProperties(value = { "internalUser", "group" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "internalUser", "notifications", "group" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private OrgUser defaultSupervisor;

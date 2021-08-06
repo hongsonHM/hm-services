@@ -31,11 +31,17 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class SvcClientResourceIT {
 
-    private static final String DEFAULT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
+    private static final String DEFAULT_CUSTOMER_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_CUSTOMER_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CUSTOMER_CITY = "AAAAAAAAAA";
+    private static final String UPDATED_CUSTOMER_CITY = "BBBBBBBBBB";
 
     private static final String DEFAULT_PHONE_NUMBER = "AAAAAAAAAA";
     private static final String UPDATED_PHONE_NUMBER = "BBBBBBBBBB";
+
+    private static final String DEFAULT_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
@@ -67,7 +73,12 @@ class SvcClientResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static SvcClient createEntity(EntityManager em) {
-        SvcClient svcClient = new SvcClient().name(DEFAULT_NAME).phoneNumber(DEFAULT_PHONE_NUMBER).address(DEFAULT_ADDRESS);
+        SvcClient svcClient = new SvcClient()
+            .customerName(DEFAULT_CUSTOMER_NAME)
+            .customerCity(DEFAULT_CUSTOMER_CITY)
+            .phoneNumber(DEFAULT_PHONE_NUMBER)
+            .type(DEFAULT_TYPE)
+            .address(DEFAULT_ADDRESS);
         return svcClient;
     }
 
@@ -78,7 +89,12 @@ class SvcClientResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static SvcClient createUpdatedEntity(EntityManager em) {
-        SvcClient svcClient = new SvcClient().name(UPDATED_NAME).phoneNumber(UPDATED_PHONE_NUMBER).address(UPDATED_ADDRESS);
+        SvcClient svcClient = new SvcClient()
+            .customerName(UPDATED_CUSTOMER_NAME)
+            .customerCity(UPDATED_CUSTOMER_CITY)
+            .phoneNumber(UPDATED_PHONE_NUMBER)
+            .type(UPDATED_TYPE)
+            .address(UPDATED_ADDRESS);
         return svcClient;
     }
 
@@ -101,8 +117,10 @@ class SvcClientResourceIT {
         List<SvcClient> svcClientList = svcClientRepository.findAll();
         assertThat(svcClientList).hasSize(databaseSizeBeforeCreate + 1);
         SvcClient testSvcClient = svcClientList.get(svcClientList.size() - 1);
-        assertThat(testSvcClient.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testSvcClient.getCustomerName()).isEqualTo(DEFAULT_CUSTOMER_NAME);
+        assertThat(testSvcClient.getCustomerCity()).isEqualTo(DEFAULT_CUSTOMER_CITY);
         assertThat(testSvcClient.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
+        assertThat(testSvcClient.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testSvcClient.getAddress()).isEqualTo(DEFAULT_ADDRESS);
     }
 
@@ -127,10 +145,28 @@ class SvcClientResourceIT {
 
     @Test
     @Transactional
-    void checkNameIsRequired() throws Exception {
+    void checkCustomerNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = svcClientRepository.findAll().size();
         // set the field null
-        svcClient.setName(null);
+        svcClient.setCustomerName(null);
+
+        // Create the SvcClient, which fails.
+        SvcClientDTO svcClientDTO = svcClientMapper.toDto(svcClient);
+
+        restSvcClientMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(svcClientDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<SvcClient> svcClientList = svcClientRepository.findAll();
+        assertThat(svcClientList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCustomerCityIsRequired() throws Exception {
+        int databaseSizeBeforeTest = svcClientRepository.findAll().size();
+        // set the field null
+        svcClient.setCustomerCity(null);
 
         // Create the SvcClient, which fails.
         SvcClientDTO svcClientDTO = svcClientMapper.toDto(svcClient);
@@ -149,6 +185,24 @@ class SvcClientResourceIT {
         int databaseSizeBeforeTest = svcClientRepository.findAll().size();
         // set the field null
         svcClient.setPhoneNumber(null);
+
+        // Create the SvcClient, which fails.
+        SvcClientDTO svcClientDTO = svcClientMapper.toDto(svcClient);
+
+        restSvcClientMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(svcClientDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<SvcClient> svcClientList = svcClientRepository.findAll();
+        assertThat(svcClientList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkTypeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = svcClientRepository.findAll().size();
+        // set the field null
+        svcClient.setType(null);
 
         // Create the SvcClient, which fails.
         SvcClientDTO svcClientDTO = svcClientMapper.toDto(svcClient);
@@ -191,8 +245,10 @@ class SvcClientResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(svcClient.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].customerName").value(hasItem(DEFAULT_CUSTOMER_NAME)))
+            .andExpect(jsonPath("$.[*].customerCity").value(hasItem(DEFAULT_CUSTOMER_CITY)))
             .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
             .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)));
     }
 
@@ -208,8 +264,10 @@ class SvcClientResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(svcClient.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.customerName").value(DEFAULT_CUSTOMER_NAME))
+            .andExpect(jsonPath("$.customerCity").value(DEFAULT_CUSTOMER_CITY))
             .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
             .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS));
     }
 
@@ -232,7 +290,12 @@ class SvcClientResourceIT {
         SvcClient updatedSvcClient = svcClientRepository.findById(svcClient.getId()).get();
         // Disconnect from session so that the updates on updatedSvcClient are not directly saved in db
         em.detach(updatedSvcClient);
-        updatedSvcClient.name(UPDATED_NAME).phoneNumber(UPDATED_PHONE_NUMBER).address(UPDATED_ADDRESS);
+        updatedSvcClient
+            .customerName(UPDATED_CUSTOMER_NAME)
+            .customerCity(UPDATED_CUSTOMER_CITY)
+            .phoneNumber(UPDATED_PHONE_NUMBER)
+            .type(UPDATED_TYPE)
+            .address(UPDATED_ADDRESS);
         SvcClientDTO svcClientDTO = svcClientMapper.toDto(updatedSvcClient);
 
         restSvcClientMockMvc
@@ -247,8 +310,10 @@ class SvcClientResourceIT {
         List<SvcClient> svcClientList = svcClientRepository.findAll();
         assertThat(svcClientList).hasSize(databaseSizeBeforeUpdate);
         SvcClient testSvcClient = svcClientList.get(svcClientList.size() - 1);
-        assertThat(testSvcClient.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testSvcClient.getCustomerName()).isEqualTo(UPDATED_CUSTOMER_NAME);
+        assertThat(testSvcClient.getCustomerCity()).isEqualTo(UPDATED_CUSTOMER_CITY);
         assertThat(testSvcClient.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
+        assertThat(testSvcClient.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testSvcClient.getAddress()).isEqualTo(UPDATED_ADDRESS);
     }
 
@@ -329,7 +394,7 @@ class SvcClientResourceIT {
         SvcClient partialUpdatedSvcClient = new SvcClient();
         partialUpdatedSvcClient.setId(svcClient.getId());
 
-        partialUpdatedSvcClient.name(UPDATED_NAME);
+        partialUpdatedSvcClient.customerName(UPDATED_CUSTOMER_NAME).address(UPDATED_ADDRESS);
 
         restSvcClientMockMvc
             .perform(
@@ -343,9 +408,11 @@ class SvcClientResourceIT {
         List<SvcClient> svcClientList = svcClientRepository.findAll();
         assertThat(svcClientList).hasSize(databaseSizeBeforeUpdate);
         SvcClient testSvcClient = svcClientList.get(svcClientList.size() - 1);
-        assertThat(testSvcClient.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testSvcClient.getCustomerName()).isEqualTo(UPDATED_CUSTOMER_NAME);
+        assertThat(testSvcClient.getCustomerCity()).isEqualTo(DEFAULT_CUSTOMER_CITY);
         assertThat(testSvcClient.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
-        assertThat(testSvcClient.getAddress()).isEqualTo(DEFAULT_ADDRESS);
+        assertThat(testSvcClient.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testSvcClient.getAddress()).isEqualTo(UPDATED_ADDRESS);
     }
 
     @Test
@@ -360,7 +427,12 @@ class SvcClientResourceIT {
         SvcClient partialUpdatedSvcClient = new SvcClient();
         partialUpdatedSvcClient.setId(svcClient.getId());
 
-        partialUpdatedSvcClient.name(UPDATED_NAME).phoneNumber(UPDATED_PHONE_NUMBER).address(UPDATED_ADDRESS);
+        partialUpdatedSvcClient
+            .customerName(UPDATED_CUSTOMER_NAME)
+            .customerCity(UPDATED_CUSTOMER_CITY)
+            .phoneNumber(UPDATED_PHONE_NUMBER)
+            .type(UPDATED_TYPE)
+            .address(UPDATED_ADDRESS);
 
         restSvcClientMockMvc
             .perform(
@@ -374,8 +446,10 @@ class SvcClientResourceIT {
         List<SvcClient> svcClientList = svcClientRepository.findAll();
         assertThat(svcClientList).hasSize(databaseSizeBeforeUpdate);
         SvcClient testSvcClient = svcClientList.get(svcClientList.size() - 1);
-        assertThat(testSvcClient.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testSvcClient.getCustomerName()).isEqualTo(UPDATED_CUSTOMER_NAME);
+        assertThat(testSvcClient.getCustomerCity()).isEqualTo(UPDATED_CUSTOMER_CITY);
         assertThat(testSvcClient.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
+        assertThat(testSvcClient.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testSvcClient.getAddress()).isEqualTo(UPDATED_ADDRESS);
     }
 

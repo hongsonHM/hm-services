@@ -32,14 +32,11 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class OrgUserResourceIT {
 
-    private static final String DEFAULT_EMAIL = "AAAAAAAAAA";
-    private static final String UPDATED_EMAIL = "BBBBBBBBBB";
+    private static final String DEFAULT_DEVICE_ID = "AAAAAAAAAA";
+    private static final String UPDATED_DEVICE_ID = "BBBBBBBBBB";
 
-    private static final String DEFAULT_PASSWORD = "AAAAAAAAAA";
-    private static final String UPDATED_PASSWORD = "BBBBBBBBBB";
-
-    private static final String DEFAULT_PHONE_NUMBER = "AAAAAAAAAA";
-    private static final String UPDATED_PHONE_NUMBER = "BBBBBBBBBB";
+    private static final String DEFAULT_PHONE = "AAAAAAAAAA";
+    private static final String UPDATED_PHONE = "BBBBBBBBBB";
 
     private static final Role DEFAULT_ROLE = Role.SERVICE_MANAGER;
     private static final Role UPDATED_ROLE = Role.SUPERVISOR;
@@ -71,11 +68,7 @@ class OrgUserResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static OrgUser createEntity(EntityManager em) {
-        OrgUser orgUser = new OrgUser()
-            .email(DEFAULT_EMAIL)
-            .password(DEFAULT_PASSWORD)
-            .phoneNumber(DEFAULT_PHONE_NUMBER)
-            .role(DEFAULT_ROLE);
+        OrgUser orgUser = new OrgUser().deviceId(DEFAULT_DEVICE_ID).phone(DEFAULT_PHONE).role(DEFAULT_ROLE);
         return orgUser;
     }
 
@@ -86,11 +79,7 @@ class OrgUserResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static OrgUser createUpdatedEntity(EntityManager em) {
-        OrgUser orgUser = new OrgUser()
-            .email(UPDATED_EMAIL)
-            .password(UPDATED_PASSWORD)
-            .phoneNumber(UPDATED_PHONE_NUMBER)
-            .role(UPDATED_ROLE);
+        OrgUser orgUser = new OrgUser().deviceId(UPDATED_DEVICE_ID).phone(UPDATED_PHONE).role(UPDATED_ROLE);
         return orgUser;
     }
 
@@ -113,9 +102,8 @@ class OrgUserResourceIT {
         List<OrgUser> orgUserList = orgUserRepository.findAll();
         assertThat(orgUserList).hasSize(databaseSizeBeforeCreate + 1);
         OrgUser testOrgUser = orgUserList.get(orgUserList.size() - 1);
-        assertThat(testOrgUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
-        assertThat(testOrgUser.getPassword()).isEqualTo(DEFAULT_PASSWORD);
-        assertThat(testOrgUser.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
+        assertThat(testOrgUser.getDeviceId()).isEqualTo(DEFAULT_DEVICE_ID);
+        assertThat(testOrgUser.getPhone()).isEqualTo(DEFAULT_PHONE);
         assertThat(testOrgUser.getRole()).isEqualTo(DEFAULT_ROLE);
     }
 
@@ -140,46 +128,10 @@ class OrgUserResourceIT {
 
     @Test
     @Transactional
-    void checkEmailIsRequired() throws Exception {
+    void checkPhoneIsRequired() throws Exception {
         int databaseSizeBeforeTest = orgUserRepository.findAll().size();
         // set the field null
-        orgUser.setEmail(null);
-
-        // Create the OrgUser, which fails.
-        OrgUserDTO orgUserDTO = orgUserMapper.toDto(orgUser);
-
-        restOrgUserMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(orgUserDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<OrgUser> orgUserList = orgUserRepository.findAll();
-        assertThat(orgUserList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkPasswordIsRequired() throws Exception {
-        int databaseSizeBeforeTest = orgUserRepository.findAll().size();
-        // set the field null
-        orgUser.setPassword(null);
-
-        // Create the OrgUser, which fails.
-        OrgUserDTO orgUserDTO = orgUserMapper.toDto(orgUser);
-
-        restOrgUserMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(orgUserDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<OrgUser> orgUserList = orgUserRepository.findAll();
-        assertThat(orgUserList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkPhoneNumberIsRequired() throws Exception {
-        int databaseSizeBeforeTest = orgUserRepository.findAll().size();
-        // set the field null
-        orgUser.setPhoneNumber(null);
+        orgUser.setPhone(null);
 
         // Create the OrgUser, which fails.
         OrgUserDTO orgUserDTO = orgUserMapper.toDto(orgUser);
@@ -222,9 +174,8 @@ class OrgUserResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(orgUser.getId().intValue())))
-            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
-            .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD)))
-            .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
+            .andExpect(jsonPath("$.[*].deviceId").value(hasItem(DEFAULT_DEVICE_ID)))
+            .andExpect(jsonPath("$.[*].phone").value(hasItem(DEFAULT_PHONE)))
             .andExpect(jsonPath("$.[*].role").value(hasItem(DEFAULT_ROLE.toString())));
     }
 
@@ -240,9 +191,8 @@ class OrgUserResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(orgUser.getId().intValue()))
-            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
-            .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD))
-            .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER))
+            .andExpect(jsonPath("$.deviceId").value(DEFAULT_DEVICE_ID))
+            .andExpect(jsonPath("$.phone").value(DEFAULT_PHONE))
             .andExpect(jsonPath("$.role").value(DEFAULT_ROLE.toString()));
     }
 
@@ -265,7 +215,7 @@ class OrgUserResourceIT {
         OrgUser updatedOrgUser = orgUserRepository.findById(orgUser.getId()).get();
         // Disconnect from session so that the updates on updatedOrgUser are not directly saved in db
         em.detach(updatedOrgUser);
-        updatedOrgUser.email(UPDATED_EMAIL).password(UPDATED_PASSWORD).phoneNumber(UPDATED_PHONE_NUMBER).role(UPDATED_ROLE);
+        updatedOrgUser.deviceId(UPDATED_DEVICE_ID).phone(UPDATED_PHONE).role(UPDATED_ROLE);
         OrgUserDTO orgUserDTO = orgUserMapper.toDto(updatedOrgUser);
 
         restOrgUserMockMvc
@@ -280,9 +230,8 @@ class OrgUserResourceIT {
         List<OrgUser> orgUserList = orgUserRepository.findAll();
         assertThat(orgUserList).hasSize(databaseSizeBeforeUpdate);
         OrgUser testOrgUser = orgUserList.get(orgUserList.size() - 1);
-        assertThat(testOrgUser.getEmail()).isEqualTo(UPDATED_EMAIL);
-        assertThat(testOrgUser.getPassword()).isEqualTo(UPDATED_PASSWORD);
-        assertThat(testOrgUser.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
+        assertThat(testOrgUser.getDeviceId()).isEqualTo(UPDATED_DEVICE_ID);
+        assertThat(testOrgUser.getPhone()).isEqualTo(UPDATED_PHONE);
         assertThat(testOrgUser.getRole()).isEqualTo(UPDATED_ROLE);
     }
 
@@ -363,7 +312,7 @@ class OrgUserResourceIT {
         OrgUser partialUpdatedOrgUser = new OrgUser();
         partialUpdatedOrgUser.setId(orgUser.getId());
 
-        partialUpdatedOrgUser.email(UPDATED_EMAIL).password(UPDATED_PASSWORD);
+        partialUpdatedOrgUser.deviceId(UPDATED_DEVICE_ID).phone(UPDATED_PHONE);
 
         restOrgUserMockMvc
             .perform(
@@ -377,9 +326,8 @@ class OrgUserResourceIT {
         List<OrgUser> orgUserList = orgUserRepository.findAll();
         assertThat(orgUserList).hasSize(databaseSizeBeforeUpdate);
         OrgUser testOrgUser = orgUserList.get(orgUserList.size() - 1);
-        assertThat(testOrgUser.getEmail()).isEqualTo(UPDATED_EMAIL);
-        assertThat(testOrgUser.getPassword()).isEqualTo(UPDATED_PASSWORD);
-        assertThat(testOrgUser.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
+        assertThat(testOrgUser.getDeviceId()).isEqualTo(UPDATED_DEVICE_ID);
+        assertThat(testOrgUser.getPhone()).isEqualTo(UPDATED_PHONE);
         assertThat(testOrgUser.getRole()).isEqualTo(DEFAULT_ROLE);
     }
 
@@ -395,7 +343,7 @@ class OrgUserResourceIT {
         OrgUser partialUpdatedOrgUser = new OrgUser();
         partialUpdatedOrgUser.setId(orgUser.getId());
 
-        partialUpdatedOrgUser.email(UPDATED_EMAIL).password(UPDATED_PASSWORD).phoneNumber(UPDATED_PHONE_NUMBER).role(UPDATED_ROLE);
+        partialUpdatedOrgUser.deviceId(UPDATED_DEVICE_ID).phone(UPDATED_PHONE).role(UPDATED_ROLE);
 
         restOrgUserMockMvc
             .perform(
@@ -409,9 +357,8 @@ class OrgUserResourceIT {
         List<OrgUser> orgUserList = orgUserRepository.findAll();
         assertThat(orgUserList).hasSize(databaseSizeBeforeUpdate);
         OrgUser testOrgUser = orgUserList.get(orgUserList.size() - 1);
-        assertThat(testOrgUser.getEmail()).isEqualTo(UPDATED_EMAIL);
-        assertThat(testOrgUser.getPassword()).isEqualTo(UPDATED_PASSWORD);
-        assertThat(testOrgUser.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
+        assertThat(testOrgUser.getDeviceId()).isEqualTo(UPDATED_DEVICE_ID);
+        assertThat(testOrgUser.getPhone()).isEqualTo(UPDATED_PHONE);
         assertThat(testOrgUser.getRole()).isEqualTo(UPDATED_ROLE);
     }
 

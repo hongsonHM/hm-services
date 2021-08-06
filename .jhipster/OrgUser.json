@@ -2,17 +2,11 @@
   "name": "OrgUser",
   "fields": [
     {
-      "fieldName": "email",
-      "fieldType": "String",
-      "fieldValidateRules": ["required", "unique"]
+      "fieldName": "deviceId",
+      "fieldType": "String"
     },
     {
-      "fieldName": "password",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "phoneNumber",
+      "fieldName": "phone",
       "fieldType": "String",
       "fieldValidateRules": ["required", "minlength", "maxlength"],
       "fieldValidateRulesMinlength": "10",
@@ -32,6 +26,12 @@
       "otherEntityRelationshipName": "orgUser",
       "relationshipName": "internalUser",
       "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "orgNotification",
+      "otherEntityRelationshipName": "orgUser",
+      "relationshipName": "notifications"
     },
     {
       "relationshipType": "many-to-one",

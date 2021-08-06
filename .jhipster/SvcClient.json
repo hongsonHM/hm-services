@@ -2,11 +2,16 @@
   "name": "SvcClient",
   "fields": [
     {
-      "fieldName": "name",
+      "fieldName": "customerName",
       "fieldType": "String",
       "fieldValidateRules": ["required", "minlength", "maxlength"],
       "fieldValidateRulesMinlength": "6",
       "fieldValidateRulesMaxlength": "40"
+    },
+    {
+      "fieldName": "customerCity",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "phoneNumber",
@@ -14,6 +19,12 @@
       "fieldValidateRules": ["required", "minlength", "maxlength"],
       "fieldValidateRulesMinlength": "10",
       "fieldValidateRulesMaxlength": "11"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required"],
+      "fieldValidateRulesMaxlength": "300"
     },
     {
       "fieldName": "address",

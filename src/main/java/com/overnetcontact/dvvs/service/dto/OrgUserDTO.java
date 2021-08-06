@@ -14,15 +14,11 @@ public class OrgUserDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
-    private String email;
-
-    @NotNull
-    private String password;
+    private String deviceId;
 
     @NotNull
     @Size(min = 10, max = 11)
-    private String phoneNumber;
+    private String phone;
 
     @NotNull
     private Role role;
@@ -39,28 +35,20 @@ public class OrgUserDTO implements Serializable {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Role getRole() {
@@ -113,9 +101,8 @@ public class OrgUserDTO implements Serializable {
     public String toString() {
         return "OrgUserDTO{" +
             "id=" + getId() +
-            ", email='" + getEmail() + "'" +
-            ", password='" + getPassword() + "'" +
-            ", phoneNumber='" + getPhoneNumber() + "'" +
+            ", deviceId='" + getDeviceId() + "'" +
+            ", phone='" + getPhone() + "'" +
             ", role='" + getRole() + "'" +
             ", internalUser=" + getInternalUser() +
             ", group=" + getGroup() +

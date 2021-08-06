@@ -25,12 +25,14 @@
     <include file="config/liquibase/changelog/20210731065410_added_entity_SvcClient.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210731065411_added_entity_SvcUnit.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210731065412_added_entity_SvcGroup.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210806214348_added_entity_OrgNotification.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20210731065403_added_entity_constraints_OrgUser.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210731065405_added_entity_constraints_SvcContract.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210731065406_added_entity_constraints_SvcTarget.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210731065408_added_entity_constraints_SvcSchedulePlan.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210731065411_added_entity_constraints_SvcUnit.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210806214348_added_entity_constraints_OrgNotification.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

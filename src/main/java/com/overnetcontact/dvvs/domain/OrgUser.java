@@ -1,7 +1,10 @@
 package com.overnetcontact.dvvs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.overnetcontact.dvvs.domain.enumeration.Role;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -22,18 +25,13 @@ public class OrgUser implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
-    @NotNull
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "device_id")
+    private String deviceId;
 
     @NotNull
     @Size(min = 10, max = 11)
-    @Column(name = "phone_number", length = 11, nullable = false)
-    private String phoneNumber;
+    @Column(name = "phone", length = 11, nullable = false)
+    private String phone;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -43,6 +41,11 @@ public class OrgUser implements Serializable {
     @OneToOne
     @JoinColumn(unique = true)
     private User internalUser;
+
+    @OneToMany(mappedBy = "orgUser")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "orgUser" }, allowSetters = true)
+    private Set<OrgNotification> notifications = new HashSet<>();
 
     @ManyToOne
     private OrgGroup group;
@@ -61,43 +64,30 @@ public class OrgUser implements Serializable {
         return this;
     }
 
-    public String getEmail() {
-        return this.email;
+    public String getDeviceId() {
+        return this.deviceId;
     }
 
-    public OrgUser email(String email) {
-        this.email = email;
+    public OrgUser deviceId(String deviceId) {
+        this.deviceId = deviceId;
         return this;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public String getPassword() {
-        return this.password;
+    public String getPhone() {
+        return this.phone;
     }
 
-    public OrgUser password(String password) {
-        this.password = password;
+    public OrgUser phone(String phone) {
+        this.phone = phone;
         return this;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
-
-    public OrgUser phoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-        return this;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Role getRole() {
@@ -124,6 +114,37 @@ public class OrgUser implements Serializable {
 
     public void setInternalUser(User user) {
         this.internalUser = user;
+    }
+
+    public Set<OrgNotification> getNotifications() {
+        return this.notifications;
+    }
+
+    public OrgUser notifications(Set<OrgNotification> orgNotifications) {
+        this.setNotifications(orgNotifications);
+        return this;
+    }
+
+    public OrgUser addNotifications(OrgNotification orgNotification) {
+        this.notifications.add(orgNotification);
+        orgNotification.setOrgUser(this);
+        return this;
+    }
+
+    public OrgUser removeNotifications(OrgNotification orgNotification) {
+        this.notifications.remove(orgNotification);
+        orgNotification.setOrgUser(null);
+        return this;
+    }
+
+    public void setNotifications(Set<OrgNotification> orgNotifications) {
+        if (this.notifications != null) {
+            this.notifications.forEach(i -> i.setOrgUser(null));
+        }
+        if (orgNotifications != null) {
+            orgNotifications.forEach(i -> i.setOrgUser(this));
+        }
+        this.notifications = orgNotifications;
     }
 
     public OrgGroup getGroup() {
@@ -163,9 +184,8 @@ public class OrgUser implements Serializable {
     public String toString() {
         return "OrgUser{" +
             "id=" + getId() +
-            ", email='" + getEmail() + "'" +
-            ", password='" + getPassword() + "'" +
-            ", phoneNumber='" + getPhoneNumber() + "'" +
+            ", deviceId='" + getDeviceId() + "'" +
+            ", phone='" + getPhone() + "'" +
             ", role='" + getRole() + "'" +
             "}";
     }
