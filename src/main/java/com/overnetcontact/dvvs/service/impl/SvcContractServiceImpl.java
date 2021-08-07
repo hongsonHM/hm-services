@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
+import org.apache.commons.text.WordUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -179,13 +180,13 @@ public class SvcContractServiceImpl implements SvcContractService {
                             break;
                         case 4:
                             if (currentCell.getCellType().equals(CellType.STRING)) {
-                                String provinde = currentCell.getStringCellValue();
+                                String provinde = WordUtils.capitalizeFully(currentCell.getStringCellValue(), ' ');
                                 svcClient.setCustomerCity(provinde);
                             }
                             break;
                         case 5:
                             if (currentCell.getCellType().equals(CellType.STRING)) {
-                                String address = CaseUtils.toCamelCase(currentCell.getStringCellValue(), false, ' ');
+                                String address = currentCell.getStringCellValue();
                                 svcClient.setAddress(address);
                                 svcGroup.setAddress(address);
                             }
