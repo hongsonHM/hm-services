@@ -7,6 +7,7 @@ import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -73,7 +74,7 @@ public class SvcContractResource {
     /**
      * {@code POST  /svc-contracts} : Create a new svcContract.
      *
-     * @param svcContractDTO the svcContractDTO to create.
+     * @param file the svcContract In excel to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new svcContractDTO, or with status {@code 400 (Bad Request)} if the svcContract has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
@@ -84,7 +85,7 @@ public class SvcContractResource {
             throw new BadRequestAlertException("Invalid excel type", ENTITY_NAME, "File format not support!");
         }
 
-        List<SvcContractDTO> result = svcContractService.saveByExcel(file);
+        Collection<SvcContractDTO> result = svcContractService.saveByExcel(file);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createAlert(applicationName, "Excel imported!", String.valueOf(result.size())))
