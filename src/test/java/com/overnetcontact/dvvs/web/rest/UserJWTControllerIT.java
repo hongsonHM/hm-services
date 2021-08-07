@@ -54,8 +54,8 @@ class UserJWTControllerIT {
         mockMvc
             .perform(post("/api/authenticate").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(login)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id_token").isString())
-            .andExpect(jsonPath("$.id_token").isNotEmpty())
+            .andExpect(jsonPath("$.token").isString())
+            .andExpect(jsonPath("$.token").isNotEmpty())
             .andExpect(header().string("Authorization", not(nullValue())))
             .andExpect(header().string("Authorization", not(is(emptyString()))));
     }
@@ -78,8 +78,8 @@ class UserJWTControllerIT {
         mockMvc
             .perform(post("/api/authenticate").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(login)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id_token").isString())
-            .andExpect(jsonPath("$.id_token").isNotEmpty())
+            .andExpect(jsonPath("$.token").isString())
+            .andExpect(jsonPath("$.token").isNotEmpty())
             .andExpect(header().string("Authorization", not(nullValue())))
             .andExpect(header().string("Authorization", not(is(emptyString()))));
     }
@@ -92,7 +92,7 @@ class UserJWTControllerIT {
         mockMvc
             .perform(post("/api/authenticate").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(login)))
             .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("$.id_token").doesNotExist())
+            .andExpect(jsonPath("$.token").doesNotExist())
             .andExpect(header().doesNotExist("Authorization"));
     }
 }
