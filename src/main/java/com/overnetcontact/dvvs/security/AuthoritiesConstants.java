@@ -5,11 +5,13 @@ package com.overnetcontact.dvvs.security;
  */
 public final class AuthoritiesConstants {
 
-    public static final String ADMIN = "ROLE_ADMIN";
+    public static final String BUSINESS_MANAGER = "BUSINESS_MANAGER";
 
-    public static final String USER = "ROLE_USER";
+    public static final String BUSINESS_STAFF = "BUSINESS_STAFF";
 
-    public static final String ANONYMOUS = "ROLE_ANONYMOUS";
+    public static final String HUMANRESOURCE_STAFF = "HUMANRESOURCE_STAFF";
+    public static final String SERVICE_MANAGER = "SERVICE_MANAGER";
+    public static final String SUPPLY_STAFF = "SUPPLY_STAFF";
 
     private AuthoritiesConstants() {}
 }

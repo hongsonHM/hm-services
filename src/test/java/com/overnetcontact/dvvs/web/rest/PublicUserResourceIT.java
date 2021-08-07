@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link UserResource} REST controller.
  */
 @AutoConfigureMockMvc
-@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
+@WithMockUser(authorities = AuthoritiesConstants.BUSINESS_MANAGER)
 @IntegrationTest
 class PublicUserResourceIT {
 
@@ -80,7 +80,18 @@ class PublicUserResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$").value(hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN)));
+            .andExpect(
+                jsonPath("$")
+                    .value(
+                        hasItems(
+                            AuthoritiesConstants.BUSINESS_MANAGER,
+                            AuthoritiesConstants.BUSINESS_STAFF,
+                            AuthoritiesConstants.HUMANRESOURCE_STAFF,
+                            AuthoritiesConstants.SERVICE_MANAGER,
+                            AuthoritiesConstants.SUPPLY_STAFF
+                        )
+                    )
+            );
     }
 
     @Test
