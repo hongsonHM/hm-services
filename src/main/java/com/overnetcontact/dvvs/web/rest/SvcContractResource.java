@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,8 +79,8 @@ public class SvcContractResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new svcContractDTO, or with status {@code 400 (Bad Request)} if the svcContract has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/svc-contracts/excel")
-    public ResponseEntity<Void> importSvcContracts(@RequestParam("file") MultipartFile file) throws URISyntaxException {
+    @PostMapping(value = "/svc-contracts/excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> importSvcContracts(@RequestPart("file") MultipartFile file) throws URISyntaxException {
         log.debug("REST request to save SvcContract by CSV");
         if (!ExcelHelper.hasExcelFormat(file)) {
             throw new BadRequestAlertException("Invalid excel type", ENTITY_NAME, "File format not support!");

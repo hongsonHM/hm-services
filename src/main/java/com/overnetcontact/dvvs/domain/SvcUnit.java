@@ -22,13 +22,12 @@ public class SvcUnit implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(max = 40)
-    @Column(name = "name", length = 40, nullable = false)
+    @Size(max = 100)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @NotNull
     @Size(max = 300)
-    @Column(name = "description", length = 300, nullable = false)
+    @Column(name = "description", length = 300, nullable = true)
     private String description;
 
     @ManyToOne

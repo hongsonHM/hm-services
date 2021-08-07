@@ -55,12 +55,10 @@ public class SvcContract implements Serializable {
     @Column(name = "duration_month", nullable = false)
     private Integer durationMonth;
 
-    @NotNull
-    @Column(name = "value", precision = 21, scale = 2, nullable = false)
+    @Column(name = "value", precision = 21, scale = 2, nullable = true)
     private BigDecimal value;
 
-    @NotNull
-    @Column(name = "contract_value", precision = 21, scale = 2, nullable = false)
+    @Column(name = "contract_value", precision = 21, scale = 2, nullable = true)
     private BigDecimal contractValue;
 
     @Column(name = "human_resources")

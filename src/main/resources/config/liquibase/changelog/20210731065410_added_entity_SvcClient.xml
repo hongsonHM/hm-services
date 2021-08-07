@@ -14,7 +14,7 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="customer_name" type="varchar(40)">
+            <column name="customer_name" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
             <column name="customer_city" type="varchar(255)">

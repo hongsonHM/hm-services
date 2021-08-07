@@ -4,7 +4,11 @@ import com.overnetcontact.dvvs.domain.SvcClient;
 import com.overnetcontact.dvvs.domain.SvcContract;
 import com.overnetcontact.dvvs.domain.SvcGroup;
 import com.overnetcontact.dvvs.domain.SvcUnit;
+import com.overnetcontact.dvvs.domain.enumeration.SvcContractStatus;
+import com.overnetcontact.dvvs.repository.SvcClientRepository;
 import com.overnetcontact.dvvs.repository.SvcContractRepository;
+import com.overnetcontact.dvvs.repository.SvcGroupRepository;
+import com.overnetcontact.dvvs.repository.SvcUnitRepository;
 import com.overnetcontact.dvvs.service.SvcContractService;
 import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
 import com.overnetcontact.dvvs.service.mapper.SvcContractMapper;
@@ -17,7 +21,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.CaseUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -35,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SvcContractServiceImpl implements SvcContractService {
 
     private final Logger log = LoggerFactory.getLogger(SvcContractServiceImpl.class);
@@ -43,10 +52,11 @@ public class SvcContractServiceImpl implements SvcContractService {
 
     private final SvcContractMapper svcContractMapper;
 
-    public SvcContractServiceImpl(SvcContractRepository svcContractRepository, SvcContractMapper svcContractMapper) {
-        this.svcContractRepository = svcContractRepository;
-        this.svcContractMapper = svcContractMapper;
-    }
+    private final SvcUnitRepository svcUnitRepository;
+
+    private final SvcGroupRepository svcGroupRepository;
+
+    private final SvcClientRepository svcClientRepository;
 
     @Override
     public SvcContractDTO save(SvcContractDTO svcContractDTO) {
@@ -114,108 +124,227 @@ public class SvcContractServiceImpl implements SvcContractService {
                 if (rowNumber == 0) {
                     rowNumber++;
                     continue;
+                } else {
+                    rowNumber++;
                 }
 
                 Iterator<Cell> cellsInRow = currentRow.iterator();
+                if (!cellsInRow.hasNext()) {
+                    break;
+                }
 
                 SvcGroup svcGroup = new SvcGroup();
                 SvcUnit svcUnit = new SvcUnit();
                 SvcClient svcClient = new SvcClient();
                 SvcContract svcContract = new SvcContract();
+                svcContract.setStatus(SvcContractStatus.PENDING);
 
                 int cellIdx = 0;
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
+
+                    if (
+                        cellIdx == 0 &&
+                        currentCell.getCellType().equals(CellType.STRING) &&
+                        StringUtils.isBlank(currentCell.getStringCellValue())
+                    ) {
+                        break;
+                    }
                     switch (cellIdx) {
                         case 0:
-                            Double stt = currentCell.getNumericCellValue();
-                            svcContract.setOrderNumber(stt.longValue());
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double stt = currentCell.getNumericCellValue();
+                                svcContract.setOrderNumber(stt.longValue());
+                            }
                             break;
                         case 1:
-                            String documentId = currentCell.getStringCellValue();
-                            svcContract.setDocumentId(documentId);
+                            if (currentCell.getCellType().equals(CellType.STRING)) {
+                                String documentId = currentCell.getStringCellValue();
+                                svcContract.setDocumentId(documentId);
+                            }
                             break;
                         case 2:
-                            String appendicesNumber = currentCell.getStringCellValue();
-                            svcContract.setAppendicesNumber(appendicesNumber);
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double appendicesNumber = currentCell.getNumericCellValue();
+                                svcContract.setAppendicesNumber(appendicesNumber.toString());
+                            }
                             break;
                         case 3:
-                            String customerName = currentCell.getStringCellValue();
-                            svcClient.setCustomerName(customerName);
-                            svcGroup.name(customerName);
-                            svcUnit.setName(customerName);
+                            if (currentCell.getCellType().equals(CellType.STRING)) {
+                                String customerName = currentCell.getStringCellValue();
+                                svcClient.setCustomerName(customerName);
+                                svcGroup.setName(customerName);
+                                svcUnit.setName(customerName);
+                            }
                             break;
                         case 4:
-                            String provinde = currentCell.getStringCellValue();
-                            svcClient.setCustomerCity(provinde);
+                            if (currentCell.getCellType().equals(CellType.STRING)) {
+                                String provinde = currentCell.getStringCellValue();
+                                svcClient.setCustomerCity(provinde);
+                            }
                             break;
                         case 5:
-                            String address = currentCell.getStringCellValue();
-                            svcClient.setAddress(address);
-                            svcGroup.setAddress(address);
+                            if (currentCell.getCellType().equals(CellType.STRING)) {
+                                String address = CaseUtils.toCamelCase(currentCell.getStringCellValue(), false, ' ');
+                                svcClient.setAddress(address);
+                                svcGroup.setAddress(address);
+                            }
                             break;
                         case 6:
-                            String type = currentCell.getStringCellValue();
-                            svcClient.setType(type);
-                            svcGroup.setDescription(type);
+                            if (currentCell.getCellType().equals(CellType.STRING)) {
+                                String type = currentCell.getStringCellValue();
+                                svcClient.setType(type);
+                                svcGroup.setDescription(type);
+                            }
                             break;
                         case 7:
-                            Date startDate = currentCell.getDateCellValue();
-                            svcContract.setEffectiveTimeFrom(startDate.toInstant());
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Date startDate = currentCell.getDateCellValue();
+                                svcContract.setEffectiveTimeFrom(startDate.toInstant());
+                            }
                             break;
                         case 8:
-                            Date endDate = currentCell.getDateCellValue();
-                            svcContract.setEffectiveTimeTo(endDate.toInstant());
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Date endDate = currentCell.getDateCellValue();
+                                svcContract.setEffectiveTimeTo(endDate.toInstant());
+                            }
                             break;
                         case 9:
-                            Double duration = currentCell.getNumericCellValue();
-                            svcContract.setDurationMonth(duration.intValue());
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double duration = currentCell.getNumericCellValue();
+                                svcContract.setDurationMonth(duration.intValue());
+                            }
                             break;
                         case 10:
-                            Double realValue = currentCell.getNumericCellValue();
-                            if (realValue != null) svcContract.setValue(BigDecimal.valueOf(realValue));
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double realValue = currentCell.getNumericCellValue();
+                                if (realValue != null) svcContract.setValue(BigDecimal.valueOf(realValue));
+                            }
                             break;
                         case 11:
-                            Double value = currentCell.getNumericCellValue();
-                            svcContract.setContractValue(BigDecimal.valueOf(value));
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double value = currentCell.getNumericCellValue();
+                                svcContract.setContractValue(BigDecimal.valueOf(value));
+                            }
                             break;
                         case 12:
-                            Double humanResource = currentCell.getNumericCellValue();
-                            if (humanResource != null) svcContract.setHumanResources(humanResource.intValue());
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double humanResource = currentCell.getNumericCellValue();
+                                if (humanResource != null) svcContract.setHumanResources(humanResource.intValue());
+                            }
                             break;
                         case 13:
-                            Double humanResourceWeekend = currentCell.getNumericCellValue();
-                            if (humanResourceWeekend != null) svcContract.setHumanResourcesWeekend(humanResourceWeekend.intValue());
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double humanResourceWeekend = currentCell.getNumericCellValue();
+                                if (humanResourceWeekend != null) svcContract.setHumanResourcesWeekend(humanResourceWeekend.intValue());
+                            }
                             break;
                         case 14:
-                            Double subUnit = currentCell.getNumericCellValue();
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double subUnit = currentCell.getNumericCellValue();
+                            }
                             break;
                         case 15:
-                            String fileId = currentCell.getStringCellValue();
-                            svcContract.setFileId(fileId);
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double fileId = currentCell.getNumericCellValue();
+                                svcContract.setFileId(fileId.toString());
+                            }
                             break;
                         case 16:
-                            String content = currentCell.getStringCellValue();
-                            svcContract.setContent(content);
+                            if (currentCell.getCellType().equals(CellType.STRING)) {
+                                String content = currentCell.getStringCellValue();
+                                svcContract.setContent(content);
+                            }
                             break;
                         case 17:
-                            Double targetCount = currentCell.getNumericCellValue();
-                            svcContract.subjectCount(targetCount.longValue());
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double targetCount = currentCell.getNumericCellValue();
+                                svcContract.subjectCount(targetCount.longValue());
+                            }
                             break;
                         case 18:
-                            Double pricePerHuman = currentCell.getNumericCellValue();
-                            svcContract.setValuePerPerson(BigDecimal.valueOf(pricePerHuman));
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double pricePerHuman = currentCell.getNumericCellValue();
+                                svcContract.setValuePerPerson(BigDecimal.valueOf(pricePerHuman));
+                            }
                             break;
                         case 19:
-                            Double year = currentCell.getNumericCellValue();
-                            svcContract.setYear(year.intValue());
+                            if (currentCell.getCellType().equals(CellType.NUMERIC)) {
+                                Double year = currentCell.getNumericCellValue();
+                                svcContract.setYear(year.intValue());
+                            }
                             break;
                         default:
                             break;
                     }
                     cellIdx++;
                 }
-                groups.put(svcGroup.getName().toLowerCase(), svcGroup);
+                SvcGroup svcGroupDB;
+                if (groups.containsKey(svcGroup.getName().toLowerCase())) {
+                    svcGroupDB = groups.get(svcGroup.getName().toLowerCase());
+                } else {
+                    svcGroupDB = svcGroupRepository.findOneByNameIgnoreCase(svcGroup.getName().toLowerCase()).orElse(svcGroup);
+                    svcGroupDB.name(svcGroup.getName()).address(svcGroup.getAddress()).description(svcGroup.getDescription());
+                    svcGroupRepository.saveAndFlush(svcGroupDB);
+                    groups.put(svcGroup.getName().toLowerCase(), svcGroupDB);
+                }
+
+                SvcUnit svcUnitDB;
+                if (units.containsKey(svcUnit.getName().toLowerCase())) {
+                    svcUnitDB = units.get(svcUnit.getName().toLowerCase());
+                } else {
+                    svcUnitDB = svcUnitRepository.findOneByNameIgnoreCase(svcUnit.getName().toLowerCase()).orElse(svcUnit);
+                    svcUnitDB.name(svcUnit.getName()).description(svcUnit.getDescription()).group(svcGroupDB);
+                    svcUnitRepository.saveAndFlush(svcUnitDB);
+                    units.put(svcUnit.getName().toLowerCase(), svcUnitDB);
+                }
+
+                SvcClient svcClientDB;
+                if (clients.containsKey(svcClient.getCustomerName().toLowerCase() + svcClient.getAddress().toLowerCase())) {
+                    svcClientDB = clients.get(svcClient.getCustomerName().toLowerCase() + svcClient.getAddress().toLowerCase());
+                } else {
+                    svcClientDB =
+                        svcClientRepository
+                            .findOneByCustomerNameIgnoreCaseAndAddressIgnoreCase(
+                                svcClient.getCustomerName().toLowerCase(),
+                                svcClient.getAddress().toLowerCase()
+                            )
+                            .orElse(svcClient);
+                    svcClientDB
+                        .customerName(svcClient.getCustomerName())
+                        .customerCity(svcClient.getCustomerCity())
+                        .address(svcClient.getAddress())
+                        .phoneNumber(svcClient.getPhoneNumber() == null ? "-----------" : svcClient.getPhoneNumber())
+                        .type(svcClient.getType());
+                    svcClientRepository.saveAndFlush(svcClientDB);
+                    clients.put(svcClient.getCustomerName().toLowerCase() + svcClient.getAddress().toLowerCase(), svcClientDB);
+                }
+
+                SvcContract svcContractDB;
+                if (contracts.containsKey(svcContract.getDocumentId().toLowerCase())) {
+                    svcContractDB = contracts.get(svcContract.getDocumentId().toLowerCase());
+                } else {
+                    svcContractDB =
+                        svcContractRepository.findOneByDocumentIdIgnoreCase(svcContract.getDocumentId().toLowerCase()).orElse(svcContract);
+                    svcContractDB
+                        .appendicesNumber(svcContract.getAppendicesNumber())
+                        .content(svcContract.getContent())
+                        .contractValue(svcContract.getContractValue())
+                        .documentId(svcContract.getDocumentId())
+                        .durationMonth(svcContract.getDurationMonth())
+                        .effectiveTimeFrom(svcContract.getEffectiveTimeFrom())
+                        .effectiveTimeTo(svcContract.getEffectiveTimeTo())
+                        .fileId(svcContract.getFileId())
+                        .orderNumber(svcContract.getOrderNumber())
+                        .humanResources(svcContract.getHumanResources())
+                        .humanResourcesWeekend(svcContract.getHumanResourcesWeekend())
+                        .year(svcContract.getYear())
+                        .unit(svcContract.getUnit())
+                        .client(svcClientDB)
+                        .unit(svcUnitDB);
+                    svcContractRepository.save(svcContractDB);
+                    contracts.put(svcContract.getDocumentId().toLowerCase(), svcContract);
+                }
             }
 
             workbook.close();
