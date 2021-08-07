@@ -57,7 +57,7 @@ class UserJWTControllerIT {
         OrgUser orgUser = new OrgUser();
         orgUser.setDeviceId("121123");
         orgUser.setInternalUser(user);
-        orgUser.setPhone("12123");
+        orgUser.setPhone("12123123121");
         orgUser.setRole(Role.SALE);
 
         orgUserRepository.saveAndFlush(orgUser);
@@ -88,7 +88,7 @@ class UserJWTControllerIT {
         OrgUser orgUser = new OrgUser();
         orgUser.setDeviceId("121123");
         orgUser.setInternalUser(user);
-        orgUser.setPhone("12123");
+        orgUser.setPhone("12123123121");
         orgUser.setRole(Role.SALE);
 
         orgUserRepository.saveAndFlush(orgUser);
