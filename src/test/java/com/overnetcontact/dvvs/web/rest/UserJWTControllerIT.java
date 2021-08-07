@@ -10,7 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.overnetcontact.dvvs.IntegrationTest;
+import com.overnetcontact.dvvs.domain.OrgUser;
 import com.overnetcontact.dvvs.domain.User;
+import com.overnetcontact.dvvs.domain.enumeration.Role;
+import com.overnetcontact.dvvs.repository.OrgUserRepository;
 import com.overnetcontact.dvvs.repository.UserRepository;
 import com.overnetcontact.dvvs.web.rest.vm.LoginVM;
 import org.junit.jupiter.api.Test;
@@ -32,6 +35,9 @@ class UserJWTControllerIT {
     private UserRepository userRepository;
 
     @Autowired
+    private OrgUserRepository orgUserRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -47,6 +53,14 @@ class UserJWTControllerIT {
         user.setPassword(passwordEncoder.encode("test"));
 
         userRepository.saveAndFlush(user);
+
+        OrgUser orgUser = new OrgUser();
+        orgUser.setDeviceId("121123");
+        orgUser.setInternalUser(user);
+        orgUser.setPhone("12123");
+        orgUser.setRole(Role.SALE);
+
+        orgUserRepository.saveAndFlush(orgUser);
 
         LoginVM login = new LoginVM();
         login.setUsername("user-jwt-controller");
@@ -70,6 +84,14 @@ class UserJWTControllerIT {
         user.setPassword(passwordEncoder.encode("test"));
 
         userRepository.saveAndFlush(user);
+
+        OrgUser orgUser = new OrgUser();
+        orgUser.setDeviceId("121123");
+        orgUser.setInternalUser(user);
+        orgUser.setPhone("12123");
+        orgUser.setRole(Role.SALE);
+
+        orgUserRepository.saveAndFlush(orgUser);
 
         LoginVM login = new LoginVM();
         login.setUsername("user-jwt-controller-remember-me");
