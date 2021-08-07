@@ -1,9 +1,12 @@
 package com.overnetcontact.dvvs.service;
 
 import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Service Interface for managing {@link com.overnetcontact.dvvs.domain.SvcContract}.
@@ -47,4 +50,6 @@ public interface SvcContractService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Collection<SvcContractDTO> saveByExcel(MultipartFile file);
 }

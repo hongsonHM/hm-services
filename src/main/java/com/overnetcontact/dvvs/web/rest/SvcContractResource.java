@@ -1,6 +1,7 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.SvcContractRepository;
+import com.overnetcontact.dvvs.service.ExcelHelper;
 import com.overnetcontact.dvvs.service.SvcContractService;
 import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -66,6 +68,27 @@ public class SvcContractResource {
             .created(new URI("/api/svc-contracts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code POST  /svc-contracts} : Create a new svcContract.
+     *
+     * @param svcContractDTO the svcContractDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new svcContractDTO, or with status {@code 400 (Bad Request)} if the svcContract has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/svc-contracts/excel")
+    public ResponseEntity<Void> importSvcContracts(@RequestParam("file") MultipartFile file) throws URISyntaxException {
+        log.debug("REST request to save SvcContract by CSV");
+        if (!ExcelHelper.hasExcelFormat(file)) {
+            throw new BadRequestAlertException("Invalid excel type", ENTITY_NAME, "File format not support!");
+        }
+
+        List<SvcContractDTO> result = svcContractService.saveByExcel(file);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createAlert(applicationName, "Excel imported!", String.valueOf(result.size())))
+            .build();
     }
 
     /**
