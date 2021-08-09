@@ -139,6 +139,7 @@ public class SvcContractServiceImpl implements SvcContractService {
                 SvcClient svcClient = new SvcClient();
                 SvcContract svcContract = new SvcContract();
                 svcContract.setValue(BigDecimal.ZERO);
+                svcContract.setContractValue(BigDecimal.ZERO);
                 svcContract.setValuePerPerson(BigDecimal.ZERO);
                 svcContract.setStatus(SvcContractStatus.PENDING);
 
