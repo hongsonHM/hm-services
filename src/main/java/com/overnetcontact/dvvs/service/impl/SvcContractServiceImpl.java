@@ -133,9 +133,13 @@ public class SvcContractServiceImpl implements SvcContractService {
                 }
 
                 SvcGroup svcGroup = new SvcGroup();
+                svcGroup.setDescription("");
                 SvcUnit svcUnit = new SvcUnit();
+                svcUnit.setDescription("");
                 SvcClient svcClient = new SvcClient();
                 SvcContract svcContract = new SvcContract();
+                svcContract.setValue(BigDecimal.ZERO);
+                svcContract.setValuePerPerson(BigDecimal.ZERO);
                 svcContract.setStatus(SvcContractStatus.PENDING);
 
                 int cellIdx = 0;
