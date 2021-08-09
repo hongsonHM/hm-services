@@ -1,7 +1,9 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.SvcUnitRepository;
+import com.overnetcontact.dvvs.service.SvcUnitQueryService;
 import com.overnetcontact.dvvs.service.SvcUnitService;
+import com.overnetcontact.dvvs.service.criteria.SvcUnitCriteria;
 import com.overnetcontact.dvvs.service.dto.SvcUnitDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -43,9 +45,12 @@ public class SvcUnitResource {
 
     private final SvcUnitRepository svcUnitRepository;
 
-    public SvcUnitResource(SvcUnitService svcUnitService, SvcUnitRepository svcUnitRepository) {
+    private final SvcUnitQueryService svcUnitQueryService;
+
+    public SvcUnitResource(SvcUnitService svcUnitService, SvcUnitRepository svcUnitRepository, SvcUnitQueryService svcUnitQueryService) {
         this.svcUnitService = svcUnitService;
         this.svcUnitRepository = svcUnitRepository;
+        this.svcUnitQueryService = svcUnitQueryService;
     }
 
     /**
@@ -142,14 +147,27 @@ public class SvcUnitResource {
      * {@code GET  /svc-units} : get all the svcUnits.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of svcUnits in body.
      */
     @GetMapping("/svc-units")
-    public ResponseEntity<List<SvcUnitDTO>> getAllSvcUnits(Pageable pageable) {
-        log.debug("REST request to get a page of SvcUnits");
-        Page<SvcUnitDTO> page = svcUnitService.findAll(pageable);
+    public ResponseEntity<List<SvcUnitDTO>> getAllSvcUnits(SvcUnitCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get SvcUnits by criteria: {}", criteria);
+        Page<SvcUnitDTO> page = svcUnitQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /svc-units/count} : count all the svcUnits.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/svc-units/count")
+    public ResponseEntity<Long> countSvcUnits(SvcUnitCriteria criteria) {
+        log.debug("REST request to count SvcUnits by criteria: {}", criteria);
+        return ResponseEntity.ok().body(svcUnitQueryService.countByCriteria(criteria));
     }
 
     /**

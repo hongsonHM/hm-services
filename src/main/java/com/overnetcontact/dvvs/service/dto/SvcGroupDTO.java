@@ -14,7 +14,7 @@ public class SvcGroupDTO implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(max = 40)
+    @Size(max = 200)
     private String name;
 
     @NotNull

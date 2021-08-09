@@ -37,7 +37,7 @@ public class SvcSchedulePlan implements Serializable {
     private OrgUser defaultSupervisor;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "targets", "unit", "saler", "client" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "targets", "approvedBy", "ownerBy", "unit", "saler", "client" }, allowSetters = true)
     private SvcContract contract;
 
     @ManyToOne

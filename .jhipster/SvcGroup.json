@@ -5,7 +5,7 @@
       "fieldName": "name",
       "fieldType": "String",
       "fieldValidateRules": ["unique", "required", "maxlength"],
-      "fieldValidateRulesMaxlength": "40"
+      "fieldValidateRulesMaxlength": "200"
     },
     {
       "fieldName": "description",
@@ -26,7 +26,7 @@
   "dto": "mapstruct",
   "pagination": "pagination",
   "service": "serviceImpl",
-  "jpaMetamodelFiltering": false,
+  "jpaMetamodelFiltering": true,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,

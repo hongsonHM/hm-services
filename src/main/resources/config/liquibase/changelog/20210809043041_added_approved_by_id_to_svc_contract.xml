@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="vinhnvq" id="1628483463082-1">
+        <addColumn tableName="svc_contract">
+            <column name="approved_by_id" type="bigint" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="vinhnvq" id="1628483463082-13">
+        <addForeignKeyConstraint baseColumnNames="approved_by_id" baseTableName="svc_contract" constraintName="FK2w8sad7ajphxw644e68vke3jj" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="dvvs_user" validate="true" />
+    </changeSet>
+</databaseChangeLog>

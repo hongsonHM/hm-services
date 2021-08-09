@@ -1,6 +1,11 @@
-id;device_id;phone;role;internal_user_id
-1;Towels Peso Public-key;1-586-784-0;SALE;1
-2;Rufiyaa SMS Vanuatu;582-750-911;SERVICE_MANAGER;2
-3;Rufiyaa SMS Vanuatu;582-750-911;SERVICE_MANAGER;3
-4;Rufiyaa SMS Vanuatu;582-750-911;SERVICE_MANAGER;4
-5;Rufiyaa SMS Vanuatu;582-750-911;SERVICE_MANAGER;5
+id;device_id;phone;role
+1;Towels Peso Public-key;1-586-784-0;SALE
+2;Rufiyaa SMS Vanuatu;582-750-911;SERVICE_MANAGER
+3;JBOD azure;223.569.958;SERVICE_MANAGER
+4;West blockchains Fantastic;500.502.117;SUPERVISOR
+5;Garden JSON;427-935-615;SUPERVISOR
+6;web-readiness;1-772-894-5;SUPERVISOR
+7;connecting Engineer Health;865.655.743;SERVICE_MANAGER
+8;Movies;1-624-649-7;SERVICE_MANAGER
+9;SMS non-volatile Angola;386.577.212;SUPERVISOR
+10;Communications artificial;(590) 622-1;SALE

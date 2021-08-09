@@ -1,7 +1,9 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.SvcTargetRepository;
+import com.overnetcontact.dvvs.service.SvcTargetQueryService;
 import com.overnetcontact.dvvs.service.SvcTargetService;
+import com.overnetcontact.dvvs.service.criteria.SvcTargetCriteria;
 import com.overnetcontact.dvvs.service.dto.SvcTargetDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -43,9 +45,16 @@ public class SvcTargetResource {
 
     private final SvcTargetRepository svcTargetRepository;
 
-    public SvcTargetResource(SvcTargetService svcTargetService, SvcTargetRepository svcTargetRepository) {
+    private final SvcTargetQueryService svcTargetQueryService;
+
+    public SvcTargetResource(
+        SvcTargetService svcTargetService,
+        SvcTargetRepository svcTargetRepository,
+        SvcTargetQueryService svcTargetQueryService
+    ) {
         this.svcTargetService = svcTargetService;
         this.svcTargetRepository = svcTargetRepository;
+        this.svcTargetQueryService = svcTargetQueryService;
     }
 
     /**
@@ -142,14 +151,27 @@ public class SvcTargetResource {
      * {@code GET  /svc-targets} : get all the svcTargets.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of svcTargets in body.
      */
     @GetMapping("/svc-targets")
-    public ResponseEntity<List<SvcTargetDTO>> getAllSvcTargets(Pageable pageable) {
-        log.debug("REST request to get a page of SvcTargets");
-        Page<SvcTargetDTO> page = svcTargetService.findAll(pageable);
+    public ResponseEntity<List<SvcTargetDTO>> getAllSvcTargets(SvcTargetCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get SvcTargets by criteria: {}", criteria);
+        Page<SvcTargetDTO> page = svcTargetQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /svc-targets/count} : count all the svcTargets.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/svc-targets/count")
+    public ResponseEntity<Long> countSvcTargets(SvcTargetCriteria criteria) {
+        log.debug("REST request to count SvcTargets by criteria: {}", criteria);
+        return ResponseEntity.ok().body(svcTargetQueryService.countByCriteria(criteria));
     }
 
     /**

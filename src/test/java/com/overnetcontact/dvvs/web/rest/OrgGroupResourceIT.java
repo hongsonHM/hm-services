@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.overnetcontact.dvvs.IntegrationTest;
 import com.overnetcontact.dvvs.domain.OrgGroup;
 import com.overnetcontact.dvvs.repository.OrgGroupRepository;
+import com.overnetcontact.dvvs.service.criteria.OrgGroupCriteria;
 import com.overnetcontact.dvvs.service.dto.OrgGroupDTO;
 import com.overnetcontact.dvvs.service.mapper.OrgGroupMapper;
 import java.util.List;
@@ -145,6 +146,140 @@ class OrgGroupResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(orgGroup.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+    }
+
+    @Test
+    @Transactional
+    void getOrgGroupsByIdFiltering() throws Exception {
+        // Initialize the database
+        orgGroupRepository.saveAndFlush(orgGroup);
+
+        Long id = orgGroup.getId();
+
+        defaultOrgGroupShouldBeFound("id.equals=" + id);
+        defaultOrgGroupShouldNotBeFound("id.notEquals=" + id);
+
+        defaultOrgGroupShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultOrgGroupShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultOrgGroupShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultOrgGroupShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgGroupsByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgGroupRepository.saveAndFlush(orgGroup);
+
+        // Get all the orgGroupList where name equals to DEFAULT_NAME
+        defaultOrgGroupShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the orgGroupList where name equals to UPDATED_NAME
+        defaultOrgGroupShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgGroupsByNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orgGroupRepository.saveAndFlush(orgGroup);
+
+        // Get all the orgGroupList where name not equals to DEFAULT_NAME
+        defaultOrgGroupShouldNotBeFound("name.notEquals=" + DEFAULT_NAME);
+
+        // Get all the orgGroupList where name not equals to UPDATED_NAME
+        defaultOrgGroupShouldBeFound("name.notEquals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgGroupsByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        orgGroupRepository.saveAndFlush(orgGroup);
+
+        // Get all the orgGroupList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultOrgGroupShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the orgGroupList where name equals to UPDATED_NAME
+        defaultOrgGroupShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgGroupsByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orgGroupRepository.saveAndFlush(orgGroup);
+
+        // Get all the orgGroupList where name is not null
+        defaultOrgGroupShouldBeFound("name.specified=true");
+
+        // Get all the orgGroupList where name is null
+        defaultOrgGroupShouldNotBeFound("name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgGroupsByNameContainsSomething() throws Exception {
+        // Initialize the database
+        orgGroupRepository.saveAndFlush(orgGroup);
+
+        // Get all the orgGroupList where name contains DEFAULT_NAME
+        defaultOrgGroupShouldBeFound("name.contains=" + DEFAULT_NAME);
+
+        // Get all the orgGroupList where name contains UPDATED_NAME
+        defaultOrgGroupShouldNotBeFound("name.contains=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgGroupsByNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        orgGroupRepository.saveAndFlush(orgGroup);
+
+        // Get all the orgGroupList where name does not contain DEFAULT_NAME
+        defaultOrgGroupShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+
+        // Get all the orgGroupList where name does not contain UPDATED_NAME
+        defaultOrgGroupShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultOrgGroupShouldBeFound(String filter) throws Exception {
+        restOrgGroupMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(orgGroup.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+
+        // Check, that the count call also returns 1
+        restOrgGroupMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultOrgGroupShouldNotBeFound(String filter) throws Exception {
+        restOrgGroupMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restOrgGroupMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

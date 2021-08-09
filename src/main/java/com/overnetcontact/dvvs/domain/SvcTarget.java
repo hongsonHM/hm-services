@@ -41,7 +41,7 @@ public class SvcTarget implements Serializable {
     private SvcTarget svcTarget;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "targets", "unit", "saler", "client" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "targets", "approvedBy", "ownerBy", "unit", "saler", "client" }, allowSetters = true)
     private SvcContract svcContract;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

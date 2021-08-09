@@ -23,7 +23,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.CaseUtils;
 import org.apache.commons.text.WordUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -43,7 +42,6 @@ import org.springframework.web.multipart.MultipartFile;
  * Service Implementation for managing {@link SvcContract}.
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class SvcContractServiceImpl implements SvcContractService {
 

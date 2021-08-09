@@ -1,13 +1,13 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.SvcContractRepository;
-import com.overnetcontact.dvvs.service.ExcelHelper;
+import com.overnetcontact.dvvs.service.SvcContractQueryService;
 import com.overnetcontact.dvvs.service.SvcContractService;
+import com.overnetcontact.dvvs.service.criteria.SvcContractCriteria;
 import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,10 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -47,9 +45,16 @@ public class SvcContractResource {
 
     private final SvcContractRepository svcContractRepository;
 
-    public SvcContractResource(SvcContractService svcContractService, SvcContractRepository svcContractRepository) {
+    private final SvcContractQueryService svcContractQueryService;
+
+    public SvcContractResource(
+        SvcContractService svcContractService,
+        SvcContractRepository svcContractRepository,
+        SvcContractQueryService svcContractQueryService
+    ) {
         this.svcContractService = svcContractService;
         this.svcContractRepository = svcContractRepository;
+        this.svcContractQueryService = svcContractQueryService;
     }
 
     /**
@@ -70,27 +75,6 @@ public class SvcContractResource {
             .created(new URI("/api/svc-contracts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
-    }
-
-    /**
-     * {@code POST  /svc-contracts} : Create a new svcContract.
-     *
-     * @param file the svcContract In excel to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new svcContractDTO, or with status {@code 400 (Bad Request)} if the svcContract has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PostMapping(value = "/svc-contracts/excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> importSvcContracts(@RequestPart("file") MultipartFile file) throws URISyntaxException {
-        log.debug("REST request to save SvcContract by CSV");
-        if (!ExcelHelper.hasExcelFormat(file)) {
-            throw new BadRequestAlertException("Invalid excel type", ENTITY_NAME, "File format not support!");
-        }
-
-        Collection<SvcContractDTO> result = svcContractService.saveByExcel(file);
-        return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createAlert(applicationName, "Excel imported!", String.valueOf(result.size())))
-            .build();
     }
 
     /**
@@ -167,14 +151,27 @@ public class SvcContractResource {
      * {@code GET  /svc-contracts} : get all the svcContracts.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of svcContracts in body.
      */
     @GetMapping("/svc-contracts")
-    public ResponseEntity<List<SvcContractDTO>> getAllSvcContracts(Pageable pageable) {
-        log.debug("REST request to get a page of SvcContracts");
-        Page<SvcContractDTO> page = svcContractService.findAll(pageable);
+    public ResponseEntity<List<SvcContractDTO>> getAllSvcContracts(SvcContractCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get SvcContracts by criteria: {}", criteria);
+        Page<SvcContractDTO> page = svcContractQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /svc-contracts/count} : count all the svcContracts.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/svc-contracts/count")
+    public ResponseEntity<Long> countSvcContracts(SvcContractCriteria criteria) {
+        log.debug("REST request to count SvcContracts by criteria: {}", criteria);
+        return ResponseEntity.ok().body(svcContractQueryService.countByCriteria(criteria));
     }
 
     /**

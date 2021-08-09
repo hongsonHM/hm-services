@@ -1,7 +1,9 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.OrgUserRepository;
+import com.overnetcontact.dvvs.service.OrgUserQueryService;
 import com.overnetcontact.dvvs.service.OrgUserService;
+import com.overnetcontact.dvvs.service.criteria.OrgUserCriteria;
 import com.overnetcontact.dvvs.service.dto.OrgUserDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -43,9 +45,12 @@ public class OrgUserResource {
 
     private final OrgUserRepository orgUserRepository;
 
-    public OrgUserResource(OrgUserService orgUserService, OrgUserRepository orgUserRepository) {
+    private final OrgUserQueryService orgUserQueryService;
+
+    public OrgUserResource(OrgUserService orgUserService, OrgUserRepository orgUserRepository, OrgUserQueryService orgUserQueryService) {
         this.orgUserService = orgUserService;
         this.orgUserRepository = orgUserRepository;
+        this.orgUserQueryService = orgUserQueryService;
     }
 
     /**
@@ -142,14 +147,27 @@ public class OrgUserResource {
      * {@code GET  /org-users} : get all the orgUsers.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orgUsers in body.
      */
     @GetMapping("/org-users")
-    public ResponseEntity<List<OrgUserDTO>> getAllOrgUsers(Pageable pageable) {
-        log.debug("REST request to get a page of OrgUsers");
-        Page<OrgUserDTO> page = orgUserService.findAll(pageable);
+    public ResponseEntity<List<OrgUserDTO>> getAllOrgUsers(OrgUserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get OrgUsers by criteria: {}", criteria);
+        Page<OrgUserDTO> page = orgUserQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /org-users/count} : count all the orgUsers.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/org-users/count")
+    public ResponseEntity<Long> countOrgUsers(OrgUserCriteria criteria) {
+        log.debug("REST request to count OrgUsers by criteria: {}", criteria);
+        return ResponseEntity.ok().body(orgUserQueryService.countByCriteria(criteria));
     }
 
     /**

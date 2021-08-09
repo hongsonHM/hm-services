@@ -8,6 +8,18 @@
     -->
     <changeSet id="20210731065405-2" author="jhipster">
 
+        <addForeignKeyConstraint baseColumnNames="approved_by_id"
+                                 baseTableName="svc_contract"
+                                 constraintName="fk_svc_contract__approved_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="dvvs_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="owner_by_id"
+                                 baseTableName="svc_contract"
+                                 constraintName="fk_svc_contract__owner_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="dvvs_user"/>
+
         <addForeignKeyConstraint baseColumnNames="unit_id"
                                  baseTableName="svc_contract"
                                  constraintName="fk_svc_contract__unit_id"

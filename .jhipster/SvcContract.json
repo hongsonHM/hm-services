@@ -83,6 +83,18 @@
     },
     {
       "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "svcContract",
+      "relationshipName": "approvedBy"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "svcContract",
+      "relationshipName": "ownerBy"
+    },
+    {
+      "relationshipType": "many-to-one",
       "otherEntityName": "svcUnit",
       "otherEntityRelationshipName": "svcContract",
       "relationshipName": "unit"
@@ -105,7 +117,7 @@
   "dto": "mapstruct",
   "pagination": "pagination",
   "service": "serviceImpl",
-  "jpaMetamodelFiltering": false,
+  "jpaMetamodelFiltering": true,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,

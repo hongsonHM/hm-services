@@ -1,7 +1,9 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.SvcGroupRepository;
+import com.overnetcontact.dvvs.service.SvcGroupQueryService;
 import com.overnetcontact.dvvs.service.SvcGroupService;
+import com.overnetcontact.dvvs.service.criteria.SvcGroupCriteria;
 import com.overnetcontact.dvvs.service.dto.SvcGroupDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -43,9 +45,16 @@ public class SvcGroupResource {
 
     private final SvcGroupRepository svcGroupRepository;
 
-    public SvcGroupResource(SvcGroupService svcGroupService, SvcGroupRepository svcGroupRepository) {
+    private final SvcGroupQueryService svcGroupQueryService;
+
+    public SvcGroupResource(
+        SvcGroupService svcGroupService,
+        SvcGroupRepository svcGroupRepository,
+        SvcGroupQueryService svcGroupQueryService
+    ) {
         this.svcGroupService = svcGroupService;
         this.svcGroupRepository = svcGroupRepository;
+        this.svcGroupQueryService = svcGroupQueryService;
     }
 
     /**
@@ -142,14 +151,27 @@ public class SvcGroupResource {
      * {@code GET  /svc-groups} : get all the svcGroups.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of svcGroups in body.
      */
     @GetMapping("/svc-groups")
-    public ResponseEntity<List<SvcGroupDTO>> getAllSvcGroups(Pageable pageable) {
-        log.debug("REST request to get a page of SvcGroups");
-        Page<SvcGroupDTO> page = svcGroupService.findAll(pageable);
+    public ResponseEntity<List<SvcGroupDTO>> getAllSvcGroups(SvcGroupCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get SvcGroups by criteria: {}", criteria);
+        Page<SvcGroupDTO> page = svcGroupQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /svc-groups/count} : count all the svcGroups.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/svc-groups/count")
+    public ResponseEntity<Long> countSvcGroups(SvcGroupCriteria criteria) {
+        log.debug("REST request to count SvcGroups by criteria: {}", criteria);
+        return ResponseEntity.ok().body(svcGroupQueryService.countByCriteria(criteria));
     }
 
     /**

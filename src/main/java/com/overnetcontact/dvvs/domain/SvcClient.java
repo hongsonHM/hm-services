@@ -22,8 +22,8 @@ public class SvcClient implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 0, max = 100)
-    @Column(name = "customer_name", length = 100, nullable = false)
+    @Size(min = 0, max = 200)
+    @Column(name = "customer_name", length = 200, nullable = false)
     private String customerName;
 
     @NotNull

@@ -6,9 +6,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.overnetcontact.dvvs.IntegrationTest;
+import com.overnetcontact.dvvs.domain.OrgGroup;
+import com.overnetcontact.dvvs.domain.OrgNotification;
 import com.overnetcontact.dvvs.domain.OrgUser;
+import com.overnetcontact.dvvs.domain.User;
 import com.overnetcontact.dvvs.domain.enumeration.Role;
 import com.overnetcontact.dvvs.repository.OrgUserRepository;
+import com.overnetcontact.dvvs.service.criteria.OrgUserCriteria;
 import com.overnetcontact.dvvs.service.dto.OrgUserDTO;
 import com.overnetcontact.dvvs.service.mapper.OrgUserMapper;
 import java.util.List;
@@ -194,6 +198,329 @@ class OrgUserResourceIT {
             .andExpect(jsonPath("$.deviceId").value(DEFAULT_DEVICE_ID))
             .andExpect(jsonPath("$.phone").value(DEFAULT_PHONE))
             .andExpect(jsonPath("$.role").value(DEFAULT_ROLE.toString()));
+    }
+
+    @Test
+    @Transactional
+    void getOrgUsersByIdFiltering() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        Long id = orgUser.getId();
+
+        defaultOrgUserShouldBeFound("id.equals=" + id);
+        defaultOrgUserShouldNotBeFound("id.notEquals=" + id);
+
+        defaultOrgUserShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultOrgUserShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultOrgUserShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultOrgUserShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByDeviceIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where deviceId equals to DEFAULT_DEVICE_ID
+        defaultOrgUserShouldBeFound("deviceId.equals=" + DEFAULT_DEVICE_ID);
+
+        // Get all the orgUserList where deviceId equals to UPDATED_DEVICE_ID
+        defaultOrgUserShouldNotBeFound("deviceId.equals=" + UPDATED_DEVICE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByDeviceIdIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where deviceId not equals to DEFAULT_DEVICE_ID
+        defaultOrgUserShouldNotBeFound("deviceId.notEquals=" + DEFAULT_DEVICE_ID);
+
+        // Get all the orgUserList where deviceId not equals to UPDATED_DEVICE_ID
+        defaultOrgUserShouldBeFound("deviceId.notEquals=" + UPDATED_DEVICE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByDeviceIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where deviceId in DEFAULT_DEVICE_ID or UPDATED_DEVICE_ID
+        defaultOrgUserShouldBeFound("deviceId.in=" + DEFAULT_DEVICE_ID + "," + UPDATED_DEVICE_ID);
+
+        // Get all the orgUserList where deviceId equals to UPDATED_DEVICE_ID
+        defaultOrgUserShouldNotBeFound("deviceId.in=" + UPDATED_DEVICE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByDeviceIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where deviceId is not null
+        defaultOrgUserShouldBeFound("deviceId.specified=true");
+
+        // Get all the orgUserList where deviceId is null
+        defaultOrgUserShouldNotBeFound("deviceId.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByDeviceIdContainsSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where deviceId contains DEFAULT_DEVICE_ID
+        defaultOrgUserShouldBeFound("deviceId.contains=" + DEFAULT_DEVICE_ID);
+
+        // Get all the orgUserList where deviceId contains UPDATED_DEVICE_ID
+        defaultOrgUserShouldNotBeFound("deviceId.contains=" + UPDATED_DEVICE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByDeviceIdNotContainsSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where deviceId does not contain DEFAULT_DEVICE_ID
+        defaultOrgUserShouldNotBeFound("deviceId.doesNotContain=" + DEFAULT_DEVICE_ID);
+
+        // Get all the orgUserList where deviceId does not contain UPDATED_DEVICE_ID
+        defaultOrgUserShouldBeFound("deviceId.doesNotContain=" + UPDATED_DEVICE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByPhoneIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where phone equals to DEFAULT_PHONE
+        defaultOrgUserShouldBeFound("phone.equals=" + DEFAULT_PHONE);
+
+        // Get all the orgUserList where phone equals to UPDATED_PHONE
+        defaultOrgUserShouldNotBeFound("phone.equals=" + UPDATED_PHONE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByPhoneIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where phone not equals to DEFAULT_PHONE
+        defaultOrgUserShouldNotBeFound("phone.notEquals=" + DEFAULT_PHONE);
+
+        // Get all the orgUserList where phone not equals to UPDATED_PHONE
+        defaultOrgUserShouldBeFound("phone.notEquals=" + UPDATED_PHONE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByPhoneIsInShouldWork() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where phone in DEFAULT_PHONE or UPDATED_PHONE
+        defaultOrgUserShouldBeFound("phone.in=" + DEFAULT_PHONE + "," + UPDATED_PHONE);
+
+        // Get all the orgUserList where phone equals to UPDATED_PHONE
+        defaultOrgUserShouldNotBeFound("phone.in=" + UPDATED_PHONE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByPhoneIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where phone is not null
+        defaultOrgUserShouldBeFound("phone.specified=true");
+
+        // Get all the orgUserList where phone is null
+        defaultOrgUserShouldNotBeFound("phone.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByPhoneContainsSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where phone contains DEFAULT_PHONE
+        defaultOrgUserShouldBeFound("phone.contains=" + DEFAULT_PHONE);
+
+        // Get all the orgUserList where phone contains UPDATED_PHONE
+        defaultOrgUserShouldNotBeFound("phone.contains=" + UPDATED_PHONE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByPhoneNotContainsSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where phone does not contain DEFAULT_PHONE
+        defaultOrgUserShouldNotBeFound("phone.doesNotContain=" + DEFAULT_PHONE);
+
+        // Get all the orgUserList where phone does not contain UPDATED_PHONE
+        defaultOrgUserShouldBeFound("phone.doesNotContain=" + UPDATED_PHONE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByRoleIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where role equals to DEFAULT_ROLE
+        defaultOrgUserShouldBeFound("role.equals=" + DEFAULT_ROLE);
+
+        // Get all the orgUserList where role equals to UPDATED_ROLE
+        defaultOrgUserShouldNotBeFound("role.equals=" + UPDATED_ROLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByRoleIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where role not equals to DEFAULT_ROLE
+        defaultOrgUserShouldNotBeFound("role.notEquals=" + DEFAULT_ROLE);
+
+        // Get all the orgUserList where role not equals to UPDATED_ROLE
+        defaultOrgUserShouldBeFound("role.notEquals=" + UPDATED_ROLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByRoleIsInShouldWork() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where role in DEFAULT_ROLE or UPDATED_ROLE
+        defaultOrgUserShouldBeFound("role.in=" + DEFAULT_ROLE + "," + UPDATED_ROLE);
+
+        // Get all the orgUserList where role equals to UPDATED_ROLE
+        defaultOrgUserShouldNotBeFound("role.in=" + UPDATED_ROLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByRoleIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+
+        // Get all the orgUserList where role is not null
+        defaultOrgUserShouldBeFound("role.specified=true");
+
+        // Get all the orgUserList where role is null
+        defaultOrgUserShouldNotBeFound("role.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByInternalUserIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+        User internalUser = UserResourceIT.createEntity(em);
+        em.persist(internalUser);
+        em.flush();
+        orgUser.setInternalUser(internalUser);
+        orgUserRepository.saveAndFlush(orgUser);
+        Long internalUserId = internalUser.getId();
+
+        // Get all the orgUserList where internalUser equals to internalUserId
+        defaultOrgUserShouldBeFound("internalUserId.equals=" + internalUserId);
+
+        // Get all the orgUserList where internalUser equals to (internalUserId + 1)
+        defaultOrgUserShouldNotBeFound("internalUserId.equals=" + (internalUserId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByNotificationsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+        OrgNotification notifications = OrgNotificationResourceIT.createEntity(em);
+        em.persist(notifications);
+        em.flush();
+        orgUser.addNotifications(notifications);
+        orgUserRepository.saveAndFlush(orgUser);
+        Long notificationsId = notifications.getId();
+
+        // Get all the orgUserList where notifications equals to notificationsId
+        defaultOrgUserShouldBeFound("notificationsId.equals=" + notificationsId);
+
+        // Get all the orgUserList where notifications equals to (notificationsId + 1)
+        defaultOrgUserShouldNotBeFound("notificationsId.equals=" + (notificationsId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgUsersByGroupIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgUserRepository.saveAndFlush(orgUser);
+        OrgGroup group = OrgGroupResourceIT.createEntity(em);
+        em.persist(group);
+        em.flush();
+        orgUser.setGroup(group);
+        orgUserRepository.saveAndFlush(orgUser);
+        Long groupId = group.getId();
+
+        // Get all the orgUserList where group equals to groupId
+        defaultOrgUserShouldBeFound("groupId.equals=" + groupId);
+
+        // Get all the orgUserList where group equals to (groupId + 1)
+        defaultOrgUserShouldNotBeFound("groupId.equals=" + (groupId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultOrgUserShouldBeFound(String filter) throws Exception {
+        restOrgUserMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(orgUser.getId().intValue())))
+            .andExpect(jsonPath("$.[*].deviceId").value(hasItem(DEFAULT_DEVICE_ID)))
+            .andExpect(jsonPath("$.[*].phone").value(hasItem(DEFAULT_PHONE)))
+            .andExpect(jsonPath("$.[*].role").value(hasItem(DEFAULT_ROLE.toString())));
+
+        // Check, that the count call also returns 1
+        restOrgUserMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultOrgUserShouldNotBeFound(String filter) throws Exception {
+        restOrgUserMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restOrgUserMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

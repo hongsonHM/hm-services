@@ -78,7 +78,7 @@ entity SvcTargetType {
  * @author KagariV.
  */
 entity SvcClient {
-	customerName String required minlength(6) maxlength(40)
+	customerName String required minlength(0) maxlength(200)
 	customerCity String required
 	phoneNumber String required minlength(10) maxlength(11)
 	type String maxlength(300) required
@@ -89,7 +89,7 @@ entity SvcClient {
  * @author KagariV.
  */
 entity SvcUnit {
-	name String required maxlength(40)
+	name String required minlength(0) maxlength(200)
 	description String required maxlength(300)
 }
 /**
@@ -97,7 +97,7 @@ entity SvcUnit {
  * @author KagariV.
  */
 entity SvcGroup {
-	name String unique required maxlength(40)
+	name String unique required maxlength(200)
 	description String required maxlength(300)
 	address String required maxlength(300)
 }
@@ -109,6 +109,7 @@ relationship OneToOne {
 	OrgUser{internalUser} to User
 }
 relationship ManyToOne {
+	SvcContract{approvedBy} to User, SvcContract{ownerBy} to User,
 	OrgUser{group} to OrgGroup , SvcUnit{group} to SvcGroup , SvcContract{unit} to SvcUnit , SvcContract{saler} to OrgUser , SvcContract{client} to SvcClient , SvcTarget{type} to SvcTargetType
 }
 relationship OneToMany {
@@ -117,6 +118,7 @@ relationship OneToMany {
 // Set pagination options
 paginate OrgUser, OrgGroup with infinite-scroll
 paginate * with pagination
+filter *
 // Use Data Transfer Objects (DTO)
 dto * with mapstruct
 // Set service options to all except few

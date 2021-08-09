@@ -22,8 +22,8 @@ public class SvcGroup implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(max = 100)
-    @Column(name = "name", length = 100, nullable = false, unique = true)
+    @Size(max = 200)
+    @Column(name = "name", length = 200, nullable = false, unique = true)
     private String name;
 
     @NotNull

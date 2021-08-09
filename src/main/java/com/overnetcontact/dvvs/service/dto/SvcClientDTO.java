@@ -14,7 +14,7 @@ public class SvcClientDTO implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 6, max = 40)
+    @Size(min = 0, max = 200)
     private String customerName;
 
     @NotNull

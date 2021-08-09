@@ -39,10 +39,10 @@
                 <constraints nullable="false" />
             </column>
             <column name="value" type="decimal(21,2)">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <column name="contract_value" type="decimal(21,2)">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <column name="human_resources" type="integer">
                 <constraints nullable="true" />
@@ -60,6 +60,12 @@
                 <constraints nullable="true" />
             </column>
             <column name="year" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="approved_by_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="owner_by_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <column name="unit_id" type="bigint">

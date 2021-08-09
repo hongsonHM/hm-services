@@ -55,10 +55,12 @@ public class SvcContract implements Serializable {
     @Column(name = "duration_month", nullable = false)
     private Integer durationMonth;
 
-    @Column(name = "value", precision = 21, scale = 2, nullable = true)
+    @NotNull
+    @Column(name = "value", precision = 21, scale = 2, nullable = false)
     private BigDecimal value;
 
-    @Column(name = "contract_value", precision = 21, scale = 2, nullable = true)
+    @NotNull
+    @Column(name = "contract_value", precision = 21, scale = 2, nullable = false)
     private BigDecimal contractValue;
 
     @Column(name = "human_resources")
@@ -85,6 +87,12 @@ public class SvcContract implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "childs", "type", "svcTarget", "svcContract" }, allowSetters = true)
     private Set<SvcTarget> targets = new HashSet<>();
+
+    @ManyToOne
+    private User approvedBy;
+
+    @ManyToOne
+    private User ownerBy;
 
     @ManyToOne
     @JsonIgnoreProperties(value = { "group" }, allowSetters = true)
@@ -348,6 +356,32 @@ public class SvcContract implements Serializable {
             svcTargets.forEach(i -> i.setSvcContract(this));
         }
         this.targets = svcTargets;
+    }
+
+    public User getApprovedBy() {
+        return this.approvedBy;
+    }
+
+    public SvcContract approvedBy(User user) {
+        this.setApprovedBy(user);
+        return this;
+    }
+
+    public void setApprovedBy(User user) {
+        this.approvedBy = user;
+    }
+
+    public User getOwnerBy() {
+        return this.ownerBy;
+    }
+
+    public SvcContract ownerBy(User user) {
+        this.setOwnerBy(user);
+        return this;
+    }
+
+    public void setOwnerBy(User user) {
+        this.ownerBy = user;
     }
 
     public SvcUnit getUnit() {

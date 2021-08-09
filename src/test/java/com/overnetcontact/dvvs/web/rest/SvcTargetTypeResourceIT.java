@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.overnetcontact.dvvs.IntegrationTest;
 import com.overnetcontact.dvvs.domain.SvcTargetType;
 import com.overnetcontact.dvvs.repository.SvcTargetTypeRepository;
+import com.overnetcontact.dvvs.service.criteria.SvcTargetTypeCriteria;
 import com.overnetcontact.dvvs.service.dto.SvcTargetTypeDTO;
 import com.overnetcontact.dvvs.service.mapper.SvcTargetTypeMapper;
 import java.util.List;
@@ -149,6 +150,140 @@ class SvcTargetTypeResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(svcTargetType.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+    }
+
+    @Test
+    @Transactional
+    void getSvcTargetTypesByIdFiltering() throws Exception {
+        // Initialize the database
+        svcTargetTypeRepository.saveAndFlush(svcTargetType);
+
+        Long id = svcTargetType.getId();
+
+        defaultSvcTargetTypeShouldBeFound("id.equals=" + id);
+        defaultSvcTargetTypeShouldNotBeFound("id.notEquals=" + id);
+
+        defaultSvcTargetTypeShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultSvcTargetTypeShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultSvcTargetTypeShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultSvcTargetTypeShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcTargetTypesByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        svcTargetTypeRepository.saveAndFlush(svcTargetType);
+
+        // Get all the svcTargetTypeList where name equals to DEFAULT_NAME
+        defaultSvcTargetTypeShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the svcTargetTypeList where name equals to UPDATED_NAME
+        defaultSvcTargetTypeShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcTargetTypesByNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        svcTargetTypeRepository.saveAndFlush(svcTargetType);
+
+        // Get all the svcTargetTypeList where name not equals to DEFAULT_NAME
+        defaultSvcTargetTypeShouldNotBeFound("name.notEquals=" + DEFAULT_NAME);
+
+        // Get all the svcTargetTypeList where name not equals to UPDATED_NAME
+        defaultSvcTargetTypeShouldBeFound("name.notEquals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcTargetTypesByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        svcTargetTypeRepository.saveAndFlush(svcTargetType);
+
+        // Get all the svcTargetTypeList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultSvcTargetTypeShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the svcTargetTypeList where name equals to UPDATED_NAME
+        defaultSvcTargetTypeShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcTargetTypesByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        svcTargetTypeRepository.saveAndFlush(svcTargetType);
+
+        // Get all the svcTargetTypeList where name is not null
+        defaultSvcTargetTypeShouldBeFound("name.specified=true");
+
+        // Get all the svcTargetTypeList where name is null
+        defaultSvcTargetTypeShouldNotBeFound("name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcTargetTypesByNameContainsSomething() throws Exception {
+        // Initialize the database
+        svcTargetTypeRepository.saveAndFlush(svcTargetType);
+
+        // Get all the svcTargetTypeList where name contains DEFAULT_NAME
+        defaultSvcTargetTypeShouldBeFound("name.contains=" + DEFAULT_NAME);
+
+        // Get all the svcTargetTypeList where name contains UPDATED_NAME
+        defaultSvcTargetTypeShouldNotBeFound("name.contains=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcTargetTypesByNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        svcTargetTypeRepository.saveAndFlush(svcTargetType);
+
+        // Get all the svcTargetTypeList where name does not contain DEFAULT_NAME
+        defaultSvcTargetTypeShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+
+        // Get all the svcTargetTypeList where name does not contain UPDATED_NAME
+        defaultSvcTargetTypeShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultSvcTargetTypeShouldBeFound(String filter) throws Exception {
+        restSvcTargetTypeMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(svcTargetType.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+
+        // Check, that the count call also returns 1
+        restSvcTargetTypeMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultSvcTargetTypeShouldNotBeFound(String filter) throws Exception {
+        restSvcTargetTypeMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restSvcTargetTypeMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

@@ -55,6 +55,10 @@ public class SvcContractDTO implements Serializable {
 
     private Integer year;
 
+    private UserDTO approvedBy;
+
+    private UserDTO ownerBy;
+
     private SvcUnitDTO unit;
 
     private OrgUserDTO saler;
@@ -197,6 +201,22 @@ public class SvcContractDTO implements Serializable {
         this.year = year;
     }
 
+    public UserDTO getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(UserDTO approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+
+    public UserDTO getOwnerBy() {
+        return ownerBy;
+    }
+
+    public void setOwnerBy(UserDTO ownerBy) {
+        this.ownerBy = ownerBy;
+    }
+
     public SvcUnitDTO getUnit() {
         return unit;
     }
@@ -263,6 +283,8 @@ public class SvcContractDTO implements Serializable {
             ", subjectCount=" + getSubjectCount() +
             ", valuePerPerson=" + getValuePerPerson() +
             ", year=" + getYear() +
+            ", approvedBy=" + getApprovedBy() +
+            ", ownerBy=" + getOwnerBy() +
             ", unit=" + getUnit() +
             ", saler=" + getSaler() +
             ", client=" + getClient() +

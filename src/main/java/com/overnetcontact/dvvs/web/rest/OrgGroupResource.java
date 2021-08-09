@@ -1,7 +1,9 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.OrgGroupRepository;
+import com.overnetcontact.dvvs.service.OrgGroupQueryService;
 import com.overnetcontact.dvvs.service.OrgGroupService;
+import com.overnetcontact.dvvs.service.criteria.OrgGroupCriteria;
 import com.overnetcontact.dvvs.service.dto.OrgGroupDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -43,9 +45,16 @@ public class OrgGroupResource {
 
     private final OrgGroupRepository orgGroupRepository;
 
-    public OrgGroupResource(OrgGroupService orgGroupService, OrgGroupRepository orgGroupRepository) {
+    private final OrgGroupQueryService orgGroupQueryService;
+
+    public OrgGroupResource(
+        OrgGroupService orgGroupService,
+        OrgGroupRepository orgGroupRepository,
+        OrgGroupQueryService orgGroupQueryService
+    ) {
         this.orgGroupService = orgGroupService;
         this.orgGroupRepository = orgGroupRepository;
+        this.orgGroupQueryService = orgGroupQueryService;
     }
 
     /**
@@ -142,14 +151,27 @@ public class OrgGroupResource {
      * {@code GET  /org-groups} : get all the orgGroups.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orgGroups in body.
      */
     @GetMapping("/org-groups")
-    public ResponseEntity<List<OrgGroupDTO>> getAllOrgGroups(Pageable pageable) {
-        log.debug("REST request to get a page of OrgGroups");
-        Page<OrgGroupDTO> page = orgGroupService.findAll(pageable);
+    public ResponseEntity<List<OrgGroupDTO>> getAllOrgGroups(OrgGroupCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get OrgGroups by criteria: {}", criteria);
+        Page<OrgGroupDTO> page = orgGroupQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /org-groups/count} : count all the orgGroups.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/org-groups/count")
+    public ResponseEntity<Long> countOrgGroups(OrgGroupCriteria criteria) {
+        log.debug("REST request to count OrgGroups by criteria: {}", criteria);
+        return ResponseEntity.ok().body(orgGroupQueryService.countByCriteria(criteria));
     }
 
     /**

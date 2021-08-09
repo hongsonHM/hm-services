@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.overnetcontact.dvvs.IntegrationTest;
 import com.overnetcontact.dvvs.domain.SvcGroup;
 import com.overnetcontact.dvvs.repository.SvcGroupRepository;
+import com.overnetcontact.dvvs.service.criteria.SvcGroupCriteria;
 import com.overnetcontact.dvvs.service.dto.SvcGroupDTO;
 import com.overnetcontact.dvvs.service.mapper.SvcGroupMapper;
 import java.util.List;
@@ -211,6 +212,298 @@ class SvcGroupResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS));
+    }
+
+    @Test
+    @Transactional
+    void getSvcGroupsByIdFiltering() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        Long id = svcGroup.getId();
+
+        defaultSvcGroupShouldBeFound("id.equals=" + id);
+        defaultSvcGroupShouldNotBeFound("id.notEquals=" + id);
+
+        defaultSvcGroupShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultSvcGroupShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultSvcGroupShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultSvcGroupShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where name equals to DEFAULT_NAME
+        defaultSvcGroupShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the svcGroupList where name equals to UPDATED_NAME
+        defaultSvcGroupShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where name not equals to DEFAULT_NAME
+        defaultSvcGroupShouldNotBeFound("name.notEquals=" + DEFAULT_NAME);
+
+        // Get all the svcGroupList where name not equals to UPDATED_NAME
+        defaultSvcGroupShouldBeFound("name.notEquals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultSvcGroupShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the svcGroupList where name equals to UPDATED_NAME
+        defaultSvcGroupShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where name is not null
+        defaultSvcGroupShouldBeFound("name.specified=true");
+
+        // Get all the svcGroupList where name is null
+        defaultSvcGroupShouldNotBeFound("name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByNameContainsSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where name contains DEFAULT_NAME
+        defaultSvcGroupShouldBeFound("name.contains=" + DEFAULT_NAME);
+
+        // Get all the svcGroupList where name contains UPDATED_NAME
+        defaultSvcGroupShouldNotBeFound("name.contains=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where name does not contain DEFAULT_NAME
+        defaultSvcGroupShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+
+        // Get all the svcGroupList where name does not contain UPDATED_NAME
+        defaultSvcGroupShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByDescriptionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where description equals to DEFAULT_DESCRIPTION
+        defaultSvcGroupShouldBeFound("description.equals=" + DEFAULT_DESCRIPTION);
+
+        // Get all the svcGroupList where description equals to UPDATED_DESCRIPTION
+        defaultSvcGroupShouldNotBeFound("description.equals=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByDescriptionIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where description not equals to DEFAULT_DESCRIPTION
+        defaultSvcGroupShouldNotBeFound("description.notEquals=" + DEFAULT_DESCRIPTION);
+
+        // Get all the svcGroupList where description not equals to UPDATED_DESCRIPTION
+        defaultSvcGroupShouldBeFound("description.notEquals=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByDescriptionIsInShouldWork() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where description in DEFAULT_DESCRIPTION or UPDATED_DESCRIPTION
+        defaultSvcGroupShouldBeFound("description.in=" + DEFAULT_DESCRIPTION + "," + UPDATED_DESCRIPTION);
+
+        // Get all the svcGroupList where description equals to UPDATED_DESCRIPTION
+        defaultSvcGroupShouldNotBeFound("description.in=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByDescriptionIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where description is not null
+        defaultSvcGroupShouldBeFound("description.specified=true");
+
+        // Get all the svcGroupList where description is null
+        defaultSvcGroupShouldNotBeFound("description.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByDescriptionContainsSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where description contains DEFAULT_DESCRIPTION
+        defaultSvcGroupShouldBeFound("description.contains=" + DEFAULT_DESCRIPTION);
+
+        // Get all the svcGroupList where description contains UPDATED_DESCRIPTION
+        defaultSvcGroupShouldNotBeFound("description.contains=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByDescriptionNotContainsSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where description does not contain DEFAULT_DESCRIPTION
+        defaultSvcGroupShouldNotBeFound("description.doesNotContain=" + DEFAULT_DESCRIPTION);
+
+        // Get all the svcGroupList where description does not contain UPDATED_DESCRIPTION
+        defaultSvcGroupShouldBeFound("description.doesNotContain=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByAddressIsEqualToSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where address equals to DEFAULT_ADDRESS
+        defaultSvcGroupShouldBeFound("address.equals=" + DEFAULT_ADDRESS);
+
+        // Get all the svcGroupList where address equals to UPDATED_ADDRESS
+        defaultSvcGroupShouldNotBeFound("address.equals=" + UPDATED_ADDRESS);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByAddressIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where address not equals to DEFAULT_ADDRESS
+        defaultSvcGroupShouldNotBeFound("address.notEquals=" + DEFAULT_ADDRESS);
+
+        // Get all the svcGroupList where address not equals to UPDATED_ADDRESS
+        defaultSvcGroupShouldBeFound("address.notEquals=" + UPDATED_ADDRESS);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByAddressIsInShouldWork() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where address in DEFAULT_ADDRESS or UPDATED_ADDRESS
+        defaultSvcGroupShouldBeFound("address.in=" + DEFAULT_ADDRESS + "," + UPDATED_ADDRESS);
+
+        // Get all the svcGroupList where address equals to UPDATED_ADDRESS
+        defaultSvcGroupShouldNotBeFound("address.in=" + UPDATED_ADDRESS);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByAddressIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where address is not null
+        defaultSvcGroupShouldBeFound("address.specified=true");
+
+        // Get all the svcGroupList where address is null
+        defaultSvcGroupShouldNotBeFound("address.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByAddressContainsSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where address contains DEFAULT_ADDRESS
+        defaultSvcGroupShouldBeFound("address.contains=" + DEFAULT_ADDRESS);
+
+        // Get all the svcGroupList where address contains UPDATED_ADDRESS
+        defaultSvcGroupShouldNotBeFound("address.contains=" + UPDATED_ADDRESS);
+    }
+
+    @Test
+    @Transactional
+    void getAllSvcGroupsByAddressNotContainsSomething() throws Exception {
+        // Initialize the database
+        svcGroupRepository.saveAndFlush(svcGroup);
+
+        // Get all the svcGroupList where address does not contain DEFAULT_ADDRESS
+        defaultSvcGroupShouldNotBeFound("address.doesNotContain=" + DEFAULT_ADDRESS);
+
+        // Get all the svcGroupList where address does not contain UPDATED_ADDRESS
+        defaultSvcGroupShouldBeFound("address.doesNotContain=" + UPDATED_ADDRESS);
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultSvcGroupShouldBeFound(String filter) throws Exception {
+        restSvcGroupMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(svcGroup.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)));
+
+        // Check, that the count call also returns 1
+        restSvcGroupMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultSvcGroupShouldNotBeFound(String filter) throws Exception {
+        restSvcGroupMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restSvcGroupMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

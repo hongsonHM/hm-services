@@ -7,8 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.overnetcontact.dvvs.IntegrationTest;
 import com.overnetcontact.dvvs.domain.OrgNotification;
+import com.overnetcontact.dvvs.domain.OrgUser;
 import com.overnetcontact.dvvs.domain.enumeration.NotificationStatus;
 import com.overnetcontact.dvvs.repository.OrgNotificationRepository;
+import com.overnetcontact.dvvs.service.criteria.OrgNotificationCriteria;
 import com.overnetcontact.dvvs.service.dto.OrgNotificationDTO;
 import com.overnetcontact.dvvs.service.mapper.OrgNotificationMapper;
 import java.util.List;
@@ -264,6 +266,423 @@ class OrgNotificationResourceIT {
             .andExpect(jsonPath("$.data").value(DEFAULT_DATA))
             .andExpect(jsonPath("$.isRead").value(DEFAULT_IS_READ.booleanValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
+    }
+
+    @Test
+    @Transactional
+    void getOrgNotificationsByIdFiltering() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        Long id = orgNotification.getId();
+
+        defaultOrgNotificationShouldBeFound("id.equals=" + id);
+        defaultOrgNotificationShouldNotBeFound("id.notEquals=" + id);
+
+        defaultOrgNotificationShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultOrgNotificationShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultOrgNotificationShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultOrgNotificationShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByTitleIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where title equals to DEFAULT_TITLE
+        defaultOrgNotificationShouldBeFound("title.equals=" + DEFAULT_TITLE);
+
+        // Get all the orgNotificationList where title equals to UPDATED_TITLE
+        defaultOrgNotificationShouldNotBeFound("title.equals=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByTitleIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where title not equals to DEFAULT_TITLE
+        defaultOrgNotificationShouldNotBeFound("title.notEquals=" + DEFAULT_TITLE);
+
+        // Get all the orgNotificationList where title not equals to UPDATED_TITLE
+        defaultOrgNotificationShouldBeFound("title.notEquals=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByTitleIsInShouldWork() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where title in DEFAULT_TITLE or UPDATED_TITLE
+        defaultOrgNotificationShouldBeFound("title.in=" + DEFAULT_TITLE + "," + UPDATED_TITLE);
+
+        // Get all the orgNotificationList where title equals to UPDATED_TITLE
+        defaultOrgNotificationShouldNotBeFound("title.in=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByTitleIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where title is not null
+        defaultOrgNotificationShouldBeFound("title.specified=true");
+
+        // Get all the orgNotificationList where title is null
+        defaultOrgNotificationShouldNotBeFound("title.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByTitleContainsSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where title contains DEFAULT_TITLE
+        defaultOrgNotificationShouldBeFound("title.contains=" + DEFAULT_TITLE);
+
+        // Get all the orgNotificationList where title contains UPDATED_TITLE
+        defaultOrgNotificationShouldNotBeFound("title.contains=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByTitleNotContainsSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where title does not contain DEFAULT_TITLE
+        defaultOrgNotificationShouldNotBeFound("title.doesNotContain=" + DEFAULT_TITLE);
+
+        // Get all the orgNotificationList where title does not contain UPDATED_TITLE
+        defaultOrgNotificationShouldBeFound("title.doesNotContain=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDescIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where desc equals to DEFAULT_DESC
+        defaultOrgNotificationShouldBeFound("desc.equals=" + DEFAULT_DESC);
+
+        // Get all the orgNotificationList where desc equals to UPDATED_DESC
+        defaultOrgNotificationShouldNotBeFound("desc.equals=" + UPDATED_DESC);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDescIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where desc not equals to DEFAULT_DESC
+        defaultOrgNotificationShouldNotBeFound("desc.notEquals=" + DEFAULT_DESC);
+
+        // Get all the orgNotificationList where desc not equals to UPDATED_DESC
+        defaultOrgNotificationShouldBeFound("desc.notEquals=" + UPDATED_DESC);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDescIsInShouldWork() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where desc in DEFAULT_DESC or UPDATED_DESC
+        defaultOrgNotificationShouldBeFound("desc.in=" + DEFAULT_DESC + "," + UPDATED_DESC);
+
+        // Get all the orgNotificationList where desc equals to UPDATED_DESC
+        defaultOrgNotificationShouldNotBeFound("desc.in=" + UPDATED_DESC);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDescIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where desc is not null
+        defaultOrgNotificationShouldBeFound("desc.specified=true");
+
+        // Get all the orgNotificationList where desc is null
+        defaultOrgNotificationShouldNotBeFound("desc.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDescContainsSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where desc contains DEFAULT_DESC
+        defaultOrgNotificationShouldBeFound("desc.contains=" + DEFAULT_DESC);
+
+        // Get all the orgNotificationList where desc contains UPDATED_DESC
+        defaultOrgNotificationShouldNotBeFound("desc.contains=" + UPDATED_DESC);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDescNotContainsSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where desc does not contain DEFAULT_DESC
+        defaultOrgNotificationShouldNotBeFound("desc.doesNotContain=" + DEFAULT_DESC);
+
+        // Get all the orgNotificationList where desc does not contain UPDATED_DESC
+        defaultOrgNotificationShouldBeFound("desc.doesNotContain=" + UPDATED_DESC);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDataIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where data equals to DEFAULT_DATA
+        defaultOrgNotificationShouldBeFound("data.equals=" + DEFAULT_DATA);
+
+        // Get all the orgNotificationList where data equals to UPDATED_DATA
+        defaultOrgNotificationShouldNotBeFound("data.equals=" + UPDATED_DATA);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDataIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where data not equals to DEFAULT_DATA
+        defaultOrgNotificationShouldNotBeFound("data.notEquals=" + DEFAULT_DATA);
+
+        // Get all the orgNotificationList where data not equals to UPDATED_DATA
+        defaultOrgNotificationShouldBeFound("data.notEquals=" + UPDATED_DATA);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDataIsInShouldWork() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where data in DEFAULT_DATA or UPDATED_DATA
+        defaultOrgNotificationShouldBeFound("data.in=" + DEFAULT_DATA + "," + UPDATED_DATA);
+
+        // Get all the orgNotificationList where data equals to UPDATED_DATA
+        defaultOrgNotificationShouldNotBeFound("data.in=" + UPDATED_DATA);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDataIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where data is not null
+        defaultOrgNotificationShouldBeFound("data.specified=true");
+
+        // Get all the orgNotificationList where data is null
+        defaultOrgNotificationShouldNotBeFound("data.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDataContainsSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where data contains DEFAULT_DATA
+        defaultOrgNotificationShouldBeFound("data.contains=" + DEFAULT_DATA);
+
+        // Get all the orgNotificationList where data contains UPDATED_DATA
+        defaultOrgNotificationShouldNotBeFound("data.contains=" + UPDATED_DATA);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByDataNotContainsSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where data does not contain DEFAULT_DATA
+        defaultOrgNotificationShouldNotBeFound("data.doesNotContain=" + DEFAULT_DATA);
+
+        // Get all the orgNotificationList where data does not contain UPDATED_DATA
+        defaultOrgNotificationShouldBeFound("data.doesNotContain=" + UPDATED_DATA);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByIsReadIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where isRead equals to DEFAULT_IS_READ
+        defaultOrgNotificationShouldBeFound("isRead.equals=" + DEFAULT_IS_READ);
+
+        // Get all the orgNotificationList where isRead equals to UPDATED_IS_READ
+        defaultOrgNotificationShouldNotBeFound("isRead.equals=" + UPDATED_IS_READ);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByIsReadIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where isRead not equals to DEFAULT_IS_READ
+        defaultOrgNotificationShouldNotBeFound("isRead.notEquals=" + DEFAULT_IS_READ);
+
+        // Get all the orgNotificationList where isRead not equals to UPDATED_IS_READ
+        defaultOrgNotificationShouldBeFound("isRead.notEquals=" + UPDATED_IS_READ);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByIsReadIsInShouldWork() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where isRead in DEFAULT_IS_READ or UPDATED_IS_READ
+        defaultOrgNotificationShouldBeFound("isRead.in=" + DEFAULT_IS_READ + "," + UPDATED_IS_READ);
+
+        // Get all the orgNotificationList where isRead equals to UPDATED_IS_READ
+        defaultOrgNotificationShouldNotBeFound("isRead.in=" + UPDATED_IS_READ);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByIsReadIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where isRead is not null
+        defaultOrgNotificationShouldBeFound("isRead.specified=true");
+
+        // Get all the orgNotificationList where isRead is null
+        defaultOrgNotificationShouldNotBeFound("isRead.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByStatusIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where status equals to DEFAULT_STATUS
+        defaultOrgNotificationShouldBeFound("status.equals=" + DEFAULT_STATUS);
+
+        // Get all the orgNotificationList where status equals to UPDATED_STATUS
+        defaultOrgNotificationShouldNotBeFound("status.equals=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByStatusIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where status not equals to DEFAULT_STATUS
+        defaultOrgNotificationShouldNotBeFound("status.notEquals=" + DEFAULT_STATUS);
+
+        // Get all the orgNotificationList where status not equals to UPDATED_STATUS
+        defaultOrgNotificationShouldBeFound("status.notEquals=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByStatusIsInShouldWork() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where status in DEFAULT_STATUS or UPDATED_STATUS
+        defaultOrgNotificationShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
+
+        // Get all the orgNotificationList where status equals to UPDATED_STATUS
+        defaultOrgNotificationShouldNotBeFound("status.in=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByStatusIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+
+        // Get all the orgNotificationList where status is not null
+        defaultOrgNotificationShouldBeFound("status.specified=true");
+
+        // Get all the orgNotificationList where status is null
+        defaultOrgNotificationShouldNotBeFound("status.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOrgNotificationsByOrgUserIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orgNotificationRepository.saveAndFlush(orgNotification);
+        OrgUser orgUser = OrgUserResourceIT.createEntity(em);
+        em.persist(orgUser);
+        em.flush();
+        orgNotification.setOrgUser(orgUser);
+        orgNotificationRepository.saveAndFlush(orgNotification);
+        Long orgUserId = orgUser.getId();
+
+        // Get all the orgNotificationList where orgUser equals to orgUserId
+        defaultOrgNotificationShouldBeFound("orgUserId.equals=" + orgUserId);
+
+        // Get all the orgNotificationList where orgUser equals to (orgUserId + 1)
+        defaultOrgNotificationShouldNotBeFound("orgUserId.equals=" + (orgUserId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultOrgNotificationShouldBeFound(String filter) throws Exception {
+        restOrgNotificationMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(orgNotification.getId().intValue())))
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
+            .andExpect(jsonPath("$.[*].desc").value(hasItem(DEFAULT_DESC)))
+            .andExpect(jsonPath("$.[*].data").value(hasItem(DEFAULT_DATA)))
+            .andExpect(jsonPath("$.[*].isRead").value(hasItem(DEFAULT_IS_READ.booleanValue())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
+
+        // Check, that the count call also returns 1
+        restOrgNotificationMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultOrgNotificationShouldNotBeFound(String filter) throws Exception {
+        restOrgNotificationMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restOrgNotificationMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

@@ -14,7 +14,7 @@ public class SvcUnitDTO implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(max = 40)
+    @Size(min = 0, max = 200)
     private String name;
 
     @NotNull

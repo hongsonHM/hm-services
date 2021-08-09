@@ -1,7 +1,9 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.OrgNotificationRepository;
+import com.overnetcontact.dvvs.service.OrgNotificationQueryService;
 import com.overnetcontact.dvvs.service.OrgNotificationService;
+import com.overnetcontact.dvvs.service.criteria.OrgNotificationCriteria;
 import com.overnetcontact.dvvs.service.dto.OrgNotificationDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -43,9 +45,16 @@ public class OrgNotificationResource {
 
     private final OrgNotificationRepository orgNotificationRepository;
 
-    public OrgNotificationResource(OrgNotificationService orgNotificationService, OrgNotificationRepository orgNotificationRepository) {
+    private final OrgNotificationQueryService orgNotificationQueryService;
+
+    public OrgNotificationResource(
+        OrgNotificationService orgNotificationService,
+        OrgNotificationRepository orgNotificationRepository,
+        OrgNotificationQueryService orgNotificationQueryService
+    ) {
         this.orgNotificationService = orgNotificationService;
         this.orgNotificationRepository = orgNotificationRepository;
+        this.orgNotificationQueryService = orgNotificationQueryService;
     }
 
     /**
@@ -143,14 +152,27 @@ public class OrgNotificationResource {
      * {@code GET  /org-notifications} : get all the orgNotifications.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orgNotifications in body.
      */
     @GetMapping("/org-notifications")
-    public ResponseEntity<List<OrgNotificationDTO>> getAllOrgNotifications(Pageable pageable) {
-        log.debug("REST request to get a page of OrgNotifications");
-        Page<OrgNotificationDTO> page = orgNotificationService.findAll(pageable);
+    public ResponseEntity<List<OrgNotificationDTO>> getAllOrgNotifications(OrgNotificationCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get OrgNotifications by criteria: {}", criteria);
+        Page<OrgNotificationDTO> page = orgNotificationQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /org-notifications/count} : count all the orgNotifications.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/org-notifications/count")
+    public ResponseEntity<Long> countOrgNotifications(OrgNotificationCriteria criteria) {
+        log.debug("REST request to count OrgNotifications by criteria: {}", criteria);
+        return ResponseEntity.ok().body(orgNotificationQueryService.countByCriteria(criteria));
     }
 
     /**

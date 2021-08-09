@@ -2,7 +2,6 @@ package com.overnetcontact.dvvs.service;
 
 import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

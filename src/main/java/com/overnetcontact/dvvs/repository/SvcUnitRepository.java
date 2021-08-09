@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface SvcUnitRepository extends JpaRepository<SvcUnit, Long> {
+public interface SvcUnitRepository extends JpaRepository<SvcUnit, Long>, JpaSpecificationExecutor<SvcUnit> {
     Optional<SvcUnit> findOneByNameIgnoreCase(String name);
 }

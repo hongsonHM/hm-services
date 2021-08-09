@@ -9,4 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface OrgGroupRepository extends JpaRepository<OrgGroup, Long> {}
+public interface OrgGroupRepository extends JpaRepository<OrgGroup, Long>, JpaSpecificationExecutor<OrgGroup> {}

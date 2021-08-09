@@ -9,4 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface SvcTargetTypeRepository extends JpaRepository<SvcTargetType, Long> {}
+public interface SvcTargetTypeRepository extends JpaRepository<SvcTargetType, Long>, JpaSpecificationExecutor<SvcTargetType> {}
