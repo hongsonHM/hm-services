@@ -13,7 +13,7 @@ public interface SvcUnitMapper extends EntityMapper<SvcUnitDTO, SvcUnit> {
     SvcUnitDTO toDto(SvcUnit s);
 
     @Named("id")
-    @BeanMapping(ignoreByDefault = true)
+    // @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     SvcUnitDTO toDtoId(SvcUnit svcUnit);
 }

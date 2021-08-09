@@ -10,7 +10,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {})
 public interface SvcClientMapper extends EntityMapper<SvcClientDTO, SvcClient> {
     @Named("id")
-    @BeanMapping(ignoreByDefault = true)
+    // @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     SvcClientDTO toDtoId(SvcClient svcClient);
 }

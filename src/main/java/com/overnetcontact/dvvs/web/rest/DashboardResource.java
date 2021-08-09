@@ -1,11 +1,18 @@
 package com.overnetcontact.dvvs.web.rest;
 
+import com.overnetcontact.dvvs.domain.SvcContract;
+import com.overnetcontact.dvvs.domain.enumeration.SvcContractStatus;
 import com.overnetcontact.dvvs.repository.OrgGroupRepository;
+import com.overnetcontact.dvvs.repository.OrgUserRepository;
+import com.overnetcontact.dvvs.repository.SvcContractRepository;
 import com.overnetcontact.dvvs.service.OrgGroupService;
 import com.overnetcontact.dvvs.service.dto.OrgGroupDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,6 +45,9 @@ public class DashboardResource {
 
     private static final String ENTITY_NAME = "orgGroup";
 
+    private SvcContractRepository contractRepository;
+    private OrgUserRepository orgUserRepository;
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
@@ -47,8 +57,24 @@ public class DashboardResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of dashboard data in body.
      */
     @GetMapping("/dashboard")
-    public ResponseEntity<List<OrgGroupDTO>> getAllOrgGroups() {
+    public ResponseEntity<DashBoardDTO> getAllOrgGroups() {
         log.debug("REST request to get dashboard statics");
-        return ResponseEntity.ok().body(null);
+        List<SvcContract> contracts = contractRepository.findAll();
+        DashBoardDTO boardDTO = new DashBoardDTO();
+        // boardDTO.setTotalContract(contracts.size().to);
+        boardDTO.setTotalContractNewOrStop(
+            contracts
+                .stream()
+                .filter(c -> c.getStatus().equals(SvcContractStatus.PENDING) || c.getStatus().equals(SvcContractStatus.WORKING))
+                .count()
+        );
+        boardDTO.setContractOnHoldOrStopped(
+            contracts
+                .stream()
+                .filter(c -> c.getStatus().equals(SvcContractStatus.TIMEOUT) || c.getStatus().equals(SvcContractStatus.UNREQUEST))
+                .count()
+        );
+        // boardDTO.setTotalContractWillBeEndIn3Month(contracts.stream().filter(c -> c.getEffectiveTimeTo().isAfter(Instant.now().minus(3))));
+        return ResponseEntity.ok().body(boardDTO);
     }
 }
