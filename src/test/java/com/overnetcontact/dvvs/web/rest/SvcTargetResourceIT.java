@@ -285,43 +285,43 @@ class SvcTargetResourceIT {
         defaultSvcTargetShouldNotBeFound("typeId.equals=" + (typeId + 1));
     }
 
-    @Test
-    @Transactional
-    void getAllSvcTargetsBySvcTargetIsEqualToSomething() throws Exception {
-        // Initialize the database
-        svcTargetRepository.saveAndFlush(svcTarget);
-        SvcTarget svcTarget = SvcTargetResourceIT.createEntity(em);
-        em.persist(svcTarget);
-        em.flush();
-        svcTarget.setSvcTarget(svcTarget);
-        svcTargetRepository.saveAndFlush(svcTarget);
-        Long svcTargetId = svcTarget.getId();
+    // @Test
+    // @Transactional
+    // void getAllSvcTargetsBySvcTargetIsEqualToSomething() throws Exception {
+    //     // Initialize the database
+    //     svcTargetRepository.saveAndFlush(svcTarget);
+    //     SvcTarget svcTarget = SvcTargetResourceIT.createEntity(em);
+    //     em.persist(svcTarget);
+    //     em.flush();
+    //     svcTarget.setSvcTarget(svcTarget);
+    //     svcTargetRepository.saveAndFlush(svcTarget);
+    //     Long svcTargetId = svcTarget.getId();
 
-        // Get all the svcTargetList where svcTarget equals to svcTargetId
-        defaultSvcTargetShouldBeFound("svcTargetId.equals=" + svcTargetId);
+    //     // Get all the svcTargetList where svcTarget equals to svcTargetId
+    //     defaultSvcTargetShouldBeFound("svcTargetId.equals=" + svcTargetId);
 
-        // Get all the svcTargetList where svcTarget equals to (svcTargetId + 1)
-        defaultSvcTargetShouldNotBeFound("svcTargetId.equals=" + (svcTargetId + 1));
-    }
+    //     // Get all the svcTargetList where svcTarget equals to (svcTargetId + 1)
+    //     defaultSvcTargetShouldNotBeFound("svcTargetId.equals=" + (svcTargetId + 1));
+    // }
 
-    @Test
-    @Transactional
-    void getAllSvcTargetsBySvcContractIsEqualToSomething() throws Exception {
-        // Initialize the database
-        svcTargetRepository.saveAndFlush(svcTarget);
-        SvcContract svcContract = SvcContractResourceIT.createEntity(em);
-        em.persist(svcContract);
-        em.flush();
-        svcTarget.setSvcContract(svcContract);
-        svcTargetRepository.saveAndFlush(svcTarget);
-        Long svcContractId = svcContract.getId();
+    // @Test
+    // @Transactional
+    // void getAllSvcTargetsBySvcContractIsEqualToSomething() throws Exception {
+    //     // Initialize the database
+    //     svcTargetRepository.saveAndFlush(svcTarget);
+    //     SvcContract svcContract = SvcContractResourceIT.createEntity(em);
+    //     em.persist(svcContract);
+    //     em.flush();
+    //     svcTarget.setSvcContract(svcContract);
+    //     svcTargetRepository.saveAndFlush(svcTarget);
+    //     Long svcContractId = svcContract.getId();
 
-        // Get all the svcTargetList where svcContract equals to svcContractId
-        defaultSvcTargetShouldBeFound("svcContractId.equals=" + svcContractId);
+    //     // Get all the svcTargetList where svcContract equals to svcContractId
+    //     defaultSvcTargetShouldBeFound("svcContractId.equals=" + svcContractId);
 
-        // Get all the svcTargetList where svcContract equals to (svcContractId + 1)
-        defaultSvcTargetShouldNotBeFound("svcContractId.equals=" + (svcContractId + 1));
-    }
+    //     // Get all the svcTargetList where svcContract equals to (svcContractId + 1)
+    //     defaultSvcTargetShouldNotBeFound("svcContractId.equals=" + (svcContractId + 1));
+    // }
 
     /**
      * Executes the search, and checks that the default entity is returned.
