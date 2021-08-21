@@ -20,8 +20,6 @@ public class SvcTargetDTO implements Serializable {
 
     private SvcTargetDTO svcTarget;
 
-    private SvcContractDTO svcContract;
-
     public Long getId() {
         return id;
     }
@@ -54,14 +52,6 @@ public class SvcTargetDTO implements Serializable {
         this.svcTarget = svcTarget;
     }
 
-    public SvcContractDTO getSvcContract() {
-        return svcContract;
-    }
-
-    public void setSvcContract(SvcContractDTO svcContract) {
-        this.svcContract = svcContract;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -91,7 +81,6 @@ public class SvcTargetDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", type=" + getType() +
             ", svcTarget=" + getSvcTarget() +
-            ", svcContract=" + getSvcContract() +
             "}";
     }
 }

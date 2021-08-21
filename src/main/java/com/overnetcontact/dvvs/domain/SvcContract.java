@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -83,16 +84,42 @@ public class SvcContract implements Serializable {
     @Column(name = "year")
     private Integer year;
 
-    @OneToMany(mappedBy = "svcContract")
+    @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JoinTable(
+        name = "dvvs_contract_target",
+        joinColumns = { @JoinColumn(name = "contract_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "target_id", referencedColumnName = "id") }
+    )
     @JsonIgnoreProperties(value = { "childs", "type", "svcTarget", "svcContract" }, allowSetters = true)
     private Set<SvcTarget> targets = new HashSet<>();
 
-    @ManyToOne
-    private User approvedBy;
+    @ManyToMany
+    @JoinTable(
+        name = "dvvs_contract_approved_by",
+        joinColumns = { @JoinColumn(name = "contract_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }
+    )
+    private List<User> approvedBy;
+
+    @ManyToMany
+    @JoinTable(
+        name = "dvvs_contract_manager_by",
+        joinColumns = { @JoinColumn(name = "contract_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }
+    )
+    private List<User> managerBy;
 
     @ManyToOne
     private User ownerBy;
+
+    @ManyToMany
+    @JoinTable(
+        name = "dvvs_contract_group_notification",
+        joinColumns = { @JoinColumn(name = "contract_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "org_group_id", referencedColumnName = "id") }
+    )
+    private List<OrgGroup> notificationUnits;
 
     @ManyToOne
     @JsonIgnoreProperties(value = { "group" }, allowSetters = true)
@@ -331,46 +358,6 @@ public class SvcContract implements Serializable {
         return this.targets;
     }
 
-    public SvcContract targets(Set<SvcTarget> svcTargets) {
-        this.setTargets(svcTargets);
-        return this;
-    }
-
-    public SvcContract addTargets(SvcTarget svcTarget) {
-        this.targets.add(svcTarget);
-        svcTarget.setSvcContract(this);
-        return this;
-    }
-
-    public SvcContract removeTargets(SvcTarget svcTarget) {
-        this.targets.remove(svcTarget);
-        svcTarget.setSvcContract(null);
-        return this;
-    }
-
-    public void setTargets(Set<SvcTarget> svcTargets) {
-        if (this.targets != null) {
-            this.targets.forEach(i -> i.setSvcContract(null));
-        }
-        if (svcTargets != null) {
-            svcTargets.forEach(i -> i.setSvcContract(this));
-        }
-        this.targets = svcTargets;
-    }
-
-    public User getApprovedBy() {
-        return this.approvedBy;
-    }
-
-    public SvcContract approvedBy(User user) {
-        this.setApprovedBy(user);
-        return this;
-    }
-
-    public void setApprovedBy(User user) {
-        this.approvedBy = user;
-    }
-
     public User getOwnerBy() {
         return this.ownerBy;
     }
@@ -464,5 +451,29 @@ public class SvcContract implements Serializable {
             ", valuePerPerson=" + getValuePerPerson() +
             ", year=" + getYear() +
             "}";
+    }
+
+    public List<OrgGroup> getNotificationUnits() {
+        return notificationUnits;
+    }
+
+    public void setNotificationUnits(List<OrgGroup> notificationUnits) {
+        this.notificationUnits = notificationUnits;
+    }
+
+    public List<User> getManagerBy() {
+        return managerBy;
+    }
+
+    public void setManagerBy(List<User> managerBy) {
+        this.managerBy = managerBy;
+    }
+
+    public List<User> getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(List<User> approvedBy) {
+        this.approvedBy = approvedBy;
     }
 }

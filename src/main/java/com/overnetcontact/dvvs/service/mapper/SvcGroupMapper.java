@@ -10,7 +10,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {})
 public interface SvcGroupMapper extends EntityMapper<SvcGroupDTO, SvcGroup> {
     @Named("id")
-    @BeanMapping(ignoreByDefault = true)
+    // @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     SvcGroupDTO toDtoId(SvcGroup svcGroup);
 }

@@ -10,7 +10,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {})
 public interface SvcScheduleUnitMapper extends EntityMapper<SvcScheduleUnitDTO, SvcScheduleUnit> {
     @Named("id")
-    @BeanMapping(ignoreByDefault = true)
+    // @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     SvcScheduleUnitDTO toDtoId(SvcScheduleUnit svcScheduleUnit);
 }

@@ -40,10 +40,6 @@ public class SvcTarget implements Serializable {
     @JsonIgnoreProperties(value = { "childs", "type", "svcTarget", "svcContract" }, allowSetters = true)
     private SvcTarget svcTarget;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "targets", "approvedBy", "ownerBy", "unit", "saler", "client" }, allowSetters = true)
-    private SvcContract svcContract;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -126,19 +122,6 @@ public class SvcTarget implements Serializable {
 
     public void setSvcTarget(SvcTarget svcTarget) {
         this.svcTarget = svcTarget;
-    }
-
-    public SvcContract getSvcContract() {
-        return this.svcContract;
-    }
-
-    public SvcTarget svcContract(SvcContract svcContract) {
-        this.setSvcContract(svcContract);
-        return this;
-    }
-
-    public void setSvcContract(SvcContract svcContract) {
-        this.svcContract = svcContract;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

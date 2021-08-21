@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrgUserRepository extends JpaRepository<OrgUser, Long>, JpaSpecificationExecutor<OrgUser> {
     Optional<OrgUser> findByInternalUser_Login(String username);
+
+    Optional<OrgUser> findByInternalUser_Id(Long id);
 }

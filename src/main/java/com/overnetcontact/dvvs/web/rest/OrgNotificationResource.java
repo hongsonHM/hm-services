@@ -1,6 +1,11 @@
 package com.overnetcontact.dvvs.web.rest;
 
+import com.overnetcontact.dvvs.domain.Authority;
+import com.overnetcontact.dvvs.domain.OrgUser;
 import com.overnetcontact.dvvs.repository.OrgNotificationRepository;
+import com.overnetcontact.dvvs.repository.OrgUserRepository;
+import com.overnetcontact.dvvs.security.AuthoritiesConstants;
+import com.overnetcontact.dvvs.security.SecurityUtils;
 import com.overnetcontact.dvvs.service.OrgNotificationQueryService;
 import com.overnetcontact.dvvs.service.OrgNotificationService;
 import com.overnetcontact.dvvs.service.criteria.OrgNotificationCriteria;
@@ -23,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -47,14 +53,18 @@ public class OrgNotificationResource {
 
     private final OrgNotificationQueryService orgNotificationQueryService;
 
+    private final OrgUserRepository orgUserRepository;
+
     public OrgNotificationResource(
         OrgNotificationService orgNotificationService,
         OrgNotificationRepository orgNotificationRepository,
-        OrgNotificationQueryService orgNotificationQueryService
+        OrgNotificationQueryService orgNotificationQueryService,
+        OrgUserRepository orgUserRepository
     ) {
         this.orgNotificationService = orgNotificationService;
         this.orgNotificationRepository = orgNotificationRepository;
         this.orgNotificationQueryService = orgNotificationQueryService;
+        this.orgUserRepository = orgUserRepository;
     }
 
     /**
@@ -158,6 +168,13 @@ public class OrgNotificationResource {
     @GetMapping("/org-notifications")
     public ResponseEntity<List<OrgNotificationDTO>> getAllOrgNotifications(OrgNotificationCriteria criteria, Pageable pageable) {
         log.debug("REST request to get OrgNotifications by criteria: {}", criteria);
+        if (!SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.BUSINESS_MANAGER)) {
+            String username = SecurityUtils.getCurrentUserLogin().orElseThrow();
+            OrgUser userEntity = orgUserRepository.findByInternalUser_Login(username).orElseThrow();
+            LongFilter userFilter = new LongFilter();
+            userFilter.setEquals(userEntity.getId());
+            criteria.setOrgUserId(userFilter);
+        }
         Page<OrgNotificationDTO> page = orgNotificationQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

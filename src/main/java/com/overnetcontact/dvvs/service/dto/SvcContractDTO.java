@@ -1,10 +1,12 @@
 package com.overnetcontact.dvvs.service.dto;
 
+import com.overnetcontact.dvvs.domain.OrgGroup;
 import com.overnetcontact.dvvs.domain.enumeration.SvcContractStatus;
 import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.*;
 
@@ -55,7 +57,11 @@ public class SvcContractDTO implements Serializable {
 
     private Integer year;
 
-    private UserDTO approvedBy;
+    private List<UserDTO> approvedBy;
+
+    private List<UserDTO> managerBy;
+
+    private List<OrgGroupDTO> notificationUnits;
 
     private UserDTO ownerBy;
 
@@ -64,6 +70,14 @@ public class SvcContractDTO implements Serializable {
     private OrgUserDTO saler;
 
     private SvcClientDTO client;
+
+    private String createdBy;
+
+    private Instant createdDate;
+
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
 
     public Long getId() {
         return id;
@@ -201,14 +215,6 @@ public class SvcContractDTO implements Serializable {
         this.year = year;
     }
 
-    public UserDTO getApprovedBy() {
-        return approvedBy;
-    }
-
-    public void setApprovedBy(UserDTO approvedBy) {
-        this.approvedBy = approvedBy;
-    }
-
     public UserDTO getOwnerBy() {
         return ownerBy;
     }
@@ -283,11 +289,66 @@ public class SvcContractDTO implements Serializable {
             ", subjectCount=" + getSubjectCount() +
             ", valuePerPerson=" + getValuePerPerson() +
             ", year=" + getYear() +
-            ", approvedBy=" + getApprovedBy() +
             ", ownerBy=" + getOwnerBy() +
             ", unit=" + getUnit() +
             ", saler=" + getSaler() +
             ", client=" + getClient() +
             "}";
+    }
+
+    public List<OrgGroupDTO> getNotificationUnits() {
+        return notificationUnits;
+    }
+
+    public void setNotificationUnits(List<OrgGroupDTO> notificationUnits) {
+        this.notificationUnits = notificationUnits;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public List<UserDTO> getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(List<UserDTO> approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+
+    public List<UserDTO> getManagerBy() {
+        return managerBy;
+    }
+
+    public void setManagerBy(List<UserDTO> managerBy) {
+        this.managerBy = managerBy;
     }
 }

@@ -1859,44 +1859,6 @@ class SvcContractResourceIT {
 
     @Test
     @Transactional
-    void getAllSvcContractsByTargetsIsEqualToSomething() throws Exception {
-        // Initialize the database
-        svcContractRepository.saveAndFlush(svcContract);
-        SvcTarget targets = SvcTargetResourceIT.createEntity(em);
-        em.persist(targets);
-        em.flush();
-        svcContract.addTargets(targets);
-        svcContractRepository.saveAndFlush(svcContract);
-        Long targetsId = targets.getId();
-
-        // Get all the svcContractList where targets equals to targetsId
-        defaultSvcContractShouldBeFound("targetsId.equals=" + targetsId);
-
-        // Get all the svcContractList where targets equals to (targetsId + 1)
-        defaultSvcContractShouldNotBeFound("targetsId.equals=" + (targetsId + 1));
-    }
-
-    @Test
-    @Transactional
-    void getAllSvcContractsByApprovedByIsEqualToSomething() throws Exception {
-        // Initialize the database
-        svcContractRepository.saveAndFlush(svcContract);
-        User approvedBy = UserResourceIT.createEntity(em);
-        em.persist(approvedBy);
-        em.flush();
-        svcContract.setApprovedBy(approvedBy);
-        svcContractRepository.saveAndFlush(svcContract);
-        Long approvedById = approvedBy.getId();
-
-        // Get all the svcContractList where approvedBy equals to approvedById
-        defaultSvcContractShouldBeFound("approvedById.equals=" + approvedById);
-
-        // Get all the svcContractList where approvedBy equals to (approvedById + 1)
-        defaultSvcContractShouldNotBeFound("approvedById.equals=" + (approvedById + 1));
-    }
-
-    @Test
-    @Transactional
     void getAllSvcContractsByOwnerByIsEqualToSomething() throws Exception {
         // Initialize the database
         svcContractRepository.saveAndFlush(svcContract);

@@ -5,6 +5,8 @@ package com.overnetcontact.dvvs.domain.enumeration;
  */
 public enum Role {
     SERVICE_MANAGER,
-    SUPERVISOR,
-    SALE,
+    BUSINESS_MANAGER,
+    BUSINESS_STAFF,
+    HUMAN_RESOURCE_STAFF,
+    SUPPLY_STAFF,
 }

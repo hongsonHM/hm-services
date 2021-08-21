@@ -7,9 +7,14 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link SvcContract} and its DTO {@link SvcContractDTO}.
  */
-@Mapper(componentModel = "spring", uses = { UserMapper.class, SvcUnitMapper.class, OrgUserMapper.class, SvcClientMapper.class })
+@Mapper(
+    componentModel = "spring",
+    uses = { UserMapper.class, SvcUnitMapper.class, OrgUserMapper.class, SvcClientMapper.class, OrgGroupMapper.class }
+)
 public interface SvcContractMapper extends EntityMapper<SvcContractDTO, SvcContract> {
-    @Mapping(target = "approvedBy", source = "approvedBy", qualifiedByName = "id")
+    @Mapping(target = "approvedBy", source = "approvedBy", qualifiedByName = "login")
+    @Mapping(target = "managerBy", source = "managerBy", qualifiedByName = "login")
+    @Mapping(target = "notificationUnits", source = "notificationUnits", qualifiedByName = "id")
     @Mapping(target = "ownerBy", source = "ownerBy", qualifiedByName = "id")
     @Mapping(target = "unit", source = "unit", qualifiedByName = "id")
     @Mapping(target = "saler", source = "saler", qualifiedByName = "id")
@@ -17,7 +22,7 @@ public interface SvcContractMapper extends EntityMapper<SvcContractDTO, SvcContr
     SvcContractDTO toDto(SvcContract s);
 
     @Named("id")
-    @BeanMapping(ignoreByDefault = true)
+    // @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     SvcContractDTO toDtoId(SvcContract svcContract);
 }

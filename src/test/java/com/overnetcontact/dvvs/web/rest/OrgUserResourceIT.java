@@ -12,7 +12,6 @@ import com.overnetcontact.dvvs.domain.OrgUser;
 import com.overnetcontact.dvvs.domain.User;
 import com.overnetcontact.dvvs.domain.enumeration.Role;
 import com.overnetcontact.dvvs.repository.OrgUserRepository;
-import com.overnetcontact.dvvs.service.criteria.OrgUserCriteria;
 import com.overnetcontact.dvvs.service.dto.OrgUserDTO;
 import com.overnetcontact.dvvs.service.mapper.OrgUserMapper;
 import java.util.List;
@@ -43,7 +42,7 @@ class OrgUserResourceIT {
     private static final String UPDATED_PHONE = "BBBBBBBBBB";
 
     private static final Role DEFAULT_ROLE = Role.SERVICE_MANAGER;
-    private static final Role UPDATED_ROLE = Role.SUPERVISOR;
+    private static final Role UPDATED_ROLE = Role.BUSINESS_MANAGER;
 
     private static final String ENTITY_API_URL = "/api/org-users";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";

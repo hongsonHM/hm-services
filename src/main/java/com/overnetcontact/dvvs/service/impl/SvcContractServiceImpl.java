@@ -1,14 +1,11 @@
 package com.overnetcontact.dvvs.service.impl;
 
-import com.overnetcontact.dvvs.domain.SvcClient;
-import com.overnetcontact.dvvs.domain.SvcContract;
-import com.overnetcontact.dvvs.domain.SvcGroup;
-import com.overnetcontact.dvvs.domain.SvcUnit;
+import com.overnetcontact.dvvs.domain.*;
+import com.overnetcontact.dvvs.domain.enumeration.NotificationStatus;
 import com.overnetcontact.dvvs.domain.enumeration.SvcContractStatus;
-import com.overnetcontact.dvvs.repository.SvcClientRepository;
-import com.overnetcontact.dvvs.repository.SvcContractRepository;
-import com.overnetcontact.dvvs.repository.SvcGroupRepository;
-import com.overnetcontact.dvvs.repository.SvcUnitRepository;
+import com.overnetcontact.dvvs.repository.*;
+import com.overnetcontact.dvvs.security.SecurityUtils;
+import com.overnetcontact.dvvs.service.OrgNotificationService;
 import com.overnetcontact.dvvs.service.SvcContractService;
 import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
 import com.overnetcontact.dvvs.service.mapper.SvcContractMapper;
@@ -57,11 +54,37 @@ public class SvcContractServiceImpl implements SvcContractService {
 
     private final SvcClientRepository svcClientRepository;
 
+    private final OrgNotificationRepository orgNotificationRepository;
+
+    private final OrgUserRepository orgUserRepository;
+
     @Override
     public SvcContractDTO save(SvcContractDTO svcContractDTO) {
         log.debug("Request to save SvcContract : {}", svcContractDTO);
         SvcContract svcContract = svcContractMapper.toEntity(svcContractDTO);
         svcContract = svcContractRepository.save(svcContract);
+        if (svcContract.getId() != null) {
+            String username = SecurityUtils.getCurrentUserLogin().orElseThrow();
+            OrgUser userEntity = orgUserRepository.findByInternalUser_Login(username).orElseThrow();
+            svcContract.setOwnerBy(userEntity.getInternalUser());
+        }
+        if (svcContract.getStatus().equals(SvcContractStatus.PENDING)) {
+            if (svcContract.getApprovedBy() != null && svcContract.getApprovedBy().size() > 0) {
+                for (User approvedByDTO : svcContract.getApprovedBy()) {
+                    OrgUser approvedBy = orgUserRepository.findByInternalUser_Id(approvedByDTO.getId()).orElseThrow();
+                    OrgNotification orgNotification = new OrgNotification();
+                    orgNotification.setStatus(NotificationStatus.PROCESS);
+                    orgNotification.setOrgUser(approvedBy);
+                    orgNotification.setIsRead(false);
+                    orgNotification.setTitle("Hợp đồng cần được phê duyệt");
+                    orgNotification.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" cần được phê duyệt, hãy kiểm tra ngay!");
+                    orgNotification.setData(
+                        "{\n" + "        contract_id: '" + svcContract.getId() + "',\n" + "        type: 'contract'\n" + "      }"
+                    );
+                    orgNotificationRepository.save(orgNotification);
+                }
+            }
+        }
         return svcContractMapper.toDto(svcContract);
     }
 
