@@ -34,8 +34,6 @@ public class SvcTargetCriteria implements Serializable, Criteria {
 
     private LongFilter svcTargetId;
 
-    private LongFilter svcContractId;
-
     public SvcTargetCriteria() {}
 
     public SvcTargetCriteria(SvcTargetCriteria other) {
@@ -44,7 +42,6 @@ public class SvcTargetCriteria implements Serializable, Criteria {
         this.childsId = other.childsId == null ? null : other.childsId.copy();
         this.typeId = other.typeId == null ? null : other.typeId.copy();
         this.svcTargetId = other.svcTargetId == null ? null : other.svcTargetId.copy();
-        this.svcContractId = other.svcContractId == null ? null : other.svcContractId.copy();
     }
 
     @Override
@@ -127,21 +124,6 @@ public class SvcTargetCriteria implements Serializable, Criteria {
         this.svcTargetId = svcTargetId;
     }
 
-    public LongFilter getSvcContractId() {
-        return svcContractId;
-    }
-
-    public LongFilter svcContractId() {
-        if (svcContractId == null) {
-            svcContractId = new LongFilter();
-        }
-        return svcContractId;
-    }
-
-    public void setSvcContractId(LongFilter svcContractId) {
-        this.svcContractId = svcContractId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -156,14 +138,13 @@ public class SvcTargetCriteria implements Serializable, Criteria {
             Objects.equals(name, that.name) &&
             Objects.equals(childsId, that.childsId) &&
             Objects.equals(typeId, that.typeId) &&
-            Objects.equals(svcTargetId, that.svcTargetId) &&
-            Objects.equals(svcContractId, that.svcContractId)
+            Objects.equals(svcTargetId, that.svcTargetId)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, childsId, typeId, svcTargetId, svcContractId);
+        return Objects.hash(id, name, childsId, typeId, svcTargetId);
     }
 
     // prettier-ignore
@@ -175,7 +156,6 @@ public class SvcTargetCriteria implements Serializable, Criteria {
             (childsId != null ? "childsId=" + childsId + ", " : "") +
             (typeId != null ? "typeId=" + typeId + ", " : "") +
             (svcTargetId != null ? "svcTargetId=" + svcTargetId + ", " : "") +
-            (svcContractId != null ? "svcContractId=" + svcContractId + ", " : "") +
             "}";
     }
 }

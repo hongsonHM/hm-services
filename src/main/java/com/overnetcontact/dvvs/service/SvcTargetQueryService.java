@@ -110,15 +110,6 @@ public class SvcTargetQueryService extends QueryService<SvcTarget> {
                         )
                     );
             }
-            if (criteria.getSvcContractId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getSvcContractId(),
-                            root -> root.join(SvcTarget_.svcContract, JoinType.LEFT).get(SvcContract_.id)
-                        )
-                    );
-            }
         }
         return specification;
     }
