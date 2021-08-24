@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+<changeSet author="vinhnvq" id="1629810361279-12">
+    <createTable tableName="dvvs_contract_approved_by">
+        <column name="user_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+        <column name="contract_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="dvvs_contract_approved_by" constraintName="FKe6goeq0jnckea6sqpslmohxpi" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="dvvs_user" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="contract_id" baseTableName="dvvs_contract_approved_by" constraintName="FKi4hnynrc46ikhkhtjx3gqb2bx" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="svc_contract" validate="true"/>
+</changeSet>
+<changeSet author="vinhnvq (generated)" id="1629810361279-14">
+    <createTable tableName="dvvs_contract_group_notification">
+        <column name="org_group_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+        <column name="contract_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="contract_id" baseTableName="dvvs_contract_group_notification" constraintName="FKn7jei1iq1wrtmpjatl2lrw4kx" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="svc_contract" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="org_group_id" baseTableName="dvvs_contract_group_notification" constraintName="FKrmbimcn2yohrhl49973ynjhc3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="org_group" validate="true"/>
+</changeSet>
+<changeSet author="vinhnvq (generated)" id="1629810361279-15">
+    <createTable tableName="dvvs_contract_manager_by">
+        <column name="user_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+        <column name="contract_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="dvvs_contract_manager_by" constraintName="FKpkt26viofjkreiqkc1md6hny5" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="dvvs_user" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="contract_id" baseTableName="dvvs_contract_manager_by" constraintName="FKt5669mbbt1j90dm59vmfic3t2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="svc_contract" validate="true"/>
+</changeSet>
+<changeSet author="vinhnvq" id="1629810361279-17">
+    <createTable tableName="dvvs_contract_target">
+        <column name="contract_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+        <column name="target_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="contract_id" baseTableName="dvvs_contract_target" constraintName="FKs9ox9mxqcbtflin8gembda6cd" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="svc_contract" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="target_id" baseTableName="dvvs_contract_target" constraintName="FKu178lhseq82pqts77qdc5vbm" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="svc_target" validate="true"/>
+</changeSet>
+<changeSet author="vinhnvq" id="1629810361279-24">
+    <dropColumn columnName="approved_by_id" tableName="svc_contract"/>
+</changeSet>
+</databaseChangeLog>
