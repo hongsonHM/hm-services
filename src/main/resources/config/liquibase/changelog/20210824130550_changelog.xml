@@ -40,7 +40,7 @@
         <column name="contract_id" type="bigint">
             <constraints nullable="false"/>
         </column>
-        <column name="target_id" type="bigintvarchar(50)">
+        <column name="target_id" type="bigint">
             <constraints nullable="false"/>
         </column>
     </createTable>
