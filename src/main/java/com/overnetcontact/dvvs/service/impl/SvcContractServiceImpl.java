@@ -63,9 +63,10 @@ public class SvcContractServiceImpl implements SvcContractService {
         log.debug("Request to save SvcContract : {}", svcContractDTO);
         SvcContract svcContract = svcContractMapper.toEntity(svcContractDTO);
         svcContract = svcContractRepository.save(svcContract);
-        if (svcContract.getId() != null) {
-            String username = SecurityUtils.getCurrentUserLogin().orElseThrow();
-            OrgUser userEntity = orgUserRepository.findByInternalUser_Login(username).orElseThrow();
+        String username = SecurityUtils.getCurrentUserLogin().orElseThrow();
+        Optional<OrgUser> userEntityOptional = orgUserRepository.findByInternalUser_Login(username);
+        if (svcContract.getId() != null && userEntityOptional.isPresent()) {
+            OrgUser userEntity = userEntityOptional.get();
             svcContract.setOwnerBy(userEntity.getInternalUser());
         }
         if (svcContract.getStatus().equals(SvcContractStatus.PENDING)) {

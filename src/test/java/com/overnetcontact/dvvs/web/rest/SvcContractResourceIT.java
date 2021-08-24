@@ -1897,25 +1897,6 @@ class SvcContractResourceIT {
 
     @Test
     @Transactional
-    void getAllSvcContractsBySalerIsEqualToSomething() throws Exception {
-        // Initialize the database
-        svcContractRepository.saveAndFlush(svcContract);
-        OrgUser saler = OrgUserResourceIT.createEntity(em);
-        em.persist(saler);
-        em.flush();
-        svcContract.setSaler(saler);
-        svcContractRepository.saveAndFlush(svcContract);
-        Long salerId = saler.getId();
-
-        // Get all the svcContractList where saler equals to salerId
-        defaultSvcContractShouldBeFound("salerId.equals=" + salerId);
-
-        // Get all the svcContractList where saler equals to (salerId + 1)
-        defaultSvcContractShouldNotBeFound("salerId.equals=" + (salerId + 1));
-    }
-
-    @Test
-    @Transactional
     void getAllSvcContractsByClientIsEqualToSomething() throws Exception {
         // Initialize the database
         svcContractRepository.saveAndFlush(svcContract);
