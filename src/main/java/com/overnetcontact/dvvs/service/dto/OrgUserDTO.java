@@ -23,7 +23,7 @@ public class OrgUserDTO implements Serializable {
     @NotNull
     private Role role;
 
-    private UserDTO internalUser;
+    private AdminUserDTO internalUser;
 
     private OrgGroupDTO group;
 
@@ -59,11 +59,11 @@ public class OrgUserDTO implements Serializable {
         this.role = role;
     }
 
-    public UserDTO getInternalUser() {
+    public AdminUserDTO getInternalUser() {
         return internalUser;
     }
 
-    public void setInternalUser(UserDTO internalUser) {
+    public void setInternalUser(AdminUserDTO internalUser) {
         this.internalUser = internalUser;
     }
 

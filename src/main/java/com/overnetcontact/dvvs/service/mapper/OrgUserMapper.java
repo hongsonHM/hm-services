@@ -9,7 +9,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { UserMapper.class, OrgGroupMapper.class })
 public interface OrgUserMapper extends EntityMapper<OrgUserDTO, OrgUser> {
-    @Mapping(target = "internalUser", source = "internalUser", qualifiedByName = "login")
+    @Mapping(target = "internalUser", source = "internalUser")
     @Mapping(target = "group", source = "group", qualifiedByName = "id")
     OrgUserDTO toDto(OrgUser s);
 
