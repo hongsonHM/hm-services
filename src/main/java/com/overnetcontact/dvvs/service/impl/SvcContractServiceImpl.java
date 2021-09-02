@@ -5,7 +5,6 @@ import com.overnetcontact.dvvs.domain.enumeration.NotificationStatus;
 import com.overnetcontact.dvvs.domain.enumeration.SvcContractStatus;
 import com.overnetcontact.dvvs.repository.*;
 import com.overnetcontact.dvvs.security.SecurityUtils;
-import com.overnetcontact.dvvs.service.OrgNotificationService;
 import com.overnetcontact.dvvs.service.SvcContractService;
 import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
 import com.overnetcontact.dvvs.service.mapper.SvcContractMapper;
@@ -70,8 +69,8 @@ public class SvcContractServiceImpl implements SvcContractService {
             svcContract.setOwnerBy(userEntity.getInternalUser());
         }
         if (svcContract.getStatus().equals(SvcContractStatus.PENDING)) {
-            if (svcContract.getApprovedBy() != null && svcContract.getApprovedBy().size() > 0) {
-                for (User approvedByDTO : svcContract.getApprovedBy()) {
+            if (svcContract.getApproveBy() != null && svcContract.getApproveBy().size() > 0) {
+                for (User approvedByDTO : svcContract.getApproveBy()) {
                     OrgUser approvedBy = orgUserRepository.findByInternalUser_Id(approvedByDTO.getId()).orElseThrow();
                     OrgNotification orgNotification = new OrgNotification();
                     orgNotification.setStatus(NotificationStatus.PROCESS);

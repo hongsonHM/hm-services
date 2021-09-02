@@ -1,6 +1,5 @@
 package com.overnetcontact.dvvs.service.dto;
 
-import com.overnetcontact.dvvs.domain.OrgGroup;
 import com.overnetcontact.dvvs.domain.enumeration.SvcContractStatus;
 import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
@@ -57,7 +56,7 @@ public class SvcContractDTO implements Serializable {
 
     private Integer year;
 
-    private List<UserDTO> approvedBy;
+    private List<UserDTO> approveBy;
 
     private List<UserDTO> managerBy;
 
@@ -336,12 +335,12 @@ public class SvcContractDTO implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public List<UserDTO> getApprovedBy() {
-        return approvedBy;
+    public List<UserDTO> getApproveBy() {
+        return approveBy;
     }
 
-    public void setApprovedBy(List<UserDTO> approvedBy) {
-        this.approvedBy = approvedBy;
+    public void setApproveBy(List<UserDTO> approveBy) {
+        this.approveBy = approveBy;
     }
 
     public List<UserDTO> getManagerBy() {

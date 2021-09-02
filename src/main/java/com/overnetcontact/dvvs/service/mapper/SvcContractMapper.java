@@ -12,7 +12,7 @@ import org.mapstruct.*;
     uses = { UserMapper.class, SvcUnitMapper.class, OrgUserMapper.class, SvcClientMapper.class, OrgGroupMapper.class }
 )
 public interface SvcContractMapper extends EntityMapper<SvcContractDTO, SvcContract> {
-    @Mapping(target = "approvedBy", source = "approvedBy", qualifiedByName = "login")
+    @Mapping(target = "approveBy", source = "approveBy", qualifiedByName = "login")
     @Mapping(target = "managerBy", source = "managerBy", qualifiedByName = "login")
     @Mapping(target = "notificationUnits", source = "notificationUnits", qualifiedByName = "id")
     @Mapping(target = "ownerBy", source = "ownerBy", qualifiedByName = "id")

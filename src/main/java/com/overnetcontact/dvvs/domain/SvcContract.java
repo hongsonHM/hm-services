@@ -100,7 +100,7 @@ public class SvcContract implements Serializable {
         joinColumns = { @JoinColumn(name = "contract_id", referencedColumnName = "id") },
         inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }
     )
-    private List<User> approvedBy;
+    private List<User> approveBy;
 
     @ManyToMany
     @JoinTable(
@@ -129,7 +129,7 @@ public class SvcContract implements Serializable {
     @JsonIgnoreProperties(value = { "internalUser", "notifications", "group" }, allowSetters = true)
     private OrgUser saler;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private SvcClient client;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -469,11 +469,11 @@ public class SvcContract implements Serializable {
         this.managerBy = managerBy;
     }
 
-    public List<User> getApprovedBy() {
-        return approvedBy;
+    public List<User> getApproveBy() {
+        return approveBy;
     }
 
-    public void setApprovedBy(List<User> approvedBy) {
-        this.approvedBy = approvedBy;
+    public void setApproveBy(List<User> approvedBy) {
+        this.approveBy = approvedBy;
     }
 }

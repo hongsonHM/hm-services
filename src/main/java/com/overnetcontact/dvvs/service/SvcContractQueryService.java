@@ -149,7 +149,7 @@ public class SvcContractQueryService extends QueryService<SvcContract> {
                     specification.and(
                         buildSpecification(
                             criteria.getApprovedById(),
-                            root -> root.join(SvcContract_.approvedBy, JoinType.LEFT).get(User_.id)
+                            root -> root.join(SvcContract_.approveBy, JoinType.LEFT).get(User_.id)
                         )
                     );
             }

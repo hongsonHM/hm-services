@@ -1,10 +1,12 @@
 package com.overnetcontact.dvvs.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.overnetcontact.dvvs.domain.User;
 
 /**
  * A DTO representing a user, with only the public attributes.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDTO {
 
     private Long id;
