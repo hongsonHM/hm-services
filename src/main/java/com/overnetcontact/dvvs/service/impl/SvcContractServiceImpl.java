@@ -58,6 +58,7 @@ public class SvcContractServiceImpl implements SvcContractService {
     private final OrgUserRepository orgUserRepository;
 
     @Override
+    @Transactional
     public SvcContractDTO save(SvcContractDTO svcContractDTO) {
         log.debug("Request to save SvcContract : {}", svcContractDTO);
         SvcContract svcContract = svcContractMapper.toEntity(svcContractDTO);
