@@ -15,10 +15,10 @@ jobs:
               with:
                   distribution: 'adopt'
                   java-version: '11.x'
-            - name: Run backend test
-              run: |
-                  chmod +x mvnw
-                  npm run ci:backend:test
+#            - name: Run backend test
+#              run: |
+#                  chmod +x mvnw
+#                  npm run ci:backend:test
             - name: Package application
               run: npm run java:jar:prod
             - name: Build and publish docker image
