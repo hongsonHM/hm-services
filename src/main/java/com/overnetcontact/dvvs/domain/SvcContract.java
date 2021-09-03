@@ -129,7 +129,7 @@ public class SvcContract implements Serializable {
     @JsonIgnoreProperties(value = { "internalUser", "notifications", "group" }, allowSetters = true)
     private OrgUser saler;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     private SvcClient client;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
