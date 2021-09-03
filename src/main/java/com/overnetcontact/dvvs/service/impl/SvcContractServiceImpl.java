@@ -61,6 +61,7 @@ public class SvcContractServiceImpl implements SvcContractService {
     @Transactional
     public SvcContractDTO save(SvcContractDTO svcContractDTO) {
         log.debug("Request to save SvcContract : {}", svcContractDTO);
+        System.out.println("New Log");
         SvcContract svcContract = svcContractMapper.toEntity(svcContractDTO);
         svcContract = svcContractRepository.save(svcContract);
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow();
