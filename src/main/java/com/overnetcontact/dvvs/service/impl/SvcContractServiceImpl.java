@@ -87,8 +87,8 @@ public class SvcContractServiceImpl implements SvcContractService {
                 }
             }
         }
-        if (svcContract.getStatus().equals(SvcContractStatus.SUCCESS) && svcContractDTO.getSaler() != null) {
-            OrgUser saler = orgUserRepository.findByInternalUser_Id(svcContractDTO.getSaler().getId()).orElseThrow();
+        if (svcContract.getStatus().equals(SvcContractStatus.SUCCESS) && svcContractDTO.getOwnerBy() != null) {
+            OrgUser saler = orgUserRepository.findByInternalUser_Id(svcContractDTO.getOwnerBy().getId()).orElseThrow();
             OrgNotification orgNotification = new OrgNotification();
             orgNotification.setStatus(NotificationStatus.PROCESS);
             orgNotification.setOrgUser(saler);
