@@ -87,6 +87,19 @@ public class SvcContractServiceImpl implements SvcContractService {
                 }
             }
         }
+        if (svcContract.getStatus().equals(SvcContractStatus.SUCCESS) && svcContractDTO.getSaler() != null) {
+            OrgUser saler = orgUserRepository.findByInternalUser_Id(svcContractDTO.getSaler().getId()).orElseThrow();
+            OrgNotification orgNotification = new OrgNotification();
+            orgNotification.setStatus(NotificationStatus.PROCESS);
+            orgNotification.setOrgUser(saler);
+            orgNotification.setIsRead(false);
+            orgNotification.setTitle("Hợp đồng đã được phê duyệt");
+            orgNotification.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được phê duyệt!");
+            orgNotification.setData(
+                "{\n" + "        contract_id: '" + svcContract.getId() + "',\n" + "        type: 'contract'\n" + "      }"
+            );
+            orgNotificationRepository.save(orgNotification);
+        }
         return svcContractMapper.toDto(svcContract);
     }
 
