@@ -1,0 +1,48 @@
+
+
+
+entity SvcSchedulePlanRecord {
+	svcSchedulePlanId Integer required
+    isPublished Integer required
+    status String required
+    approved String
+    approvedId Integer
+    comment String  
+    createDate LocalDate 
+    lastModifiedDate LocalDate 
+    createBy String
+    createById Integer
+    lastModifiedBy String
+    lastModifiedById Integer      
+}
+
+entity SvcScheduleUnitRecord {
+	svcScheduleUnitId Integer required
+    isPublished Integer required
+    status String required
+    approved String
+    approvedId Integer
+    comment String
+    createDate LocalDate 
+    lastModifiedDate LocalDate 
+    createBy String
+    createById Integer
+    lastModifiedBy String
+    lastModifiedById Integer      
+}
+
+
+// defining multiple ManyToMany relationships with comments
+relationship ManyToMany {
+	SvcSchedulePlanRecord to SvcScheduleUnitRecord ,
+}
+
+// Set pagination options
+paginate SvcScheduleUnitRecord, SvcSchedulePlanRecord with pagination
+filter SvcScheduleUnitRecord, SvcSchedulePlanRecord
+// Use Data Transfer Objects (DTO)
+dto SvcScheduleUnitRecord, SvcSchedulePlanRecord with mapstruct
+// Set service options to SvcScheduleUnitRecord, SvcSchedulePlanRecord 
+service SvcScheduleUnitRecord, SvcSchedulePlanRecord with serviceImpl
+// Set an angular suffix
+// angularSuffix * with mySuffix

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity SvcSchedulePlanRecord.
+    -->
+    <changeSet id="20210910141015-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="svc_schedule_plan_id"
+                                 baseTableName="svc_schedule_plan_record"
+                                 constraintName="fk_rel_svc_schedule_plan_record__svc_schedule_plan_2a_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="svc_schedule_plan"/>
+
+        <addForeignKeyConstraint baseColumnNames="svc_schedule_unit_id"
+                                 baseTableName="svc_schedule_unit_record"
+                                 constraintName="fk_rel_svc_schedule_unit_record__svc_schedule_unit_1a_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="svc_schedule_unit"/>
+    </changeSet>
+</databaseChangeLog>

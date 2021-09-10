@@ -36,4 +36,8 @@
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
     <include file="config/liquibase/changelog/20210824130550_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210910141015_added_entity_SvcScheduleUnitRecord.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210910141014_added_entity_SvcSchedulePlanRecord.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210910141014_added_entity_constraints_SvcSchedulePlanRecord.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210910141234_added_entity_constraints_SvcSchedulePlanUnit.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
