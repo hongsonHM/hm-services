@@ -1,0 +1,55 @@
+entity CoreSupplies {
+	name String
+    unit String
+    effort String
+}
+
+entity CoreTask {
+	name String
+    unit String
+    category String
+    note String
+}
+
+entity SvcGroupTask {
+	name String
+    createDate LocalDate
+    createBy String
+    category String
+}
+
+entity SvcArea {
+	name String
+    location String
+    type String
+    contractsId Integer
+}
+
+entity SvcSpendTask {
+	coreTaskId Integer  
+    mass String
+    note String
+}
+
+// defining multiple ManyToMany relationships with comments
+relationship OneToOne {
+	SvcGroupTask to SvcArea ,
+}
+
+relationship OneToMany {
+	SvcGroupTask to SvcSpendTask ,
+}
+
+relationship ManyToMany {
+    CoreTask to CoreSupplies
+}
+
+// Set pagination options
+paginate CoreTask, CoreSupplies with pagination
+filter CoreTask, CoreSupplies, SvcGroupTask, SvcArea, SvcSpendTask
+// Use Data Transfer Objects (DTO)
+dto CoreTask, CoreSupplies, SvcGroupTask, SvcArea, SvcSpendTask with mapstruct
+// Set service options to SvcScheduleUnitRecord, SvcSchedulePlanRecord 
+service CoreTask, CoreSupplies, SvcGroupTask, SvcArea, SvcSpendTask with serviceImpl
+// Set an angular suffix
+// angularSuffix * with mySuffix

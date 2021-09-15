@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity CoreTask.
+    -->
+    <changeSet id="20210915032908-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="core_task_id"
+                                 baseTableName="rel_core_task__core_supplies"
+                                 constraintName="fk_rel_core_task__core_supplies__core_task_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="core_task"/>
+
+        <addForeignKeyConstraint baseColumnNames="core_supplies_id"
+                                 baseTableName="rel_core_task__core_supplies"
+                                 constraintName="fk_rel_core_task__core_supplies__core_supplies_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="core_supplies"/>
+    </changeSet>
+</databaseChangeLog>

@@ -40,4 +40,14 @@
     <include file="config/liquibase/changelog/20210910141014_added_entity_SvcSchedulePlanRecord.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210910141014_added_entity_constraints_SvcSchedulePlanRecord.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210910141234_added_entity_constraints_SvcSchedulePlanUnit.xml" relativeToChangelogFile="false"/>
+
+<!--    jhipter-v3 generate-->
+    <include file="config/liquibase/changelog/20210915032907_added_entity_CoreSupplies.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210915032908_added_entity_CoreTask.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210915032908_added_entity_constraints_CoreTask.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210915032909_added_entity_SvcGroupTask.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210915032910_added_entity_SvcArea.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210915032909_added_entity_constraints_SvcGroupTask.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210915032911_added_entity_SvcSpendTask.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210915032911_added_entity_SvcSpendTask.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

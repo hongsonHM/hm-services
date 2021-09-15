@@ -1,0 +1,46 @@
+{
+  "name": "SvcGroupTask",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "createBy",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "category",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "svcArea",
+      "otherEntityRelationshipName": "svcGroupTask",
+      "relationshipName": "svcArea",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "svcSpendTask",
+      "otherEntityRelationshipName": "svcGroupTask",
+      "relationshipName": "svcSpendTask"
+    }
+  ],
+  "entityTableName": "svc_group_task",
+  "dto": "mapstruct",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210915032909"
+}
