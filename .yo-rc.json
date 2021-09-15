@@ -56,8 +56,13 @@
       "SvcGroup",
       "OrgNotification",
       "SvcSchedulePlanRecord",
-      "SvcScheduleUnitRecord"
+      "SvcScheduleUnitRecord",
+      "CoreSupplies",
+      "CoreTask",
+      "SvcGroupTask",
+      "SvcArea",
+      "SvcSpendTask"
     ],
-    "lastLiquibaseTimestamp": 1631283015000
+    "lastLiquibaseTimestamp": 1631676551000
   }
 }
