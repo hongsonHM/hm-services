@@ -186,7 +186,6 @@ public class CoreTaskResource {
     }
 
     /**
-     * commit thu
      *
      * {@code DELETE  /core-tasks/:id} : delete the "id" coreTask.
      *

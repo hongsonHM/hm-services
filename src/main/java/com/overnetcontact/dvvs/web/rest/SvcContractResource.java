@@ -1,18 +1,13 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.SvcContractRepository;
-import com.overnetcontact.dvvs.service.ExcelHelper;
-import com.overnetcontact.dvvs.service.SvcContractQueryService;
-import com.overnetcontact.dvvs.service.SvcContractService;
+import com.overnetcontact.dvvs.service.*;
 import com.overnetcontact.dvvs.service.criteria.SvcContractCriteria;
-import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
+import com.overnetcontact.dvvs.service.dto.*;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -55,17 +50,29 @@ public class SvcContractResource {
 
     private final SvcContractService svcContractService;
 
+    private final SvcAreaService svcAreaService;
+
     private final SvcContractRepository svcContractRepository;
+
+    private final SvcGroupTaskService svcGroupTaskService;
+
+    private final SvcSpendTaskService svcSpendTaskService;
 
     private final SvcContractQueryService svcContractQueryService;
 
     public SvcContractResource(
         SvcContractService svcContractService,
+        SvcAreaService svcAreaService,
         SvcContractRepository svcContractRepository,
+        SvcGroupTaskService svcGroupTaskService,
+        SvcSpendTaskService svcSpendTaskService,
         SvcContractQueryService svcContractQueryService
     ) {
         this.svcContractService = svcContractService;
+        this.svcAreaService = svcAreaService;
         this.svcContractRepository = svcContractRepository;
+        this.svcGroupTaskService = svcGroupTaskService;
+        this.svcSpendTaskService = svcSpendTaskService;
         this.svcContractQueryService = svcContractQueryService;
     }
 
@@ -234,5 +241,49 @@ public class SvcContractResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    /**
+     * {@code PostMapping  /full-contract} : create contract with full sub-areas.
+     *
+     * @param svcFullContractsDTO the object to create
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @PostMapping("/full-contract")
+    public ResponseEntity<String> createFullContract(@RequestBody SvcFullContractsDTO svcFullContractsDTO) throws URISyntaxException {
+        log.debug("REST request to create full contracts  : {}", svcFullContractsDTO);
+        SvcContractDTO svcContractDTO = svcFullContractsDTO.getSvcContractDTO();
+
+        if (svcContractDTO.getId() != null) {
+            throw new BadRequestAlertException("A new svcContract cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+
+        SvcContractDTO resultContract = svcContractService.save(svcContractDTO);
+        Set<SvcSpendTaskForAreaDTO> SvcSpendTaskForAreaDTOs = svcFullContractsDTO.getSvcSpendTaskForAreaDTOs();
+        Long contractsId = resultContract.getId();
+
+        for (SvcSpendTaskForAreaDTO svcSpendTaskForAreaDTO : SvcSpendTaskForAreaDTOs) {
+            SvcAreaDTO svcAreaDTO = svcSpendTaskForAreaDTO.getSvcAreaDTO();
+            svcAreaDTO.setContractsId(Math.toIntExact(contractsId));
+            SvcAreaDTO result = svcAreaService.save(svcAreaDTO);
+            SvcGroupTaskDTO svcGroupTaskDTO = new SvcGroupTaskDTO();
+            svcGroupTaskDTO.setSvcArea(result);
+            svcGroupTaskDTO.setName("Group task of " + result.getName());
+            SvcGroupTaskDTO rsGroupTask = svcGroupTaskService.save(svcGroupTaskDTO);
+
+            for (SvcSpendTaskDTO svcSpendTaskDTO : svcSpendTaskForAreaDTO.getSvcSpendTaskDTOs()) {
+                if (svcSpendTaskDTO.getId() != null || svcSpendTaskDTO.getSvcGroupTask() != null) {
+                    throw new BadRequestAlertException("A new svcSpendTask cannot already have an ID", ENTITY_NAME, "idexists");
+                } else {
+                    svcSpendTaskDTO.setSvcGroupTask(rsGroupTask);
+                    svcSpendTaskService.save(svcSpendTaskDTO);
+                }
+            }
+        }
+
+        return ResponseEntity
+            .created(new URI("/full-contract"))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
+            .body("Create Successfully ");
     }
 }
