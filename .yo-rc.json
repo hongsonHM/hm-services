@@ -61,8 +61,12 @@
       "CoreTask",
       "SvcGroupTask",
       "SvcArea",
-      "SvcSpendTask"
+      "SvcSpendTask",
+      "SvcPlan",
+      "SvcPlanUnit",
+      "SvcLabor",
+      "SvcPlanTask"
     ],
-    "lastLiquibaseTimestamp": 1631676551000
+    "lastLiquibaseTimestamp": 1631889945000
   }
 }

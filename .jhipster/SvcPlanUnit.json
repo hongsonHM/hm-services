@@ -1,0 +1,71 @@
+{
+  "name": "SvcPlanUnit",
+  "fields": [
+    {
+      "fieldName": "startAt",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "endAt",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "createAt",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "amountOfWork",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "quantity",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "frequency",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "note",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "suppervisorId",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "svcLabor",
+      "otherEntityRelationshipName": "svcPlanUnit",
+      "relationshipName": "svcLabor"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "svcPlanTask",
+      "otherEntityRelationshipName": "svcPlanUnit",
+      "relationshipName": "svcPlanTask"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "svcPlan",
+      "otherEntityRelationshipName": "svcPlanUnit",
+      "relationshipName": "svcPlan"
+    }
+  ],
+  "entityTableName": "svc_plan_unit",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210917144543"
+}

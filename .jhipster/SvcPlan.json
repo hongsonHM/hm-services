@@ -1,0 +1,62 @@
+{
+  "name": "SvcPlan",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "serviceManagerId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "defaultSuppervisorId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "startPlan",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "endPlan",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "contractId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "note",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "svcPlanUnit",
+      "otherEntityRelationshipName": "svcPlan",
+      "relationshipName": "svcPlanUnit"
+    }
+  ],
+  "entityTableName": "svc_plan",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210917144542"
+}

@@ -1,0 +1,51 @@
+entity SvcPlan {
+	name String required
+    serviceManagerId Long required
+    defaultSuppervisorId Long required
+    status Boolean
+    startPlan LocalDate
+    endPlan LocalDate
+    createDate LocalDate
+    contractId Long
+    note String
+}
+
+entity SvcPlanUnit {	
+    startAt LocalDate
+    endAt LocalDate
+    createAt LocalDate
+    status Boolean
+    amountOfWork Integer
+    quantity Integer
+    frequency String
+    note String
+    suppervisorId Long
+}
+
+entity SvcLabor {
+	name String required
+    phone String
+    address String
+    laborCode String
+}
+
+entity SvcPlanTask {
+	coreTaskId Long required
+    note String    
+}
+
+relationship OneToMany {
+	SvcPlan to SvcPlanUnit ,
+    SvcPlanUnit to SvcLabor,
+    SvcPlanUnit to SvcPlanTask
+}
+
+// Set pagination options
+paginate SvcPlan, SvcPlanUnit, SvcLabor, SvcPlanTask with pagination
+filter SvcPlan, SvcPlanUnit, SvcLabor, SvcPlanTask
+// Use Data Transfer Objects (DTO)
+dto SvcPlan, SvcPlanUnit, SvcLabor, SvcPlanTask with mapstruct
+// Set service options to SvcScheduleUnitRecord, SvcSchedulePlanRecord 
+service SvcPlan, SvcPlanUnit, SvcLabor, SvcPlanTask with serviceImpl
+// Set an angular suffix
+// angularSuffix * with mySuffix
