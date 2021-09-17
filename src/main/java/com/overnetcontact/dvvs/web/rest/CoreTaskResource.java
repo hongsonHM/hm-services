@@ -186,6 +186,7 @@ public class CoreTaskResource {
     }
 
     /**
+     *
      * {@code DELETE  /core-tasks/:id} : delete the "id" coreTask.
      *
      * @param id the id of the coreTaskDTO to delete.
