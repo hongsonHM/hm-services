@@ -57,7 +57,7 @@ public class SvcPlan implements Serializable {
 
     @OneToMany(mappedBy = "svcPlan")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "svcLabors", "svcPlanTasks", "svcPlan" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {}, allowSetters = true)
     private Set<SvcPlanUnit> svcPlanUnits = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

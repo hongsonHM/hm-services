@@ -17,7 +17,6 @@ public class SvcContractDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
     private Long orderNumber;
 
     private String documentId;

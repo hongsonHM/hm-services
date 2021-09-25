@@ -258,6 +258,12 @@ public class SvcContractResource {
             throw new BadRequestAlertException("A new svcContract cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
+        if (svcContractDTO.getOrderNumber() == null) {
+            Long totalNumber = svcContractQueryService.countByCriteria(new SvcContractCriteria());
+            totalNumber++;
+            svcContractDTO.setOrderNumber(totalNumber);
+        }
+
         SvcContractDTO resultContract = svcContractService.save(svcContractDTO);
         Set<SvcSpendTaskForAreaDTO> SvcSpendTaskForAreaDTOs = svcFullContractsDTO.getSvcSpendTaskForAreaDTOs();
         Long contractsId = resultContract.getId();

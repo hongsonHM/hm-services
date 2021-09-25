@@ -198,4 +198,19 @@ public class SvcPlanResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    /**
+     * {@code GET  /svc-plans} : get all the svcPlans.
+     *
+     * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of svcPlans in body.
+     */
+    @GetMapping("/svc-plans-details")
+    public ResponseEntity<List<SvcPlanDTO>> getAllSvcPlansDetail(SvcPlanCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get SvcPlans by criteria: {}", criteria);
+        Page<SvcPlanDTO> page = svcPlanQueryService.findByCriteria(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
 }

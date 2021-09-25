@@ -58,7 +58,7 @@ public class SvcPlanUnit implements Serializable {
 
     @OneToMany(mappedBy = "svcPlanUnit")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "svcPlanUnit" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {}, allowSetters = true)
     private Set<SvcPlanTask> svcPlanTasks = new HashSet<>();
 
     @ManyToOne
