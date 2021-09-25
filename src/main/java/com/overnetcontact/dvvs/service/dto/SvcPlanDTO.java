@@ -18,8 +18,12 @@ public class SvcPlanDTO implements Serializable {
     @NotNull
     private Long serviceManagerId;
 
+    private String serviceManagerName;
+
     @NotNull
     private Long defaultSuppervisorId;
+
+    private String defaultSuppervisorName;
 
     private Boolean status;
 
@@ -111,6 +115,22 @@ public class SvcPlanDTO implements Serializable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getServiceManagerName() {
+        return serviceManagerName;
+    }
+
+    public void setServiceManagerName(String serviceManagerName) {
+        this.serviceManagerName = serviceManagerName;
+    }
+
+    public String getDefaultSuppervisorName() {
+        return defaultSuppervisorName;
+    }
+
+    public void setDefaultSuppervisorName(String defaultSuppervisorName) {
+        this.defaultSuppervisorName = defaultSuppervisorName;
     }
 
     @Override

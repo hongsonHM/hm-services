@@ -30,7 +30,7 @@ public class SvcPlanTask implements Serializable {
     private String note;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "svcLabors", "svcPlanTasks", "svcPlan" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {}, allowSetters = true)
     private SvcPlanUnit svcPlanUnit;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

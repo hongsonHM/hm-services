@@ -64,6 +64,19 @@ public class SvcPlanQueryService extends QueryService<SvcPlan> {
     }
 
     /**
+     * Return a {@link Page} of {@link SvcPlanDTO} which matches the criteria from the database.
+     * @param criteria The object which holds all the filters, which the entities should match.
+     * @param page The page, which should be returned.
+     * @return the matching entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<SvcPlanDTO> findByCriteriaDetail(SvcPlanCriteria criteria, Pageable page) {
+        log.debug("find by criteria : {}, page: {}", criteria, page);
+        final Specification<SvcPlan> specification = createSpecification(criteria);
+        return svcPlanRepository.findAll(specification, page).map(svcPlanMapper::toDto);
+    }
+
+    /**
      * Return the number of matching entities in the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
