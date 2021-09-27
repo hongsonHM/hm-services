@@ -14,6 +14,8 @@ public class SvcSpendTaskDTO implements Serializable {
 
     private String mass;
 
+    private String frequency;
+
     private String note;
 
     private SvcGroupTaskDTO svcGroupTask;
@@ -56,6 +58,14 @@ public class SvcSpendTaskDTO implements Serializable {
 
     public void setSvcGroupTask(SvcGroupTaskDTO svcGroupTask) {
         this.svcGroupTask = svcGroupTask;
+    }
+
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
     }
 
     @Override
