@@ -59,4 +59,5 @@
     <include file="config/liquibase/changelog/20210917144543_added_entity_constraints_SvcPlanUnit.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210917144544_added_entity_constraints_SvcLabor.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210917144545_added_entity_constraints_SvcPlanTask.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210917144546_added_field_SvcSpendTask.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

@@ -27,6 +27,9 @@ public class SvcSpendTask implements Serializable {
     @Column(name = "mass")
     private String mass;
 
+    @Column(name = "frequency")
+    private String frequency;
+
     @Column(name = "note")
     private String note;
 
@@ -63,6 +66,11 @@ public class SvcSpendTask implements Serializable {
 
     public String getMass() {
         return this.mass;
+    }
+
+    public SvcSpendTask frequency(String frequency) {
+        this.frequency = frequency;
+        return this;
     }
 
     public SvcSpendTask mass(String mass) {
@@ -126,7 +134,16 @@ public class SvcSpendTask implements Serializable {
             "id=" + getId() +
             ", coreTaskId=" + getCoreTaskId() +
             ", mass='" + getMass() + "'" +
+            ", frequency='" + getFrequency() + "'" +
             ", note='" + getNote() + "'" +
             "}";
+    }
+
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
     }
 }

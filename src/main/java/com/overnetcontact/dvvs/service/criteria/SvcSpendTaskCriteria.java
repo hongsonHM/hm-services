@@ -30,6 +30,8 @@ public class SvcSpendTaskCriteria implements Serializable, Criteria {
 
     private StringFilter mass;
 
+    private StringFilter frequency;
+
     private StringFilter note;
 
     private LongFilter svcGroupTaskId;
@@ -40,6 +42,7 @@ public class SvcSpendTaskCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.coreTaskId = other.coreTaskId == null ? null : other.coreTaskId.copy();
         this.mass = other.mass == null ? null : other.mass.copy();
+        this.frequency = other.frequency == null ? null : other.frequency.copy();
         this.note = other.note == null ? null : other.note.copy();
         this.svcGroupTaskId = other.svcGroupTaskId == null ? null : other.svcGroupTaskId.copy();
     }
@@ -92,6 +95,21 @@ public class SvcSpendTaskCriteria implements Serializable, Criteria {
 
     public void setMass(StringFilter mass) {
         this.mass = mass;
+    }
+
+    public StringFilter getFrequency() {
+        return mass;
+    }
+
+    public StringFilter frequency() {
+        if (frequency == null) {
+            frequency = new StringFilter();
+        }
+        return frequency;
+    }
+
+    public void setFrequency(StringFilter frequency) {
+        this.frequency = frequency;
     }
 
     public StringFilter getNote() {
