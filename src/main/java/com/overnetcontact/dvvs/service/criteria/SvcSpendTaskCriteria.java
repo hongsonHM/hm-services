@@ -26,7 +26,7 @@ public class SvcSpendTaskCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private IntegerFilter coreTaskId;
+    private LongFilter coreTaskId;
 
     private StringFilter mass;
 
@@ -67,18 +67,18 @@ public class SvcSpendTaskCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public IntegerFilter getCoreTaskId() {
+    public LongFilter getCoreTaskId() {
         return coreTaskId;
     }
 
-    public IntegerFilter coreTaskId() {
+    public LongFilter coreTaskId() {
         if (coreTaskId == null) {
-            coreTaskId = new IntegerFilter();
+            coreTaskId = new LongFilter();
         }
         return coreTaskId;
     }
 
-    public void setCoreTaskId(IntegerFilter coreTaskId) {
+    public void setCoreTaskId(LongFilter coreTaskId) {
         this.coreTaskId = coreTaskId;
     }
 

@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "coreTaskId",
-      "fieldType": "Integer"
+      "fieldType": "Long"
     },
     {
       "fieldName": "mass",

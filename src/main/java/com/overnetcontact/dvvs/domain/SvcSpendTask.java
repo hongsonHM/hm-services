@@ -22,7 +22,7 @@ public class SvcSpendTask implements Serializable {
     private Long id;
 
     @Column(name = "core_task_id")
-    private Integer coreTaskId;
+    private Long coreTaskId;
 
     @Column(name = "mass")
     private String mass;
@@ -51,16 +51,16 @@ public class SvcSpendTask implements Serializable {
         return this;
     }
 
-    public Integer getCoreTaskId() {
+    public Long getCoreTaskId() {
         return this.coreTaskId;
     }
 
-    public SvcSpendTask coreTaskId(Integer coreTaskId) {
+    public SvcSpendTask coreTaskId(Long coreTaskId) {
         this.coreTaskId = coreTaskId;
         return this;
     }
 
-    public void setCoreTaskId(Integer coreTaskId) {
+    public void setCoreTaskId(Long coreTaskId) {
         this.coreTaskId = coreTaskId;
     }
 

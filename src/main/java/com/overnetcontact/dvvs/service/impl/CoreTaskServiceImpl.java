@@ -5,6 +5,7 @@ import com.overnetcontact.dvvs.repository.CoreTaskRepository;
 import com.overnetcontact.dvvs.service.CoreTaskService;
 import com.overnetcontact.dvvs.service.dto.CoreTaskDTO;
 import com.overnetcontact.dvvs.service.mapper.CoreTaskMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,5 +79,15 @@ public class CoreTaskServiceImpl implements CoreTaskService {
     public void delete(Long id) {
         log.debug("Request to delete CoreTask : {}", id);
         coreTaskRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CoreTask> findByIdIn(List<Long> inventoryIdList) {
+        return coreTaskRepository.findByIdIn(inventoryIdList);
+    }
+
+    @Override
+    public List<Object> findSuppliesWithTask(List<Long> ids) {
+        return coreTaskRepository.findSuppliesWithTask(ids);
     }
 }

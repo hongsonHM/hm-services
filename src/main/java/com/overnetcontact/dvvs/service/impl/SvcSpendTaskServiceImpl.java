@@ -76,4 +76,10 @@ public class SvcSpendTaskServiceImpl implements SvcSpendTaskService {
         log.debug("Request to delete SvcSpendTask : {}", id);
         svcSpendTaskRepository.deleteById(id);
     }
+
+    @Override
+    public List<Object> findIds(List<Long> ids) {
+        log.debug("request to find ids in list");
+        return svcSpendTaskRepository.findByIds(ids);
+    }
 }

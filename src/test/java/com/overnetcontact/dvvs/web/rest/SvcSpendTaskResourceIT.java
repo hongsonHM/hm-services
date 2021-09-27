@@ -33,9 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class SvcSpendTaskResourceIT {
 
-    private static final Integer DEFAULT_CORE_TASK_ID = 1;
-    private static final Integer UPDATED_CORE_TASK_ID = 2;
-    private static final Integer SMALLER_CORE_TASK_ID = 1 - 1;
+    private static final Long DEFAULT_CORE_TASK_ID = Long.valueOf(1);
+    private static final Long UPDATED_CORE_TASK_ID = Long.valueOf(2);
+    private static final Long SMALLER_CORE_TASK_ID = Long.valueOf(1 - 1);
 
     private static final String DEFAULT_MASS = "AAAAAAAAAA";
     private static final String UPDATED_MASS = "BBBBBBBBBB";

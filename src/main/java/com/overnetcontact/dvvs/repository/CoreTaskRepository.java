@@ -25,4 +25,16 @@ public interface CoreTaskRepository extends JpaRepository<CoreTask, Long>, JpaSp
 
     @Query("select coreTask from CoreTask coreTask left join fetch coreTask.coreSupplies where coreTask.id =:id")
     Optional<CoreTask> findOneWithEagerRelationships(@Param("id") Long id);
+
+    @Query("select distinct coreTask from CoreTask coreTask left join fetch coreTask.coreSupplies where coreTask.id in :ids")
+    List<CoreTask> findByIdIn(@Param("ids") List<Long> ids);
+
+    @Query(
+        value = "SELECT distinct cs.name, cs.unit, cs.effort from core_task as ct " +
+        "inner join rel_core_task__core_supplies as rctcs on ct.id = rctcs.core_task_id " +
+        "inner join core_supplies as cs on rctcs.core_supplies_id = cs.id " +
+        "where ct.id in :ids",
+        nativeQuery = true
+    )
+    List<Object> findSuppliesWithTask(@Param("ids") List<Long> ids);
 }

@@ -10,7 +10,7 @@ public class SvcSpendTaskDTO implements Serializable {
 
     private Long id;
 
-    private Integer coreTaskId;
+    private Long coreTaskId;
 
     private String mass;
 
@@ -28,11 +28,11 @@ public class SvcSpendTaskDTO implements Serializable {
         this.id = id;
     }
 
-    public Integer getCoreTaskId() {
+    public Long getCoreTaskId() {
         return coreTaskId;
     }
 
-    public void setCoreTaskId(Integer coreTaskId) {
+    public void setCoreTaskId(Long coreTaskId) {
         this.coreTaskId = coreTaskId;
     }
 

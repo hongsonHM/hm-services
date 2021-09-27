@@ -1,5 +1,6 @@
 package com.overnetcontact.dvvs.service;
 
+import com.overnetcontact.dvvs.domain.SvcSpendTask;
 import com.overnetcontact.dvvs.service.dto.SvcSpendTaskDTO;
 import java.util.List;
 import java.util.Optional;
@@ -45,4 +46,6 @@ public interface SvcSpendTaskService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    List<Object> findIds(List<Long> ids);
 }

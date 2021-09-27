@@ -1,5 +1,8 @@
 package com.overnetcontact.dvvs.web.rest;
 
+import com.overnetcontact.dvvs.domain.CoreTask;
+import com.overnetcontact.dvvs.domain.SvcSpendTask;
+import com.overnetcontact.dvvs.repository.CoreTaskRepository;
 import com.overnetcontact.dvvs.repository.SvcContractRepository;
 import com.overnetcontact.dvvs.service.*;
 import com.overnetcontact.dvvs.service.criteria.SvcContractCriteria;
@@ -48,6 +51,10 @@ public class SvcContractResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final CoreTaskService coreTaskService;
+
+    private final CoreTaskRepository coreTaskRepository;
+
     private final SvcContractService svcContractService;
 
     private final SvcAreaService svcAreaService;
@@ -61,6 +68,8 @@ public class SvcContractResource {
     private final SvcContractQueryService svcContractQueryService;
 
     public SvcContractResource(
+        CoreTaskService coreTaskService,
+        CoreTaskRepository coreTaskRepository,
         SvcContractService svcContractService,
         SvcAreaService svcAreaService,
         SvcContractRepository svcContractRepository,
@@ -68,6 +77,8 @@ public class SvcContractResource {
         SvcSpendTaskService svcSpendTaskService,
         SvcContractQueryService svcContractQueryService
     ) {
+        this.coreTaskService = coreTaskService;
+        this.coreTaskRepository = coreTaskRepository;
         this.svcContractService = svcContractService;
         this.svcAreaService = svcAreaService;
         this.svcContractRepository = svcContractRepository;
@@ -291,5 +302,44 @@ public class SvcContractResource {
             .created(new URI("/full-contract"))
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
             .body("Create Successfully ");
+    }
+
+    /**
+     * {@code PostMapping  /total-supplies} : calculate total supplies
+     *
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    //    @PostMapping("/total-supplies")
+    //    public ResponseEntity<List<CoreTask>> totalSupplies(@RequestBody SvcFullContractsDTO totalSupplies) throws URISyntaxException {
+    //        log.debug("REST request to calculate total supplies ");
+    //        List<Long> ids = new ArrayList<>();
+    //        for (SvcSpendTaskForAreaDTO svcSpendTaskForAreaDTO : totalSupplies.getSvcSpendTaskForAreaDTOs()) {
+    //            System.out.println(svcSpendTaskDTO.getId());
+    //            ids.add(svcSpendTaskDTO.getCoreTaskId());
+    //        }
+    //
+    //        List<CoreTask> svcSpendTasks = coreTaskService.findByIdIn(ids);
+    //
+    //        return ResponseEntity
+    //            .created(new URI("/total-supplies"))
+    //            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
+    //            .body(svcSpendTasks);
+    //    }
+
+    @PostMapping("/preview-supplies")
+    public ResponseEntity<List<Object>> totalSupplies(@RequestBody TotalSuppliesDTO totalSuppliesDTO) throws URISyntaxException {
+        log.debug("REST request to calculate total supplies ");
+        List<Long> ids = new ArrayList<>();
+        for (SvcSpendTaskDTO svcSpendTaskDTO : totalSuppliesDTO.getSvcSpendTaskDTOs()) {
+            System.out.println(svcSpendTaskDTO.getId());
+            ids.add(svcSpendTaskDTO.getCoreTaskId());
+        }
+
+        List<Object> svcSpendTasks = coreTaskService.findSuppliesWithTask(ids);
+
+        return ResponseEntity
+            .created(new URI("/preview-supplies"))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
+            .body(svcSpendTasks);
     }
 }
