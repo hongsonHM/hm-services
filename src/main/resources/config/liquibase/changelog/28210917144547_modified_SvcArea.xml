@@ -6,15 +6,12 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <!--
-        Added the entity SvcPlanTask.
-    -->
-    <changeSet  author="tungnm"  id="27210917144549-1">
+    <changeSet  author="tungnm"  id="28210917144547-1">
         <modifyDataType
-            columnName="core_task_id"
-            newDataType="bigint"
-            schemaName="public"
-            tableName="svc_spend_task"/>
+                         columnName="contracts_id"
+                         newDataType="bigint"
+                         schemaName="public"
+                         tableName="svc_area"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

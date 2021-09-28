@@ -32,7 +32,7 @@ public class SvcAreaCriteria implements Serializable, Criteria {
 
     private StringFilter type;
 
-    private IntegerFilter contractsId;
+    private LongFilter contractsId;
 
     private LongFilter svcGroupTaskId;
 
@@ -112,18 +112,18 @@ public class SvcAreaCriteria implements Serializable, Criteria {
         this.type = type;
     }
 
-    public IntegerFilter getContractsId() {
+    public LongFilter getContractsId() {
         return contractsId;
     }
 
-    public IntegerFilter contractsId() {
+    public LongFilter contractsId() {
         if (contractsId == null) {
-            contractsId = new IntegerFilter();
+            contractsId = new LongFilter();
         }
         return contractsId;
     }
 
-    public void setContractsId(IntegerFilter contractsId) {
+    public void setContractsId(LongFilter contractsId) {
         this.contractsId = contractsId;
     }
 

@@ -16,7 +16,7 @@ public class SvcAreaDTO implements Serializable {
 
     private String type;
 
-    private Integer contractsId;
+    private Long contractsId;
 
     public Long getId() {
         return id;
@@ -50,11 +50,11 @@ public class SvcAreaDTO implements Serializable {
         this.type = type;
     }
 
-    public Integer getContractsId() {
+    public Long getContractsId() {
         return contractsId;
     }
 
-    public void setContractsId(Integer contractsId) {
+    public void setContractsId(Long contractsId) {
         this.contractsId = contractsId;
     }
 

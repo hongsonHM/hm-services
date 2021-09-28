@@ -42,9 +42,9 @@ class SvcAreaResourceIT {
     private static final String DEFAULT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
-    private static final Integer DEFAULT_CONTRACTS_ID = 1;
-    private static final Integer UPDATED_CONTRACTS_ID = 2;
-    private static final Integer SMALLER_CONTRACTS_ID = 1 - 1;
+    private static final Long DEFAULT_CONTRACTS_ID = Long.valueOf(1);
+    private static final Long UPDATED_CONTRACTS_ID = Long.valueOf(2);
+    private static final Long SMALLER_CONTRACTS_ID = Long.valueOf(1 - 1);
 
     private static final String ENTITY_API_URL = "/api/svc-areas";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";

@@ -281,7 +281,7 @@ public class SvcContractResource {
 
         for (SvcSpendTaskForAreaDTO svcSpendTaskForAreaDTO : SvcSpendTaskForAreaDTOs) {
             SvcAreaDTO svcAreaDTO = svcSpendTaskForAreaDTO.getSvcAreaDTO();
-            svcAreaDTO.setContractsId(Math.toIntExact(contractsId));
+            svcAreaDTO.setContractsId(contractsId);
             SvcAreaDTO result = svcAreaService.save(svcAreaDTO);
             SvcGroupTaskDTO svcGroupTaskDTO = new SvcGroupTaskDTO();
             svcGroupTaskDTO.setSvcArea(result);
@@ -341,5 +341,31 @@ public class SvcContractResource {
             .created(new URI("/preview-supplies"))
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
             .body(svcSpendTasks);
+    }
+
+    /**
+     * {@code GET  /svc-contracts/:id} : get the "id" svcContract.
+     *
+     * @param id the id of the svcContractDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the svcContractDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/full-contract/{id}")
+    public ResponseEntity<SvcFullContractsDTO> getFullSvcContract(@PathVariable Long id) throws URISyntaxException {
+        log.debug("REST request to get SvcContract : {}", id);
+        SvcFullContractsDTO svcFullContractsDTO = new SvcFullContractsDTO();
+        Optional<SvcContractDTO> svcContractDTO = svcContractService.findOne(id);
+        svcContractDTO.ifPresent(svcFullContractsDTO::setSvcContractDTO);
+        List<SvcAreaDTO> svcAreaDTOs = svcAreaService.findByContractsId(id);
+        Set<SvcSpendTaskForAreaDTO> svcSpendTaskForAreaDTOs = new HashSet<>();
+        for (SvcAreaDTO svcAreaDTO : svcAreaDTOs) {
+            SvcSpendTaskForAreaDTO svcSpendTaskForAreaDTO = new SvcSpendTaskForAreaDTO();
+            svcSpendTaskForAreaDTO.setSvcAreaDTO(svcAreaDTO);
+            svcSpendTaskForAreaDTOs.add(svcSpendTaskForAreaDTO);
+        }
+        svcFullContractsDTO.setSvcSpendTaskForAreaDTOs(svcSpendTaskForAreaDTOs);
+        return ResponseEntity
+            .created(new URI("/full-contract"))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
+            .body(svcFullContractsDTO);
     }
 }
