@@ -1,5 +1,6 @@
 package com.overnetcontact.dvvs.web.rest;
 
+import com.overnetcontact.dvvs.domain.CoreSupplies;
 import com.overnetcontact.dvvs.domain.CoreTask;
 import com.overnetcontact.dvvs.domain.SvcSpendTask;
 import com.overnetcontact.dvvs.repository.CoreTaskRepository;
@@ -10,9 +11,14 @@ import com.overnetcontact.dvvs.service.dto.*;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.math3.geometry.euclidean.oned.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +53,10 @@ public class SvcContractResource {
     private final Logger log = LoggerFactory.getLogger(SvcContractResource.class);
 
     private static final String ENTITY_NAME = "svcContract";
+    private static final String DAYS = "day";
+    private static final String WEEKS = "week";
+    private static final String MONTHS = "month";
+    private static final String YEARS = "year";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -326,22 +336,22 @@ public class SvcContractResource {
     //            .body(svcSpendTasks);
     //    }
 
-    @PostMapping("/preview-supplies")
-    public ResponseEntity<List<Object>> totalSupplies(@RequestBody TotalSuppliesDTO totalSuppliesDTO) throws URISyntaxException {
-        log.debug("REST request to calculate total supplies ");
-        List<Long> ids = new ArrayList<>();
-        for (SvcSpendTaskDTO svcSpendTaskDTO : totalSuppliesDTO.getSvcSpendTaskDTOs()) {
-            System.out.println(svcSpendTaskDTO.getId());
-            ids.add(svcSpendTaskDTO.getCoreTaskId());
-        }
-
-        List<Object> svcSpendTasks = coreTaskService.findSuppliesWithTask(ids);
-
-        return ResponseEntity
-            .created(new URI("/preview-supplies"))
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
-            .body(svcSpendTasks);
-    }
+    //    @PostMapping("/preview-supplies")
+    //    public ResponseEntity<List<Object>> totalSupplies(@RequestBody TotalSuppliesDTO totalSuppliesDTO) throws URISyntaxException {
+    //        log.debug("REST request to calculate total supplies ");
+    //        List<Long> ids = new ArrayList<>();
+    //        for (SvcSpendTaskDTO svcSpendTaskDTO : totalSuppliesDTO.getSvcSpendTaskDTOs()) {
+    //            System.out.println(svcSpendTaskDTO.getId());
+    //            ids.add(svcSpendTaskDTO.getCoreTaskId());
+    //        }
+    //
+    //        List<Object> svcSpendTasks = coreTaskService.findSuppliesWithTask(ids);
+    //
+    //        return ResponseEntity
+    //            .created(new URI("/preview-supplies"))
+    //            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
+    //            .body(svcSpendTasks);
+    //    }
 
     /**
      * {@code GET  /svc-contracts/:id} : get the "id" svcContract.
@@ -367,5 +377,96 @@ public class SvcContractResource {
             .created(new URI("/full-contract"))
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
             .body(svcFullContractsDTO);
+    }
+
+    /**
+     * {@code PostMapping  /full-contract} : create contract with full sub-areas.
+     *
+     * @param svcFullContractsDTO the object to create
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @PostMapping("/preview-supplies")
+    public ResponseEntity<Collection<CoreSuppliesDTO>> previewSupplies(@RequestBody SvcFullContractsDTO svcFullContractsDTO)
+        throws URISyntaxException {
+        log.debug("REST request to view previewSupplies : {}", svcFullContractsDTO);
+        Map<Long, Long> taskMap = new HashMap<>();
+        Map<String, CoreSuppliesDTO> suppliesMap = new HashMap<>();
+        Set<Long> coreTaskids = new HashSet<>();
+        Instant timeFrom = svcFullContractsDTO.getSvcContractDTO().getEffectiveTimeFrom();
+        Instant timeTo = svcFullContractsDTO.getSvcContractDTO().getEffectiveTimeTo();
+        LocalDateTime lcFrom = LocalDateTime.ofInstant(timeFrom, ZoneOffset.UTC);
+        LocalDateTime lcTo = LocalDateTime.ofInstant(timeTo, ZoneOffset.UTC);
+        long dayNums = ChronoUnit.DAYS.between(lcFrom, lcTo);
+        long weekNums = ChronoUnit.WEEKS.between(lcFrom, lcTo);
+        long monthNums = ChronoUnit.MONTHS.between(lcFrom, lcTo);
+        long yearNums = ChronoUnit.YEARS.between(lcFrom, lcTo);
+
+        for (SvcSpendTaskForAreaDTO svcSpendTaskForAreaDTO : svcFullContractsDTO.getSvcSpendTaskForAreaDTOs()) {
+            Set<SvcSpendTaskDTO> svcSpendTaskDTOs = svcSpendTaskForAreaDTO.getSvcSpendTaskDTOs();
+            for (SvcSpendTaskDTO svcSpendTaskDTO : svcSpendTaskDTOs) {
+                String frequency = svcSpendTaskDTO.getFrequency();
+                Long totalTimesUnit = this.getTotalTimes(frequency, dayNums, weekNums, monthNums, yearNums);
+                Integer mass = Integer.valueOf(svcSpendTaskDTO.getMass());
+                Long totalTimes = totalTimesUnit * mass;
+                Long coreTaskId = svcSpendTaskDTO.getCoreTaskId();
+                coreTaskids.add(coreTaskId);
+                if (!taskMap.containsKey(coreTaskId)) {
+                    taskMap.put(coreTaskId, totalTimes);
+                } else {
+                    taskMap.put(coreTaskId, taskMap.get(coreTaskId) + totalTimes);
+                }
+            }
+        }
+        List<CoreTask> coreTasks = coreTaskService.findByIdIn(coreTaskids);
+        for (CoreTask coreTaskIndex : coreTasks) {
+            Set<CoreSupplies> coreSupplies = coreTaskIndex.getCoreSupplies();
+            Long times = taskMap.get(coreTaskIndex.getId());
+            for (CoreSupplies coreSupply : coreSupplies) {
+                Long efforts = Long.parseLong(coreSupply.getEffort()) * times;
+
+                if (!suppliesMap.containsKey(coreSupply.getName())) {
+                    CoreSuppliesDTO coreSuppliesDTO = new CoreSuppliesDTO();
+                    coreSuppliesDTO.setEffort(String.valueOf(efforts));
+                    coreSuppliesDTO.setName(coreSupply.getName());
+                    coreSuppliesDTO.setUnit(coreSupply.getUnit());
+                    suppliesMap.put(coreSupply.getName(), coreSuppliesDTO);
+                } else {
+                    CoreSuppliesDTO coreSuppliesDTO = suppliesMap.get(coreSupply.getName());
+                    Long currentEffort = Long.valueOf(coreSuppliesDTO.getEffort());
+                    coreSuppliesDTO.setEffort(String.valueOf(currentEffort + efforts));
+                    suppliesMap.put(coreSupply.getName(), coreSuppliesDTO);
+                }
+            }
+        }
+        Collection<CoreSuppliesDTO> result = suppliesMap.values();
+        return ResponseEntity
+            .created(new URI("/preview-supplies"))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
+            .body(result);
+    }
+
+    public Long getTotalTimes(String frequency, long dayNums, long weekNums, long monthNums, long yearNums) {
+        String[] parts = frequency.split("/");
+        String numbers = parts[0];
+        Integer times = Integer.valueOf(numbers);
+        String unit = parts[1];
+        long total = 0;
+        switch (unit) {
+            case DAYS:
+                total = times * dayNums;
+                break;
+            case WEEKS:
+                total = times * weekNums;
+                break;
+            case MONTHS:
+                total = times * monthNums;
+                break;
+            case YEARS:
+                total = times * yearNums;
+                break;
+            default:
+                break;
+        }
+        return total;
     }
 }

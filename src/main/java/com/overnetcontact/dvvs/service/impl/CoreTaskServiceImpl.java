@@ -7,6 +7,7 @@ import com.overnetcontact.dvvs.service.dto.CoreTaskDTO;
 import com.overnetcontact.dvvs.service.mapper.CoreTaskMapper;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -82,7 +83,7 @@ public class CoreTaskServiceImpl implements CoreTaskService {
     }
 
     @Override
-    public List<CoreTask> findByIdIn(List<Long> inventoryIdList) {
+    public List<CoreTask> findByIdIn(Set<Long> inventoryIdList) {
         return coreTaskRepository.findByIdIn(inventoryIdList);
     }
 
