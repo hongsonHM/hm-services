@@ -91,4 +91,9 @@ public class SvcAreaServiceImpl implements SvcAreaService {
         log.debug("Request to delete SvcArea : {}", id);
         svcAreaRepository.deleteById(id);
     }
+
+    @Override
+    public List<SvcAreaDTO> findByContractsId(Long id) {
+        return svcAreaRepository.findByContractsId(id).stream().map(svcAreaMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+    }
 }

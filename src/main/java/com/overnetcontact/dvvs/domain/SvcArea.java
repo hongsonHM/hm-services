@@ -31,7 +31,7 @@ public class SvcArea implements Serializable {
     private String type;
 
     @Column(name = "contracts_id")
-    private Integer contractsId;
+    private Long contractsId;
 
     @JsonIgnoreProperties(value = { "svcArea", "svcSpendTasks" }, allowSetters = true)
     @OneToOne(mappedBy = "svcArea")
@@ -90,16 +90,16 @@ public class SvcArea implements Serializable {
         this.type = type;
     }
 
-    public Integer getContractsId() {
+    public Long getContractsId() {
         return this.contractsId;
     }
 
-    public SvcArea contractsId(Integer contractsId) {
+    public SvcArea contractsId(Long contractsId) {
         this.contractsId = contractsId;
         return this;
     }
 
-    public void setContractsId(Integer contractsId) {
+    public void setContractsId(Long contractsId) {
         this.contractsId = contractsId;
     }
 

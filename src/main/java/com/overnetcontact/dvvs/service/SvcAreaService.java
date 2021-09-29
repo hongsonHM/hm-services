@@ -1,5 +1,6 @@
 package com.overnetcontact.dvvs.service;
 
+import com.overnetcontact.dvvs.domain.SvcArea;
 import com.overnetcontact.dvvs.service.dto.SvcAreaDTO;
 import java.util.List;
 import java.util.Optional;
@@ -51,4 +52,6 @@ public interface SvcAreaService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    List<SvcAreaDTO> findByContractsId(Long id);
 }

@@ -4,6 +4,7 @@ import com.overnetcontact.dvvs.domain.CoreTask;
 import com.overnetcontact.dvvs.service.dto.CoreTaskDTO;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -59,7 +60,7 @@ public interface CoreTaskService {
      */
     void delete(Long id);
 
-    List<CoreTask> findByIdIn(List<Long> inventoryIdList);
+    List<CoreTask> findByIdIn(Set<Long> inventoryIdList);
 
     List<Object> findSuppliesWithTask(List<Long> ids);
 }

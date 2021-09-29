@@ -3,6 +3,7 @@ package com.overnetcontact.dvvs.repository;
 import com.overnetcontact.dvvs.domain.CoreTask;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -27,7 +28,7 @@ public interface CoreTaskRepository extends JpaRepository<CoreTask, Long>, JpaSp
     Optional<CoreTask> findOneWithEagerRelationships(@Param("id") Long id);
 
     @Query("select distinct coreTask from CoreTask coreTask left join fetch coreTask.coreSupplies where coreTask.id in :ids")
-    List<CoreTask> findByIdIn(@Param("ids") List<Long> ids);
+    List<CoreTask> findByIdIn(@Param("ids") Set<Long> ids);
 
     @Query(
         value = "SELECT distinct cs.name, cs.unit, cs.effort from core_task as ct " +
