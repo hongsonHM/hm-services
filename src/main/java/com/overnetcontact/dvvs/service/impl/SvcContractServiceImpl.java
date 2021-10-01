@@ -119,34 +119,31 @@ public class SvcContractServiceImpl implements SvcContractService {
         if (svcContract.getStatus().equals(SvcContractStatus.SUCCESS) && svcContractDTO.getOwnerBy() != null) {
             OrgUser saler = orgUserRepository.findByInternalUser_Id(svcContractDTO.getOwnerBy().getId()).orElseThrow();
             OrgNotification orgNotification = new OrgNotification();
-            orgNotification.setStatus(NotificationStatus.PROCESS);
+            orgNotification.setStatus(NotificationStatus.SUCCESS);
             orgNotification.setOrgUser(saler);
             orgNotification.setIsRead(false);
             orgNotification.setTitle("Hợp đồng đã được phê duyệt");
             orgNotification.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được phê duyệt!");
             orgNotification.setData(String.valueOf(svcContract.getId()));
             orgNotificationRepository.save(orgNotification);
-            String data = String.valueOf(svcContract.getId());
-            List<OrgNotification> orgNotifications = orgNotificationRepository.findAllByDataAndStatus(data, NotificationStatus.PROCESS);
 
-            if (orgNotifications.size() > 0) {
-                for (OrgNotification notification : orgNotifications) {
-                    OrgUser user = notification.getOrgUser();
-                    OrgNotification updateNotification = new OrgNotification();
-                    updateNotification.setStatus(NotificationStatus.PROCESS);
-                    updateNotification.setOrgUser(user);
-                    updateNotification.setIsRead(false);
-                    updateNotification.setTitle("Hợp đồng đã được phê duyệt");
+            List<OrgUser> orgUsers = orgUserRepository.findByGroupIn(svcContract.getNotificationUnits());
 
-                    if (svcContract.getDocumentId() == null) {
-                        orgNotification.setDesc("Một hợp đông mới đã được phê duyệt");
-                    } else {
-                        orgNotification.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được phê duyệt");
-                    }
+            for (OrgUser orgUser : orgUsers) {
+                OrgNotification org = new OrgNotification();
+                org.setStatus(NotificationStatus.SUCCESS);
+                org.setOrgUser(orgUser);
+                org.setIsRead(false);
+                org.setTitle("Hợp đồng đã được phê duyệt");
 
-                    updateNotification.setData(String.valueOf(svcContract.getId()));
-                    orgNotificationRepository.save(updateNotification);
+                if (svcContract.getDocumentId() == null) {
+                    org.setDesc("Một hợp đông mới đã được phê duyệt");
+                } else {
+                    org.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được phê duyệt");
                 }
+
+                org.setData(String.valueOf(svcContract.getId()));
+                orgNotificationRepository.save(org);
             }
         }
         return svcContractMapper.toDto(svcContract);
