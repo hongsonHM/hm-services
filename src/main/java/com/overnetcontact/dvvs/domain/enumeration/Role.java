@@ -9,4 +9,5 @@ public enum Role {
     BUSINESS_STAFF,
     HUMAN_RESOURCE_STAFF,
     SUPPLY_STAFF,
+    SUPERVISOR,
 }
