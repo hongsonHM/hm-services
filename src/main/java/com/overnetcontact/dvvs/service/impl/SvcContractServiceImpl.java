@@ -126,25 +126,24 @@ public class SvcContractServiceImpl implements SvcContractService {
             orgNotification.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được phê duyệt!");
             orgNotification.setData(String.valueOf(svcContract.getId()));
             orgNotificationRepository.save(orgNotification);
-
-            List<OrgUser> orgUsers = orgUserRepository.findByGroupIn(svcContract.getNotificationUnits());
-
-            for (OrgUser orgUser : orgUsers) {
-                OrgNotification org = new OrgNotification();
-                org.setStatus(NotificationStatus.SUCCESS);
-                org.setOrgUser(orgUser);
-                org.setIsRead(false);
-                org.setTitle("Hợp đồng đã được phê duyệt");
-
-                if (svcContract.getDocumentId() == null) {
-                    org.setDesc("Một hợp đông mới đã được phê duyệt");
-                } else {
-                    org.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được phê duyệt");
-                }
-
-                org.setData(String.valueOf(svcContract.getId()));
-                orgNotificationRepository.save(org);
-            }
+            //            List<OrgUser> orgUsers = orgUserRepository.findByGroupIn(svcContract.getNotificationUnits());
+            //
+            //            for (OrgUser orgUser : orgUsers) {
+            //                OrgNotification org = new OrgNotification();
+            //                org.setStatus(NotificationStatus.SUCCESS);
+            //                org.setOrgUser(orgUser);
+            //                org.setIsRead(false);
+            //                org.setTitle("Hợp đồng đã được phê duyệt");
+            //
+            //                if (svcContract.getDocumentId() == null) {
+            //                    org.setDesc("Một hợp đông mới đã được phê duyệt");
+            //                } else {
+            //                    org.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được phê duyệt");
+            //                }
+            //
+            //                org.setData(String.valueOf(svcContract.getId()));
+            //                orgNotificationRepository.save(org);
+            //            }
         }
         return svcContractMapper.toDto(svcContract);
     }
