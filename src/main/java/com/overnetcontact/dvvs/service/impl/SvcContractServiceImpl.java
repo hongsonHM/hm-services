@@ -7,24 +7,17 @@ import com.overnetcontact.dvvs.repository.*;
 import com.overnetcontact.dvvs.security.SecurityUtils;
 import com.overnetcontact.dvvs.service.SvcContractService;
 import com.overnetcontact.dvvs.service.dto.SvcContractDTO;
+import com.overnetcontact.dvvs.service.mapper.OrgGroupMapper;
+import com.overnetcontact.dvvs.service.mapper.OrgUserMapper;
 import com.overnetcontact.dvvs.service.mapper.SvcContractMapper;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +40,8 @@ public class SvcContractServiceImpl implements SvcContractService {
 
     private final SvcContractMapper svcContractMapper;
 
+    private final OrgGroupMapper orgGroupMapper;
+
     private final SvcUnitRepository svcUnitRepository;
 
     private final SvcGroupRepository svcGroupRepository;
@@ -66,10 +61,12 @@ public class SvcContractServiceImpl implements SvcContractService {
         svcContract = svcContractRepository.save(svcContract);
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow();
         Optional<OrgUser> userEntityOptional = orgUserRepository.findByInternalUser_Login(username);
+
         if (svcContract.getId() != null && userEntityOptional.isPresent()) {
             OrgUser userEntity = userEntityOptional.get();
             svcContract.setOwnerBy(userEntity.getInternalUser());
         }
+
         if (svcContract.getStatus().equals(SvcContractStatus.PENDING)) {
             if (svcContract.getApproveBy() != null && svcContract.getApproveBy().size() > 0) {
                 for (User approvedByDTO : svcContract.getApproveBy()) {
@@ -79,14 +76,46 @@ public class SvcContractServiceImpl implements SvcContractService {
                     orgNotification.setOrgUser(approvedBy);
                     orgNotification.setIsRead(false);
                     orgNotification.setTitle("Hợp đồng cần được phê duyệt");
-                    orgNotification.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" cần được phê duyệt, hãy kiểm tra ngay!");
-                    orgNotification.setData(
-                        "{\n" + "        contract_id: '" + svcContract.getId() + "',\n" + "        type: 'contract'\n" + "      }"
-                    );
+
+                    if (svcContract.getDocumentId() == null) {
+                        orgNotification.setDesc("Một hợp đông mới cần được phê duyệt, hãy kiểm tra ngay!");
+                    } else {
+                        orgNotification.setDesc(
+                            "Hợp đồng số \"" + svcContract.getDocumentId() + "\" cần được phê duyệt, hãy kiểm tra ngay!"
+                        );
+                    }
+
+                    orgNotification.setData(String.valueOf(svcContract.getId()));
+                    orgNotificationRepository.save(orgNotification);
+                }
+            }
+
+            if (svcContract.getNotificationUnits() != null && svcContract.getNotificationUnits().size() > 0) {
+                List<OrgUser> orgUsers = orgUserRepository.findByGroupIn(svcContract.getNotificationUnits());
+                OrgUser saler = orgUserRepository.findByInternalUser_Id(svcContractDTO.getOwnerBy().getId()).orElseThrow();
+                for (OrgUser orgUser : orgUsers) {
+                    if (saler.getId() == orgUser.getId()) {
+                        continue;
+                    }
+
+                    OrgNotification orgNotification = new OrgNotification();
+                    orgNotification.setStatus(NotificationStatus.PROCESS);
+                    orgNotification.setOrgUser(orgUser);
+                    orgNotification.setIsRead(false);
+                    orgNotification.setTitle("Hợp đồng đã được tạo! Đang chờ phê duyệt");
+
+                    if (svcContract.getDocumentId() == null) {
+                        orgNotification.setDesc("Một hợp đông mới đã được tạo! Đang chờ phê duyệt");
+                    } else {
+                        orgNotification.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được tạo! Đang chờ phê duyệt");
+                    }
+
+                    orgNotification.setData(String.valueOf(svcContract.getId()));
                     orgNotificationRepository.save(orgNotification);
                 }
             }
         }
+
         if (svcContract.getStatus().equals(SvcContractStatus.SUCCESS) && svcContractDTO.getOwnerBy() != null) {
             OrgUser saler = orgUserRepository.findByInternalUser_Id(svcContractDTO.getOwnerBy().getId()).orElseThrow();
             OrgNotification orgNotification = new OrgNotification();
@@ -95,10 +124,30 @@ public class SvcContractServiceImpl implements SvcContractService {
             orgNotification.setIsRead(false);
             orgNotification.setTitle("Hợp đồng đã được phê duyệt");
             orgNotification.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được phê duyệt!");
-            orgNotification.setData(
-                "{\n" + "        contract_id: '" + svcContract.getId() + "',\n" + "        type: 'contract'\n" + "      }"
-            );
+            orgNotification.setData(String.valueOf(svcContract.getId()));
             orgNotificationRepository.save(orgNotification);
+            String data = String.valueOf(svcContract.getId());
+            List<OrgNotification> orgNotifications = orgNotificationRepository.findAllByDataAndStatus(data, NotificationStatus.PROCESS);
+
+            if (orgNotifications.size() > 0) {
+                for (OrgNotification notification : orgNotifications) {
+                    OrgUser user = notification.getOrgUser();
+                    OrgNotification updateNotification = new OrgNotification();
+                    updateNotification.setStatus(NotificationStatus.PROCESS);
+                    updateNotification.setOrgUser(user);
+                    updateNotification.setIsRead(false);
+                    updateNotification.setTitle("Hợp đồng đã được phê duyệt");
+
+                    if (svcContract.getDocumentId() == null) {
+                        orgNotification.setDesc("Một hợp đông mới đã được phê duyệt");
+                    } else {
+                        orgNotification.setDesc("Hợp đồng số \"" + svcContract.getDocumentId() + "\" đã được phê duyệt");
+                    }
+
+                    updateNotification.setData(String.valueOf(svcContract.getId()));
+                    orgNotificationRepository.save(updateNotification);
+                }
+            }
         }
         return svcContractMapper.toDto(svcContract);
     }

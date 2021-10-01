@@ -1,6 +1,8 @@
 package com.overnetcontact.dvvs.repository;
 
 import com.overnetcontact.dvvs.domain.OrgNotification;
+import com.overnetcontact.dvvs.domain.enumeration.NotificationStatus;
+import java.util.List;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +11,7 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface OrgNotificationRepository extends JpaRepository<OrgNotification, Long>, JpaSpecificationExecutor<OrgNotification> {}
+public interface OrgNotificationRepository extends JpaRepository<OrgNotification, Long>, JpaSpecificationExecutor<OrgNotification> {
+    @Override
+    List<OrgNotification> findAllByDataAndStatus(String Data, NotificationStatus notificationStatus);
+}
