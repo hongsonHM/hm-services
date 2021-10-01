@@ -422,7 +422,7 @@ public class SvcContractResource {
             Set<CoreSupplies> coreSupplies = coreTaskIndex.getCoreSupplies();
             Long times = taskMap.get(coreTaskIndex.getId());
             for (CoreSupplies coreSupply : coreSupplies) {
-                Long efforts = Long.parseLong(coreSupply.getEffort()) * times;
+                Double efforts = Double.parseDouble(coreSupply.getEffort()) * times;
 
                 if (!suppliesMap.containsKey(coreSupply.getName())) {
                     CoreSuppliesDTO coreSuppliesDTO = new CoreSuppliesDTO();
@@ -432,7 +432,7 @@ public class SvcContractResource {
                     suppliesMap.put(coreSupply.getName(), coreSuppliesDTO);
                 } else {
                     CoreSuppliesDTO coreSuppliesDTO = suppliesMap.get(coreSupply.getName());
-                    Long currentEffort = Long.valueOf(coreSuppliesDTO.getEffort());
+                    Double currentEffort = Double.valueOf(coreSuppliesDTO.getEffort());
                     coreSuppliesDTO.setEffort(String.valueOf(currentEffort + efforts));
                     suppliesMap.put(coreSupply.getName(), coreSuppliesDTO);
                 }
