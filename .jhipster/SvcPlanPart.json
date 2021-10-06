@@ -1,0 +1,54 @@
+{
+  "name": "SvcPlanPart",
+  "fields": [
+    {
+      "fieldName": "planUnitID",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "spendTaskID",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "location",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "startAt",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "endAt",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "frequency",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "periodic",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "note",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "workOnDays",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "svc_plan_part",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20211006142819"
+}

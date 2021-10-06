@@ -1,6 +1,8 @@
 package com.overnetcontact.dvvs.repository;
 
 import com.overnetcontact.dvvs.domain.OrgGroup;
+import java.util.Optional;
+import javax.validation.constraints.Size;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface OrgGroupRepository extends JpaRepository<OrgGroup, Long>, JpaSpecificationExecutor<OrgGroup> {}
+public interface OrgGroupRepository extends JpaRepository<OrgGroup, Long>, JpaSpecificationExecutor<OrgGroup> {
+    Optional<OrgGroup> findByName(@Size(max = 100) String name);
+}

@@ -2,6 +2,7 @@ package com.overnetcontact.dvvs.service.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -30,6 +31,16 @@ public class SvcPlanUnitDTO implements Serializable {
     private Long suppervisorId;
 
     private SvcPlanDTO svcPlan;
+
+    private List<SvcPlanPartDTO> svcPlanPartDTOList;
+
+    public List<SvcPlanPartDTO> getSvcPlanPartDTOList() {
+        return svcPlanPartDTOList;
+    }
+
+    public void setSvcPlanPartDTOList(List<SvcPlanPartDTO> svcPlanPartDTOList) {
+        this.svcPlanPartDTOList = svcPlanPartDTOList;
+    }
 
     public Long getId() {
         return id;

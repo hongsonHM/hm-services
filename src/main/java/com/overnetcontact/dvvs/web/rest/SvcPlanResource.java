@@ -1,10 +1,12 @@
 package com.overnetcontact.dvvs.web.rest;
 
 import com.overnetcontact.dvvs.repository.SvcPlanRepository;
-import com.overnetcontact.dvvs.service.SvcPlanQueryService;
-import com.overnetcontact.dvvs.service.SvcPlanService;
+import com.overnetcontact.dvvs.service.*;
 import com.overnetcontact.dvvs.service.criteria.SvcPlanCriteria;
+import com.overnetcontact.dvvs.service.dto.SvcFullPlanDTO;
 import com.overnetcontact.dvvs.service.dto.SvcPlanDTO;
+import com.overnetcontact.dvvs.service.dto.SvcPlanPartDTO;
+import com.overnetcontact.dvvs.service.dto.SvcPlanUnitDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,12 +44,24 @@ public class SvcPlanResource {
 
     private final SvcPlanService svcPlanService;
 
+    private final SvcPlanUnitService svcPlanUnitService;
+
+    private final SvcPlanPartService svcPlanPartService;
+
     private final SvcPlanRepository svcPlanRepository;
 
     private final SvcPlanQueryService svcPlanQueryService;
 
-    public SvcPlanResource(SvcPlanService svcPlanService, SvcPlanRepository svcPlanRepository, SvcPlanQueryService svcPlanQueryService) {
+    public SvcPlanResource(
+        SvcPlanService svcPlanService,
+        SvcPlanUnitService svcPlanUnitService,
+        SvcPlanPartService svcPlanPartService,
+        SvcPlanRepository svcPlanRepository,
+        SvcPlanQueryService svcPlanQueryService
+    ) {
         this.svcPlanService = svcPlanService;
+        this.svcPlanUnitService = svcPlanUnitService;
+        this.svcPlanPartService = svcPlanPartService;
         this.svcPlanRepository = svcPlanRepository;
         this.svcPlanQueryService = svcPlanQueryService;
     }
@@ -212,5 +225,49 @@ public class SvcPlanResource {
         Page<SvcPlanDTO> page = svcPlanQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code POST  /svc-plans} : Create a new svcPlan.
+     *
+     * @param svcFullPlanDTO the svcPlanDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new svcPlanDTO, or with status {@code 400 (Bad Request)} if the svcPlan has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/svc-full-plans")
+    public ResponseEntity<String> createFullSvcPlan(@Valid @RequestBody SvcFullPlanDTO svcFullPlanDTO) throws URISyntaxException {
+        log.debug("REST request to save full SvcPlan : {}", svcFullPlanDTO);
+        if (svcFullPlanDTO.getSvcPlanDTO().getId() != null) {
+            throw new BadRequestAlertException("A new svcPlan cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+
+        for (SvcPlanUnitDTO svcPlanUnitDTO : svcFullPlanDTO.getSvcPlanUnitDTOList()) {
+            if (svcPlanUnitDTO.getId() != null) {
+                throw new BadRequestAlertException("A new svcPlanUnit cannot already have an ID", ENTITY_NAME, "idexists");
+            }
+
+            for (SvcPlanPartDTO svcPlanPartDTO : svcPlanUnitDTO.getSvcPlanPartDTOList()) {
+                if (svcPlanPartDTO.getId() != null) {
+                    throw new BadRequestAlertException("A new svcPlanPart cannot already have an ID", ENTITY_NAME, "idexists");
+                }
+            }
+        }
+
+        SvcPlanDTO plan = svcPlanService.save(svcFullPlanDTO.getSvcPlanDTO());
+        for (SvcPlanUnitDTO svcPlanUnitDTO : svcFullPlanDTO.getSvcPlanUnitDTOList()) {
+            svcPlanUnitDTO.setSvcPlan(plan);
+            SvcPlanUnitDTO planUnit = svcPlanUnitService.save(svcPlanUnitDTO);
+
+            for (SvcPlanPartDTO svcPlanPartDTO : svcPlanUnitDTO.getSvcPlanPartDTOList()) {
+                svcPlanPartDTO.setPlanUnitID(plan.getId());
+                svcPlanPartDTO.setPlanUnitID(planUnit.getId());
+                svcPlanPartService.save(svcPlanPartDTO);
+            }
+        }
+
+        return ResponseEntity
+            .created(new URI("/svc-full-plans"))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
+            .body("Create Successfully ");
     }
 }

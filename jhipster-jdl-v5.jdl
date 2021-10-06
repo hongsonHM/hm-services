@@ -1,0 +1,22 @@
+entity SvcPlanPart {
+	planUnitID Long required
+    spendTaskID Long required
+    location String
+    startAt String
+    endAt String
+    frequency String
+    periodic String
+    note String
+    workOnDays String
+}
+
+
+// Set pagination options
+paginate SvcPlanPart with pagination
+filter SvcPlanPart
+// Use Data Transfer Objects (DTO)
+dto SvcPlanPart with mapstruct
+// Set service options to SvcScheduleUnitRecord, SvcSchedulePlanRecord
+service SvcPlanPart with serviceImpl
+// Set an angular suffix
+// angularSuffix * with mySuffix
