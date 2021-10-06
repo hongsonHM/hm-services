@@ -24,4 +24,7 @@ public interface OrgUserRepository extends JpaRepository<OrgUser, Long>, JpaSpec
 
     @Query("select distinct orgUser from OrgUser orgUser where orgUser.group in :groups")
     List<OrgUser> findByGroupIn(@Param("groups") List<OrgGroup> groups);
+
+    @Query("select distinct orgUser from OrgUser orgUser where orgUser.group = :group")
+    List<OrgUser> findByGroup(@Param("group") OrgGroup groups);
 }

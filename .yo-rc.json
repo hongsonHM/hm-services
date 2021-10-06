@@ -65,8 +65,9 @@
       "SvcPlan",
       "SvcPlanUnit",
       "SvcLabor",
-      "SvcPlanTask"
+      "SvcPlanTask",
+      "SvcPlanPart"
     ],
-    "lastLiquibaseTimestamp": 1631889945000
+    "lastLiquibaseTimestamp": 1633530499000
   }
 }
