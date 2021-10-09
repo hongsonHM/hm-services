@@ -1,5 +1,7 @@
 package com.overnetcontact.dvvs.service;
 
+import com.overnetcontact.dvvs.domain.SvcArea;
+import com.overnetcontact.dvvs.domain.SvcGroupTask;
 import com.overnetcontact.dvvs.service.dto.SvcGroupTaskDTO;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +40,8 @@ public interface SvcGroupTaskService {
      * @return the entity.
      */
     Optional<SvcGroupTaskDTO> findOne(Long id);
+
+    Optional<SvcGroupTask> findBySvcArea(SvcArea svcArea);
 
     /**
      * Delete the "id" svcGroupTask.

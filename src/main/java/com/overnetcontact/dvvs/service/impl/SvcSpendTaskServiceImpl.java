@@ -1,13 +1,12 @@
 package com.overnetcontact.dvvs.service.impl;
 
+import com.overnetcontact.dvvs.domain.SvcGroupTask;
 import com.overnetcontact.dvvs.domain.SvcSpendTask;
 import com.overnetcontact.dvvs.repository.SvcSpendTaskRepository;
 import com.overnetcontact.dvvs.service.SvcSpendTaskService;
 import com.overnetcontact.dvvs.service.dto.SvcSpendTaskDTO;
 import com.overnetcontact.dvvs.service.mapper.SvcSpendTaskMapper;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,5 +80,15 @@ public class SvcSpendTaskServiceImpl implements SvcSpendTaskService {
     public List<Object> findIds(List<Long> ids) {
         log.debug("request to find ids in list");
         return svcSpendTaskRepository.findByIds(ids);
+    }
+
+    @Override
+    public Set<SvcSpendTaskDTO> findBySvcGroupTask(SvcGroupTask svcGroupTask) {
+        log.debug("request to find ids in list");
+        return svcSpendTaskRepository
+            .findBySvcGroupTask(svcGroupTask)
+            .stream()
+            .map(svcSpendTaskMapper::toDto)
+            .collect(Collectors.toCollection(HashSet::new));
     }
 }

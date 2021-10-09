@@ -93,7 +93,7 @@ public class SvcAreaServiceImpl implements SvcAreaService {
     }
 
     @Override
-    public List<SvcAreaDTO> findByContractsId(Long id) {
-        return svcAreaRepository.findByContractsId(id).stream().map(svcAreaMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+    public List<SvcArea> findByContractsId(Long id) {
+        return svcAreaRepository.findByContractsId(id);
     }
 }

@@ -1,7 +1,9 @@
 package com.overnetcontact.dvvs.repository;
 
+import com.overnetcontact.dvvs.domain.SvcGroupTask;
 import com.overnetcontact.dvvs.domain.SvcSpendTask;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,4 +22,6 @@ public interface SvcSpendTaskRepository extends JpaRepository<SvcSpendTask, Long
         nativeQuery = true
     )
     List<Object> findByIds(@Param("ids") List<Long> ids);
+
+    Set<SvcSpendTask> findBySvcGroupTask(SvcGroupTask svcGroupTask);
 }
