@@ -1,9 +1,11 @@
 package com.overnetcontact.dvvs.service;
 
+import com.overnetcontact.dvvs.domain.SvcGroupTask;
 import com.overnetcontact.dvvs.domain.SvcSpendTask;
 import com.overnetcontact.dvvs.service.dto.SvcSpendTaskDTO;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service Interface for managing {@link com.overnetcontact.dvvs.domain.SvcSpendTask}.
@@ -48,4 +50,6 @@ public interface SvcSpendTaskService {
     void delete(Long id);
 
     List<Object> findIds(List<Long> ids);
+
+    Set<SvcSpendTaskDTO> findBySvcGroupTask(SvcGroupTask svcGroupTask);
 }

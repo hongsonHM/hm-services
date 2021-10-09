@@ -1,5 +1,6 @@
 package com.overnetcontact.dvvs.service.impl;
 
+import com.overnetcontact.dvvs.domain.SvcArea;
 import com.overnetcontact.dvvs.domain.SvcGroupTask;
 import com.overnetcontact.dvvs.repository.SvcGroupTaskRepository;
 import com.overnetcontact.dvvs.service.SvcGroupTaskService;
@@ -69,6 +70,12 @@ public class SvcGroupTaskServiceImpl implements SvcGroupTaskService {
     public Optional<SvcGroupTaskDTO> findOne(Long id) {
         log.debug("Request to get SvcGroupTask : {}", id);
         return svcGroupTaskRepository.findById(id).map(svcGroupTaskMapper::toDto);
+    }
+
+    @Override
+    public Optional<SvcGroupTask> findBySvcArea(SvcArea svcArea) {
+        log.debug("Request to find SvcGroupTask : {}");
+        return svcGroupTaskRepository.findBySvcArea(svcArea);
     }
 
     @Override

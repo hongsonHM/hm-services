@@ -1,13 +1,12 @@
 package com.overnetcontact.dvvs.web.rest;
 
-import com.overnetcontact.dvvs.domain.CoreSupplies;
-import com.overnetcontact.dvvs.domain.CoreTask;
-import com.overnetcontact.dvvs.domain.SvcSpendTask;
+import com.overnetcontact.dvvs.domain.*;
 import com.overnetcontact.dvvs.repository.CoreTaskRepository;
 import com.overnetcontact.dvvs.repository.SvcContractRepository;
 import com.overnetcontact.dvvs.service.*;
 import com.overnetcontact.dvvs.service.criteria.SvcContractCriteria;
 import com.overnetcontact.dvvs.service.dto.*;
+import com.overnetcontact.dvvs.service.mapper.SvcAreaMapper;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,7 +17,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import org.apache.commons.math3.geometry.euclidean.oned.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,6 +63,8 @@ public class SvcContractResource {
 
     private final CoreTaskRepository coreTaskRepository;
 
+    private final SvcAreaMapper svcAreaMapper;
+
     private final SvcContractService svcContractService;
 
     private final SvcAreaService svcAreaService;
@@ -80,6 +80,7 @@ public class SvcContractResource {
     public SvcContractResource(
         CoreTaskService coreTaskService,
         CoreTaskRepository coreTaskRepository,
+        SvcAreaMapper svcAreaMapper,
         SvcContractService svcContractService,
         SvcAreaService svcAreaService,
         SvcContractRepository svcContractRepository,
@@ -89,6 +90,7 @@ public class SvcContractResource {
     ) {
         this.coreTaskService = coreTaskService;
         this.coreTaskRepository = coreTaskRepository;
+        this.svcAreaMapper = svcAreaMapper;
         this.svcContractService = svcContractService;
         this.svcAreaService = svcAreaService;
         this.svcContractRepository = svcContractRepository;
@@ -315,45 +317,6 @@ public class SvcContractResource {
     }
 
     /**
-     * {@code PostMapping  /total-supplies} : calculate total supplies
-     *
-     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
-     */
-    //    @PostMapping("/total-supplies")
-    //    public ResponseEntity<List<CoreTask>> totalSupplies(@RequestBody SvcFullContractsDTO totalSupplies) throws URISyntaxException {
-    //        log.debug("REST request to calculate total supplies ");
-    //        List<Long> ids = new ArrayList<>();
-    //        for (SvcSpendTaskForAreaDTO svcSpendTaskForAreaDTO : totalSupplies.getSvcSpendTaskForAreaDTOs()) {
-    //            System.out.println(svcSpendTaskDTO.getId());
-    //            ids.add(svcSpendTaskDTO.getCoreTaskId());
-    //        }
-    //
-    //        List<CoreTask> svcSpendTasks = coreTaskService.findByIdIn(ids);
-    //
-    //        return ResponseEntity
-    //            .created(new URI("/total-supplies"))
-    //            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
-    //            .body(svcSpendTasks);
-    //    }
-
-    //    @PostMapping("/preview-supplies")
-    //    public ResponseEntity<List<Object>> totalSupplies(@RequestBody TotalSuppliesDTO totalSuppliesDTO) throws URISyntaxException {
-    //        log.debug("REST request to calculate total supplies ");
-    //        List<Long> ids = new ArrayList<>();
-    //        for (SvcSpendTaskDTO svcSpendTaskDTO : totalSuppliesDTO.getSvcSpendTaskDTOs()) {
-    //            System.out.println(svcSpendTaskDTO.getId());
-    //            ids.add(svcSpendTaskDTO.getCoreTaskId());
-    //        }
-    //
-    //        List<Object> svcSpendTasks = coreTaskService.findSuppliesWithTask(ids);
-    //
-    //        return ResponseEntity
-    //            .created(new URI("/preview-supplies"))
-    //            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
-    //            .body(svcSpendTasks);
-    //    }
-
-    /**
      * {@code GET  /svc-contracts/:id} : get the "id" svcContract.
      *
      * @param id the id of the svcContractDTO to retrieve.
@@ -365,11 +328,14 @@ public class SvcContractResource {
         SvcFullContractsDTO svcFullContractsDTO = new SvcFullContractsDTO();
         Optional<SvcContractDTO> svcContractDTO = svcContractService.findOne(id);
         svcContractDTO.ifPresent(svcFullContractsDTO::setSvcContractDTO);
-        List<SvcAreaDTO> svcAreaDTOs = svcAreaService.findByContractsId(id);
+        List<SvcArea> svcAreas = svcAreaService.findByContractsId(id);
         Set<SvcSpendTaskForAreaDTO> svcSpendTaskForAreaDTOs = new HashSet<>();
-        for (SvcAreaDTO svcAreaDTO : svcAreaDTOs) {
+        for (SvcArea svcArea : svcAreas) {
             SvcSpendTaskForAreaDTO svcSpendTaskForAreaDTO = new SvcSpendTaskForAreaDTO();
-            svcSpendTaskForAreaDTO.setSvcAreaDTO(svcAreaDTO);
+            Optional<SvcGroupTask> rsGroupTask = svcGroupTaskService.findBySvcArea(svcArea);
+            Set<SvcSpendTaskDTO> svcSpendTaskDTOS = svcSpendTaskService.findBySvcGroupTask(rsGroupTask.get());
+            svcSpendTaskForAreaDTO.setSvcAreaDTO(svcAreaMapper.toDto(svcArea));
+            svcSpendTaskForAreaDTO.setSvcSpendTaskDTOs(svcSpendTaskDTOS);
             svcSpendTaskForAreaDTOs.add(svcSpendTaskForAreaDTO);
         }
         svcFullContractsDTO.setSvcSpendTaskForAreaDTOs(svcSpendTaskForAreaDTOs);

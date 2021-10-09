@@ -53,5 +53,5 @@ public interface SvcAreaService {
      */
     void delete(Long id);
 
-    List<SvcAreaDTO> findByContractsId(Long id);
+    List<SvcArea> findByContractsId(Long id);
 }
