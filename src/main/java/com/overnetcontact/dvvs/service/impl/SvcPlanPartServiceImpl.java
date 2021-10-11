@@ -5,7 +5,10 @@ import com.overnetcontact.dvvs.repository.SvcPlanPartRepository;
 import com.overnetcontact.dvvs.service.SvcPlanPartService;
 import com.overnetcontact.dvvs.service.dto.SvcPlanPartDTO;
 import com.overnetcontact.dvvs.service.mapper.SvcPlanPartMapper;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -74,5 +77,15 @@ public class SvcPlanPartServiceImpl implements SvcPlanPartService {
     public void delete(Long id) {
         log.debug("Request to delete SvcPlanPart : {}", id);
         svcPlanPartRepository.deleteById(id);
+    }
+
+    @Override
+    public List<SvcPlanPartDTO> findByPlanUnitID(Long planUnitID) {
+        log.debug("Request to find SvcPlanPart : {}", planUnitID);
+        return svcPlanPartRepository
+            .findByPlanUnitID(planUnitID)
+            .stream()
+            .map(svcPlanPartMapper::toDto)
+            .collect(Collectors.toCollection(ArrayList::new));
     }
 }
