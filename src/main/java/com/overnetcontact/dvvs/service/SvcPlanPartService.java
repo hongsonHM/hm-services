@@ -1,7 +1,10 @@
 package com.overnetcontact.dvvs.service;
 
+import com.overnetcontact.dvvs.domain.SvcPlanPart;
 import com.overnetcontact.dvvs.service.dto.SvcPlanPartDTO;
+import java.util.List;
 import java.util.Optional;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -47,4 +50,6 @@ public interface SvcPlanPartService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    List<SvcPlanPartDTO> findByPlanUnitID(Long planUnitID);
 }

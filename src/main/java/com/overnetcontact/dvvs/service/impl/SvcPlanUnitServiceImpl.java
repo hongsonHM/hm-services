@@ -3,9 +3,14 @@ package com.overnetcontact.dvvs.service.impl;
 import com.overnetcontact.dvvs.domain.SvcPlanUnit;
 import com.overnetcontact.dvvs.repository.SvcPlanUnitRepository;
 import com.overnetcontact.dvvs.service.SvcPlanUnitService;
+import com.overnetcontact.dvvs.service.dto.SvcPlanDTO;
 import com.overnetcontact.dvvs.service.dto.SvcPlanUnitDTO;
+import com.overnetcontact.dvvs.service.mapper.SvcPlanMapper;
 import com.overnetcontact.dvvs.service.mapper.SvcPlanUnitMapper;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,9 +31,16 @@ public class SvcPlanUnitServiceImpl implements SvcPlanUnitService {
 
     private final SvcPlanUnitMapper svcPlanUnitMapper;
 
-    public SvcPlanUnitServiceImpl(SvcPlanUnitRepository svcPlanUnitRepository, SvcPlanUnitMapper svcPlanUnitMapper) {
+    private final SvcPlanMapper svcPlanMapper;
+
+    public SvcPlanUnitServiceImpl(
+        SvcPlanUnitRepository svcPlanUnitRepository,
+        SvcPlanUnitMapper svcPlanUnitMapper,
+        SvcPlanMapper svcPlanMapper
+    ) {
         this.svcPlanUnitRepository = svcPlanUnitRepository;
         this.svcPlanUnitMapper = svcPlanUnitMapper;
+        this.svcPlanMapper = svcPlanMapper;
     }
 
     @Override
@@ -74,5 +86,15 @@ public class SvcPlanUnitServiceImpl implements SvcPlanUnitService {
     public void delete(Long id) {
         log.debug("Request to delete SvcPlanUnit : {}", id);
         svcPlanUnitRepository.deleteById(id);
+    }
+
+    @Override
+    public List<SvcPlanUnitDTO> findBySvcPlan(SvcPlanDTO svcPlanDTO) {
+        log.debug("Request to find by plan : {}", svcPlanDTO);
+        return svcPlanUnitRepository
+            .findBySvcPlan(svcPlanMapper.toEntity(svcPlanDTO))
+            .stream()
+            .map(svcPlanUnitMapper::toDto)
+            .collect(Collectors.toCollection(ArrayList::new));
     }
 }

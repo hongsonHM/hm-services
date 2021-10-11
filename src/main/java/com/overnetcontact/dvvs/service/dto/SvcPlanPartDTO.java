@@ -17,6 +17,56 @@ public class SvcPlanPartDTO implements Serializable {
     @NotNull
     private Long spendTaskID;
 
+    private String name;
+
+    private String unit;
+
+    private String mass;
+
+    private String frequencyDetails;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getMass() {
+        return mass;
+    }
+
+    public void setMass(String mass) {
+        this.mass = mass;
+    }
+
+    public String getFrequencyDetails() {
+        return frequencyDetails;
+    }
+
+    public void setFrequencyDetails(String frequencyDetails) {
+        this.frequencyDetails = frequencyDetails;
+    }
+
+    public String getNoteDetails() {
+        return noteDetails;
+    }
+
+    public void setNoteDetails(String noteDetails) {
+        this.noteDetails = noteDetails;
+    }
+
+    private String noteDetails;
+
     private String location;
 
     private String startAt;

@@ -10,6 +10,7 @@ import com.overnetcontact.dvvs.service.dto.SvcPlanUnitDTO;
 import com.overnetcontact.dvvs.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -269,5 +270,32 @@ public class SvcPlanResource {
             .created(new URI("/svc-full-plans"))
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
             .body("Create Successfully ");
+    }
+
+    /**
+     * {@code POST  /svc-plans} : Create a new svcPlan.
+     *
+     * @param id the svcPlanDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new svcPlanDTO, or with status {@code 400 (Bad Request)} if the svcPlan has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @GetMapping("/svc-full-plans/{id}")
+    public ResponseEntity<SvcFullPlanDTO> getFullSvcPlan(@PathVariable Long id) throws URISyntaxException {
+        log.debug("REST request to get full SvcPlan : {}", id);
+        SvcFullPlanDTO svcFullPlanDTO = new SvcFullPlanDTO();
+        Optional<SvcPlanDTO> planDTO = svcPlanService.findOne(id);
+        List<SvcPlanUnitDTO> svcPlanUnitDTOS = svcPlanUnitService.findBySvcPlan(planDTO.get());
+        svcFullPlanDTO.setSvcPlanDTO(planDTO.get());
+
+        for (SvcPlanUnitDTO svcPlanUnitDTO : svcPlanUnitDTOS) {
+            List<SvcPlanPartDTO> svcPlanPartDTOList = svcPlanPartService.findByPlanUnitID(svcPlanUnitDTO.getId());
+            svcPlanUnitDTO.setSvcPlanPartDTOList(svcPlanPartDTOList);
+        }
+
+        svcFullPlanDTO.setSvcPlanUnitDTOList(svcPlanUnitDTOS);
+        return ResponseEntity
+            .created(new URI("/svc-full-plans"))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, ""))
+            .body(svcFullPlanDTO);
     }
 }
