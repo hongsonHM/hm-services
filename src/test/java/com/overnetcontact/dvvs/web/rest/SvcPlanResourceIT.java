@@ -97,8 +97,8 @@ class SvcPlanResourceIT {
     public static SvcPlan createEntity(EntityManager em) {
         SvcPlan svcPlan = new SvcPlan()
             .name(DEFAULT_NAME)
-            .serviceManagerId(DEFAULT_SERVICE_MANAGER_ID)
-            .defaultSuppervisorId(DEFAULT_DEFAULT_SUPPERVISOR_ID)
+            //            .serviceManagerId(DEFAULT_SERVICE_MANAGER_ID)
+            //            .defaultSuppervisorId(DEFAULT_DEFAULT_SUPPERVISOR_ID)
             .status(DEFAULT_STATUS)
             .startPlan(DEFAULT_START_PLAN)
             .endPlan(DEFAULT_END_PLAN)
@@ -117,8 +117,8 @@ class SvcPlanResourceIT {
     public static SvcPlan createUpdatedEntity(EntityManager em) {
         SvcPlan svcPlan = new SvcPlan()
             .name(UPDATED_NAME)
-            .serviceManagerId(UPDATED_SERVICE_MANAGER_ID)
-            .defaultSuppervisorId(UPDATED_DEFAULT_SUPPERVISOR_ID)
+            //            .serviceManagerId(UPDATED_SERVICE_MANAGER_ID)
+            //            .defaultSuppervisorId(UPDATED_DEFAULT_SUPPERVISOR_ID)
             .status(UPDATED_STATUS)
             .startPlan(UPDATED_START_PLAN)
             .endPlan(UPDATED_END_PLAN)
@@ -148,8 +148,8 @@ class SvcPlanResourceIT {
         assertThat(svcPlanList).hasSize(databaseSizeBeforeCreate + 1);
         SvcPlan testSvcPlan = svcPlanList.get(svcPlanList.size() - 1);
         assertThat(testSvcPlan.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testSvcPlan.getServiceManagerId()).isEqualTo(DEFAULT_SERVICE_MANAGER_ID);
-        assertThat(testSvcPlan.getDefaultSuppervisorId()).isEqualTo(DEFAULT_DEFAULT_SUPPERVISOR_ID);
+        //        assertThat(testSvcPlan.getServiceManagerId()).isEqualTo(DEFAULT_SERVICE_MANAGER_ID);
+        //        assertThat(testSvcPlan.getDefaultSuppervisorId()).isEqualTo(DEFAULT_DEFAULT_SUPPERVISOR_ID);
         assertThat(testSvcPlan.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testSvcPlan.getStartPlan()).isEqualTo(DEFAULT_START_PLAN);
         assertThat(testSvcPlan.getEndPlan()).isEqualTo(DEFAULT_END_PLAN);
@@ -200,7 +200,7 @@ class SvcPlanResourceIT {
     void checkServiceManagerIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = svcPlanRepository.findAll().size();
         // set the field null
-        svcPlan.setServiceManagerId(null);
+        //        svcPlan.setServiceManagerId(null);
 
         // Create the SvcPlan, which fails.
         SvcPlanDTO svcPlanDTO = svcPlanMapper.toDto(svcPlan);
@@ -218,7 +218,7 @@ class SvcPlanResourceIT {
     void checkDefaultSuppervisorIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = svcPlanRepository.findAll().size();
         // set the field null
-        svcPlan.setDefaultSuppervisorId(null);
+        //        svcPlan.setDefaultSuppervisorId(null);
 
         // Create the SvcPlan, which fails.
         SvcPlanDTO svcPlanDTO = svcPlanMapper.toDto(svcPlan);
@@ -1213,8 +1213,8 @@ class SvcPlanResourceIT {
         em.detach(updatedSvcPlan);
         updatedSvcPlan
             .name(UPDATED_NAME)
-            .serviceManagerId(UPDATED_SERVICE_MANAGER_ID)
-            .defaultSuppervisorId(UPDATED_DEFAULT_SUPPERVISOR_ID)
+            //            .serviceManagerId(UPDATED_SERVICE_MANAGER_ID)
+            //            .defaultSuppervisorId(UPDATED_DEFAULT_SUPPERVISOR_ID)
             .status(UPDATED_STATUS)
             .startPlan(UPDATED_START_PLAN)
             .endPlan(UPDATED_END_PLAN)
@@ -1236,8 +1236,8 @@ class SvcPlanResourceIT {
         assertThat(svcPlanList).hasSize(databaseSizeBeforeUpdate);
         SvcPlan testSvcPlan = svcPlanList.get(svcPlanList.size() - 1);
         assertThat(testSvcPlan.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testSvcPlan.getServiceManagerId()).isEqualTo(UPDATED_SERVICE_MANAGER_ID);
-        assertThat(testSvcPlan.getDefaultSuppervisorId()).isEqualTo(UPDATED_DEFAULT_SUPPERVISOR_ID);
+        //        assertThat(testSvcPlan.getServiceManagerId()).isEqualTo(UPDATED_SERVICE_MANAGER_ID);
+        //        assertThat(testSvcPlan.getDefaultSuppervisorId()).isEqualTo(UPDATED_DEFAULT_SUPPERVISOR_ID);
         assertThat(testSvcPlan.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testSvcPlan.getStartPlan()).isEqualTo(UPDATED_START_PLAN);
         assertThat(testSvcPlan.getEndPlan()).isEqualTo(UPDATED_END_PLAN);
@@ -1324,7 +1324,7 @@ class SvcPlanResourceIT {
         partialUpdatedSvcPlan.setId(svcPlan.getId());
 
         partialUpdatedSvcPlan
-            .defaultSuppervisorId(UPDATED_DEFAULT_SUPPERVISOR_ID)
+            //            .defaultSuppervisorId(UPDATED_DEFAULT_SUPPERVISOR_ID)
             .status(UPDATED_STATUS)
             .startPlan(UPDATED_START_PLAN)
             .createDate(UPDATED_CREATE_DATE)
@@ -1343,8 +1343,8 @@ class SvcPlanResourceIT {
         assertThat(svcPlanList).hasSize(databaseSizeBeforeUpdate);
         SvcPlan testSvcPlan = svcPlanList.get(svcPlanList.size() - 1);
         assertThat(testSvcPlan.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testSvcPlan.getServiceManagerId()).isEqualTo(DEFAULT_SERVICE_MANAGER_ID);
-        assertThat(testSvcPlan.getDefaultSuppervisorId()).isEqualTo(UPDATED_DEFAULT_SUPPERVISOR_ID);
+        //        assertThat(testSvcPlan.getServiceManagerId()).isEqualTo(DEFAULT_SERVICE_MANAGER_ID);
+        //        assertThat(testSvcPlan.getDefaultSuppervisorId()).isEqualTo(UPDATED_DEFAULT_SUPPERVISOR_ID);
         assertThat(testSvcPlan.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testSvcPlan.getStartPlan()).isEqualTo(UPDATED_START_PLAN);
         assertThat(testSvcPlan.getEndPlan()).isEqualTo(DEFAULT_END_PLAN);
@@ -1367,8 +1367,8 @@ class SvcPlanResourceIT {
 
         partialUpdatedSvcPlan
             .name(UPDATED_NAME)
-            .serviceManagerId(UPDATED_SERVICE_MANAGER_ID)
-            .defaultSuppervisorId(UPDATED_DEFAULT_SUPPERVISOR_ID)
+            //            .serviceManagerId(UPDATED_SERVICE_MANAGER_ID)
+            //            .defaultSuppervisorId(UPDATED_DEFAULT_SUPPERVISOR_ID)
             .status(UPDATED_STATUS)
             .startPlan(UPDATED_START_PLAN)
             .endPlan(UPDATED_END_PLAN)
@@ -1389,8 +1389,8 @@ class SvcPlanResourceIT {
         assertThat(svcPlanList).hasSize(databaseSizeBeforeUpdate);
         SvcPlan testSvcPlan = svcPlanList.get(svcPlanList.size() - 1);
         assertThat(testSvcPlan.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testSvcPlan.getServiceManagerId()).isEqualTo(UPDATED_SERVICE_MANAGER_ID);
-        assertThat(testSvcPlan.getDefaultSuppervisorId()).isEqualTo(UPDATED_DEFAULT_SUPPERVISOR_ID);
+        //        assertThat(testSvcPlan.getServiceManagerId()).isEqualTo(UPDATED_SERVICE_MANAGER_ID);
+        //        assertThat(testSvcPlan.getDefaultSuppervisorId()).isEqualTo(UPDATED_DEFAULT_SUPPERVISOR_ID);
         assertThat(testSvcPlan.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testSvcPlan.getStartPlan()).isEqualTo(UPDATED_START_PLAN);
         assertThat(testSvcPlan.getEndPlan()).isEqualTo(UPDATED_END_PLAN);

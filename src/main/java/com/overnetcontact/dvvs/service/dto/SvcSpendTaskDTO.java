@@ -1,5 +1,6 @@
 package com.overnetcontact.dvvs.service.dto;
 
+import com.overnetcontact.dvvs.domain.CoreTask;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -10,7 +11,9 @@ public class SvcSpendTaskDTO implements Serializable {
 
     private Long id;
 
-    private Long coreTaskId;
+    //    private Long coreTaskId;
+
+    private CoreTaskDTO coreTask;
 
     private String mass;
 
@@ -28,13 +31,13 @@ public class SvcSpendTaskDTO implements Serializable {
         this.id = id;
     }
 
-    public Long getCoreTaskId() {
-        return coreTaskId;
-    }
-
-    public void setCoreTaskId(Long coreTaskId) {
-        this.coreTaskId = coreTaskId;
-    }
+    //    public Long getCoreTaskId() {
+    //        return coreTaskId;
+    //    }
+    //
+    //    public void setCoreTaskId(Long coreTaskId) {
+    //        this.coreTaskId = coreTaskId;
+    //    }
 
     public String getMass() {
         return mass;
@@ -68,6 +71,14 @@ public class SvcSpendTaskDTO implements Serializable {
         this.frequency = frequency;
     }
 
+    public CoreTaskDTO getCoreTask() {
+        return coreTask;
+    }
+
+    public void setCoreTask(CoreTaskDTO coreTask) {
+        this.coreTask = coreTask;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -94,7 +105,7 @@ public class SvcSpendTaskDTO implements Serializable {
     public String toString() {
         return "SvcSpendTaskDTO{" +
             "id=" + getId() +
-            ", coreTaskId=" + getCoreTaskId() +
+//            ", coreTaskId=" + getCoreTaskId() +
             ", mass='" + getMass() + "'" +
             ", note='" + getNote() + "'" +
             ", svcGroupTask=" + getSvcGroupTask() +

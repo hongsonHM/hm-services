@@ -1,8 +1,11 @@
 package com.overnetcontact.dvvs.service.dto;
 
+import com.overnetcontact.dvvs.domain.OrgUser;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.*;
 
 /**
@@ -24,6 +27,10 @@ public class SvcPlanDTO implements Serializable {
     private Long defaultSuppervisorId;
 
     private String defaultSuppervisorName;
+
+    private UserDTO serviceManager;
+
+    private UserDTO suppervisor;
 
     private Boolean status;
 
@@ -131,6 +138,22 @@ public class SvcPlanDTO implements Serializable {
 
     public void setDefaultSuppervisorName(String defaultSuppervisorName) {
         this.defaultSuppervisorName = defaultSuppervisorName;
+    }
+
+    public UserDTO getServiceManager() {
+        return serviceManager;
+    }
+
+    public void setServiceManager(UserDTO serviceManager) {
+        this.serviceManager = serviceManager;
+    }
+
+    public UserDTO getSuppervisor() {
+        return suppervisor;
+    }
+
+    public void setSuppervisor(UserDTO suppervisor) {
+        this.suppervisor = suppervisor;
     }
 
     @Override

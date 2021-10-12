@@ -86,9 +86,9 @@ public class SvcSpendTaskQueryService extends QueryService<SvcSpendTask> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), SvcSpendTask_.id));
             }
-            if (criteria.getCoreTaskId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCoreTaskId(), SvcSpendTask_.coreTaskId));
-            }
+            //            if (criteria.getCoreTaskId() != null) {
+            //                specification = specification.and(buildRangeSpecification(criteria.getCoreTaskId(), SvcSpendTask_.coreTaskId));
+            //            }
             if (criteria.getMass() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getMass(), SvcSpendTask_.mass));
             }

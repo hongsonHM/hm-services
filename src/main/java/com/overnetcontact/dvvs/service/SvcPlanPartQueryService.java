@@ -89,9 +89,9 @@ public class SvcPlanPartQueryService extends QueryService<SvcPlanPart> {
             if (criteria.getPlanUnitID() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getPlanUnitID(), SvcPlanPart_.planUnitID));
             }
-            if (criteria.getSpendTaskID() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getSpendTaskID(), SvcPlanPart_.spendTaskID));
-            }
+            //            if (criteria.getSpendTaskID() != null) {
+            //                specification = specification.and(buildRangeSpecification(criteria.getSpendTaskID(), SvcPlanPart_.spendTaskID));
+            //            }
             if (criteria.getLocation() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getLocation(), SvcPlanPart_.location));
             }

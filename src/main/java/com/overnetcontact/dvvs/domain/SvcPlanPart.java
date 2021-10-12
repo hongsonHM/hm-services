@@ -1,5 +1,6 @@
 package com.overnetcontact.dvvs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -25,9 +26,13 @@ public class SvcPlanPart implements Serializable {
     @Column(name = "plan_unit_id", nullable = false)
     private Long planUnitID;
 
-    @NotNull
-    @Column(name = "spend_task_id", nullable = false)
-    private Long spendTaskID;
+    //    @NotNull
+    //    @Column(name = "spend_task_id", nullable = false)
+    //    private Long spendTaskID;
+
+    @OneToOne
+    @JoinColumn(name = "spend_task_id")
+    private SvcSpendTask svcSpendTask;
 
     @Column(name = "location")
     private String location;
@@ -77,18 +82,18 @@ public class SvcPlanPart implements Serializable {
         this.planUnitID = planUnitID;
     }
 
-    public Long getSpendTaskID() {
-        return this.spendTaskID;
-    }
-
-    public SvcPlanPart spendTaskID(Long spendTaskID) {
-        this.spendTaskID = spendTaskID;
-        return this;
-    }
-
-    public void setSpendTaskID(Long spendTaskID) {
-        this.spendTaskID = spendTaskID;
-    }
+    //    public Long getSpendTaskID() {
+    //        return this.spendTaskID;
+    //    }
+    //
+    //    public SvcPlanPart spendTaskID(Long spendTaskID) {
+    //        this.spendTaskID = spendTaskID;
+    //        return this;
+    //    }
+    //
+    //    public void setSpendTaskID(Long spendTaskID) {
+    //        this.spendTaskID = spendTaskID;
+    //    }
 
     public String getLocation() {
         return this.location;
@@ -177,6 +182,14 @@ public class SvcPlanPart implements Serializable {
         return this;
     }
 
+    public SvcSpendTask getSvcSpendTask() {
+        return svcSpendTask;
+    }
+
+    public void setSvcSpendTask(SvcSpendTask svcSpendTask) {
+        this.svcSpendTask = svcSpendTask;
+    }
+
     public void setWorkOnDays(String workOnDays) {
         this.workOnDays = workOnDays;
     }
@@ -206,7 +219,7 @@ public class SvcPlanPart implements Serializable {
         return "SvcPlanPart{" +
             "id=" + getId() +
             ", planUnitID=" + getPlanUnitID() +
-            ", spendTaskID=" + getSpendTaskID() +
+//            ", spendTaskID=" + getSpendTaskID() +
             ", location='" + getLocation() + "'" +
             ", startAt='" + getStartAt() + "'" +
             ", endAt='" + getEndAt() + "'" +
