@@ -21,8 +21,12 @@ public class SvcSpendTask implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "core_task_id")
-    private Long coreTaskId;
+    //    @Column(name = "core_task_id")
+    //    private Long coreTaskId;
+
+    @ManyToOne
+    @JoinColumn(name = "core_task_id")
+    private CoreTask coreTask;
 
     @Column(name = "mass")
     private String mass;
@@ -51,18 +55,18 @@ public class SvcSpendTask implements Serializable {
         return this;
     }
 
-    public Long getCoreTaskId() {
-        return this.coreTaskId;
-    }
-
-    public SvcSpendTask coreTaskId(Long coreTaskId) {
-        this.coreTaskId = coreTaskId;
-        return this;
-    }
-
-    public void setCoreTaskId(Long coreTaskId) {
-        this.coreTaskId = coreTaskId;
-    }
+    //    public Long getCoreTaskId() {
+    //        return this.coreTaskId;
+    //    }
+    //
+    //    public SvcSpendTask coreTaskId(Long coreTaskId) {
+    //        this.coreTaskId = coreTaskId;
+    //        return this;
+    //    }
+    //
+    //    public void setCoreTaskId(Long coreTaskId) {
+    //        this.coreTaskId = coreTaskId;
+    //    }
 
     public String getMass() {
         return this.mass;
@@ -104,6 +108,14 @@ public class SvcSpendTask implements Serializable {
         return this;
     }
 
+    public CoreTask getCoreTask() {
+        return coreTask;
+    }
+
+    public void setCoreTask(CoreTask coreTask) {
+        this.coreTask = coreTask;
+    }
+
     public void setSvcGroupTask(SvcGroupTask svcGroupTask) {
         this.svcGroupTask = svcGroupTask;
     }
@@ -132,7 +144,7 @@ public class SvcSpendTask implements Serializable {
     public String toString() {
         return "SvcSpendTask{" +
             "id=" + getId() +
-            ", coreTaskId=" + getCoreTaskId() +
+//            ", coreTaskId=" + getCoreTaskId() +
             ", mass='" + getMass() + "'" +
             ", frequency='" + getFrequency() + "'" +
             ", note='" + getNote() + "'" +

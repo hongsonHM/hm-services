@@ -1,5 +1,6 @@
 package com.overnetcontact.dvvs.service.dto;
 
+import com.overnetcontact.dvvs.domain.SvcSpendTask;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.validation.constraints.*;
@@ -14,8 +15,10 @@ public class SvcPlanPartDTO implements Serializable {
     @NotNull
     private Long planUnitID;
 
-    @NotNull
-    private Long spendTaskID;
+    //    @NotNull
+    //    private Long spendTaskID;
+
+    private SvcSpendTaskDTO svcSpendTask;
 
     private String name;
 
@@ -97,13 +100,13 @@ public class SvcPlanPartDTO implements Serializable {
         this.planUnitID = planUnitID;
     }
 
-    public Long getSpendTaskID() {
-        return spendTaskID;
-    }
-
-    public void setSpendTaskID(Long spendTaskID) {
-        this.spendTaskID = spendTaskID;
-    }
+    //    public Long getSpendTaskID() {
+    //        return spendTaskID;
+    //    }
+    //
+    //    public void setSpendTaskID(Long spendTaskID) {
+    //        this.spendTaskID = spendTaskID;
+    //    }
 
     public String getLocation() {
         return location;
@@ -161,6 +164,14 @@ public class SvcPlanPartDTO implements Serializable {
         this.workOnDays = workOnDays;
     }
 
+    public SvcSpendTaskDTO getSvcSpendTask() {
+        return svcSpendTask;
+    }
+
+    public void setSvcSpendTask(SvcSpendTaskDTO svcSpendTask) {
+        this.svcSpendTask = svcSpendTask;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -188,7 +199,7 @@ public class SvcPlanPartDTO implements Serializable {
         return "SvcPlanPartDTO{" +
             "id=" + getId() +
             ", planUnitID=" + getPlanUnitID() +
-            ", spendTaskID=" + getSpendTaskID() +
+//            ", spendTaskID=" + getSpendTaskID() +
             ", location='" + getLocation() + "'" +
             ", startAt='" + getStartAt() + "'" +
             ", endAt='" + getEndAt() + "'" +

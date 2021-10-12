@@ -29,13 +29,21 @@ public class SvcPlan implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
-    @Column(name = "service_manager_id", nullable = false)
-    private Long serviceManagerId;
+    //    @NotNull
+    //    @Column(name = "service_manager_id", nullable = false)
+    //    private Long serviceManagerId;
+    //
+    //    @NotNull
+    //    @Column(name = "default_suppervisor_id", nullable = false)
+    //    private Long defaultSuppervisorId;
 
-    @NotNull
-    @Column(name = "default_suppervisor_id", nullable = false)
-    private Long defaultSuppervisorId;
+    @ManyToOne
+    @JoinColumn(name = "service_manager_id")
+    private User serviceManager;
+
+    @ManyToOne
+    @JoinColumn(name = "default_suppervisor_id")
+    private User suppervisor;
 
     @Column(name = "status")
     private Boolean status;
@@ -87,31 +95,31 @@ public class SvcPlan implements Serializable {
         this.name = name;
     }
 
-    public Long getServiceManagerId() {
-        return this.serviceManagerId;
-    }
+    //    public Long getServiceManagerId() {
+    //        return this.serviceManagerId;
+    //    }
+    //
+    //    public SvcPlan serviceManagerId(Long serviceManagerId) {
+    //        this.serviceManagerId = serviceManagerId;
+    //        return this;
+    //    }
 
-    public SvcPlan serviceManagerId(Long serviceManagerId) {
-        this.serviceManagerId = serviceManagerId;
-        return this;
-    }
+    //    public void setServiceManagerId(Long serviceManagerId) {
+    //        this.serviceManagerId = serviceManagerId;
+    //    }
+    //
+    //    public Long getDefaultSuppervisorId() {
+    //        return this.defaultSuppervisorId;
+    //    }
+    //
+    //    public SvcPlan defaultSuppervisorId(Long defaultSuppervisorId) {
+    //        this.defaultSuppervisorId = defaultSuppervisorId;
+    //        return this;
+    //    }
 
-    public void setServiceManagerId(Long serviceManagerId) {
-        this.serviceManagerId = serviceManagerId;
-    }
-
-    public Long getDefaultSuppervisorId() {
-        return this.defaultSuppervisorId;
-    }
-
-    public SvcPlan defaultSuppervisorId(Long defaultSuppervisorId) {
-        this.defaultSuppervisorId = defaultSuppervisorId;
-        return this;
-    }
-
-    public void setDefaultSuppervisorId(Long defaultSuppervisorId) {
-        this.defaultSuppervisorId = defaultSuppervisorId;
-    }
+    //    public void setDefaultSuppervisorId(Long defaultSuppervisorId) {
+    //        this.defaultSuppervisorId = defaultSuppervisorId;
+    //    }
 
     public Boolean getStatus() {
         return this.status;
@@ -222,6 +230,22 @@ public class SvcPlan implements Serializable {
         this.svcPlanUnits = svcPlanUnits;
     }
 
+    public User getServiceManager() {
+        return serviceManager;
+    }
+
+    public void setServiceManager(User serviceManager) {
+        this.serviceManager = serviceManager;
+    }
+
+    public User getSuppervisor() {
+        return suppervisor;
+    }
+
+    public void setSuppervisor(User suppervisor) {
+        this.suppervisor = suppervisor;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -247,8 +271,8 @@ public class SvcPlan implements Serializable {
         return "SvcPlan{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", serviceManagerId=" + getServiceManagerId() +
-            ", defaultSuppervisorId=" + getDefaultSuppervisorId() +
+//            ", serviceManagerId=" + getServiceManagerId() +
+//            ", defaultSuppervisorId=" + getDefaultSuppervisorId() +
             ", status='" + getStatus() + "'" +
             ", startPlan='" + getStartPlan() + "'" +
             ", endPlan='" + getEndPlan() + "'" +

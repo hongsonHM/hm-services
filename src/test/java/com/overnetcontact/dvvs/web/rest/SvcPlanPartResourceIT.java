@@ -90,7 +90,7 @@ class SvcPlanPartResourceIT {
     public static SvcPlanPart createEntity(EntityManager em) {
         SvcPlanPart svcPlanPart = new SvcPlanPart()
             .planUnitID(DEFAULT_PLAN_UNIT_ID)
-            .spendTaskID(DEFAULT_SPEND_TASK_ID)
+            //            .spendTaskID(DEFAULT_SPEND_TASK_ID)
             .location(DEFAULT_LOCATION)
             .startAt(DEFAULT_START_AT)
             .endAt(DEFAULT_END_AT)
@@ -110,7 +110,7 @@ class SvcPlanPartResourceIT {
     public static SvcPlanPart createUpdatedEntity(EntityManager em) {
         SvcPlanPart svcPlanPart = new SvcPlanPart()
             .planUnitID(UPDATED_PLAN_UNIT_ID)
-            .spendTaskID(UPDATED_SPEND_TASK_ID)
+            //            .spendTaskID(UPDATED_SPEND_TASK_ID)
             .location(UPDATED_LOCATION)
             .startAt(UPDATED_START_AT)
             .endAt(UPDATED_END_AT)
@@ -143,7 +143,7 @@ class SvcPlanPartResourceIT {
         assertThat(svcPlanPartList).hasSize(databaseSizeBeforeCreate + 1);
         SvcPlanPart testSvcPlanPart = svcPlanPartList.get(svcPlanPartList.size() - 1);
         assertThat(testSvcPlanPart.getPlanUnitID()).isEqualTo(DEFAULT_PLAN_UNIT_ID);
-        assertThat(testSvcPlanPart.getSpendTaskID()).isEqualTo(DEFAULT_SPEND_TASK_ID);
+        //        assertThat(testSvcPlanPart.getSpendTaskID()).isEqualTo(DEFAULT_SPEND_TASK_ID);
         assertThat(testSvcPlanPart.getLocation()).isEqualTo(DEFAULT_LOCATION);
         assertThat(testSvcPlanPart.getStartAt()).isEqualTo(DEFAULT_START_AT);
         assertThat(testSvcPlanPart.getEndAt()).isEqualTo(DEFAULT_END_AT);
@@ -199,7 +199,7 @@ class SvcPlanPartResourceIT {
     void checkSpendTaskIDIsRequired() throws Exception {
         int databaseSizeBeforeTest = svcPlanPartRepository.findAll().size();
         // set the field null
-        svcPlanPart.setSpendTaskID(null);
+        //        svcPlanPart.setSpendTaskID(null);
 
         // Create the SvcPlanPart, which fails.
         SvcPlanPartDTO svcPlanPartDTO = svcPlanPartMapper.toDto(svcPlanPart);
@@ -1099,7 +1099,7 @@ class SvcPlanPartResourceIT {
         em.detach(updatedSvcPlanPart);
         updatedSvcPlanPart
             .planUnitID(UPDATED_PLAN_UNIT_ID)
-            .spendTaskID(UPDATED_SPEND_TASK_ID)
+            //            .spendTaskID(UPDATED_SPEND_TASK_ID)
             .location(UPDATED_LOCATION)
             .startAt(UPDATED_START_AT)
             .endAt(UPDATED_END_AT)
@@ -1122,7 +1122,7 @@ class SvcPlanPartResourceIT {
         assertThat(svcPlanPartList).hasSize(databaseSizeBeforeUpdate);
         SvcPlanPart testSvcPlanPart = svcPlanPartList.get(svcPlanPartList.size() - 1);
         assertThat(testSvcPlanPart.getPlanUnitID()).isEqualTo(UPDATED_PLAN_UNIT_ID);
-        assertThat(testSvcPlanPart.getSpendTaskID()).isEqualTo(UPDATED_SPEND_TASK_ID);
+        //        assertThat(testSvcPlanPart.getSpendTaskID()).isEqualTo(UPDATED_SPEND_TASK_ID);
         assertThat(testSvcPlanPart.getLocation()).isEqualTo(UPDATED_LOCATION);
         assertThat(testSvcPlanPart.getStartAt()).isEqualTo(UPDATED_START_AT);
         assertThat(testSvcPlanPart.getEndAt()).isEqualTo(UPDATED_END_AT);
@@ -1211,7 +1211,7 @@ class SvcPlanPartResourceIT {
 
         partialUpdatedSvcPlanPart
             .planUnitID(UPDATED_PLAN_UNIT_ID)
-            .spendTaskID(UPDATED_SPEND_TASK_ID)
+            //            .spendTaskID(UPDATED_SPEND_TASK_ID)
             .endAt(UPDATED_END_AT)
             .periodic(UPDATED_PERIODIC)
             .workOnDays(UPDATED_WORK_ON_DAYS);
@@ -1229,7 +1229,7 @@ class SvcPlanPartResourceIT {
         assertThat(svcPlanPartList).hasSize(databaseSizeBeforeUpdate);
         SvcPlanPart testSvcPlanPart = svcPlanPartList.get(svcPlanPartList.size() - 1);
         assertThat(testSvcPlanPart.getPlanUnitID()).isEqualTo(UPDATED_PLAN_UNIT_ID);
-        assertThat(testSvcPlanPart.getSpendTaskID()).isEqualTo(UPDATED_SPEND_TASK_ID);
+        //        assertThat(testSvcPlanPart.getSpendTaskID()).isEqualTo(UPDATED_SPEND_TASK_ID);
         assertThat(testSvcPlanPart.getLocation()).isEqualTo(DEFAULT_LOCATION);
         assertThat(testSvcPlanPart.getStartAt()).isEqualTo(DEFAULT_START_AT);
         assertThat(testSvcPlanPart.getEndAt()).isEqualTo(UPDATED_END_AT);
@@ -1253,7 +1253,7 @@ class SvcPlanPartResourceIT {
 
         partialUpdatedSvcPlanPart
             .planUnitID(UPDATED_PLAN_UNIT_ID)
-            .spendTaskID(UPDATED_SPEND_TASK_ID)
+            //            .spendTaskID(UPDATED_SPEND_TASK_ID)
             .location(UPDATED_LOCATION)
             .startAt(UPDATED_START_AT)
             .endAt(UPDATED_END_AT)
@@ -1275,7 +1275,7 @@ class SvcPlanPartResourceIT {
         assertThat(svcPlanPartList).hasSize(databaseSizeBeforeUpdate);
         SvcPlanPart testSvcPlanPart = svcPlanPartList.get(svcPlanPartList.size() - 1);
         assertThat(testSvcPlanPart.getPlanUnitID()).isEqualTo(UPDATED_PLAN_UNIT_ID);
-        assertThat(testSvcPlanPart.getSpendTaskID()).isEqualTo(UPDATED_SPEND_TASK_ID);
+        //        assertThat(testSvcPlanPart.getSpendTaskID()).isEqualTo(UPDATED_SPEND_TASK_ID);
         assertThat(testSvcPlanPart.getLocation()).isEqualTo(UPDATED_LOCATION);
         assertThat(testSvcPlanPart.getStartAt()).isEqualTo(UPDATED_START_AT);
         assertThat(testSvcPlanPart.getEndAt()).isEqualTo(UPDATED_END_AT);

@@ -374,7 +374,7 @@ public class SvcContractResource {
                 Long totalTimesUnit = this.getTotalTimes(frequency, dayNums, weekNums, monthNums, yearNums);
                 Integer mass = Integer.valueOf(svcSpendTaskDTO.getMass());
                 Long totalTimes = totalTimesUnit * mass;
-                Long coreTaskId = svcSpendTaskDTO.getCoreTaskId();
+                Long coreTaskId = svcSpendTaskDTO.getCoreTask().getId();
                 coreTaskids.add(coreTaskId);
                 if (!taskMap.containsKey(coreTaskId)) {
                     taskMap.put(coreTaskId, totalTimes);

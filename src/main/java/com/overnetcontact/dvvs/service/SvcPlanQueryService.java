@@ -102,13 +102,13 @@ public class SvcPlanQueryService extends QueryService<SvcPlan> {
             if (criteria.getName() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getName(), SvcPlan_.name));
             }
-            if (criteria.getServiceManagerId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getServiceManagerId(), SvcPlan_.serviceManagerId));
-            }
-            if (criteria.getDefaultSuppervisorId() != null) {
-                specification =
-                    specification.and(buildRangeSpecification(criteria.getDefaultSuppervisorId(), SvcPlan_.defaultSuppervisorId));
-            }
+            //            if (criteria.getServiceManagerId() != null) {
+            //                specification = specification.and(buildRangeSpecification(criteria.getServiceManagerId(), SvcPlan_.serviceManagerId));
+            //            }
+            //            if (criteria.getDefaultSuppervisorId() != null) {
+            //                specification =
+            //                    specification.and(buildRangeSpecification(criteria.getDefaultSuppervisorId(), SvcPlan_.defaultSuppervisorId));
+            //            }
             if (criteria.getStatus() != null) {
                 specification = specification.and(buildSpecification(criteria.getStatus(), SvcPlan_.status));
             }
