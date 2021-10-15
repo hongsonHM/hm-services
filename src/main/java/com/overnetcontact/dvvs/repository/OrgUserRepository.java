@@ -1,11 +1,10 @@
 package com.overnetcontact.dvvs.repository;
 
-import com.overnetcontact.dvvs.domain.CoreTask;
 import com.overnetcontact.dvvs.domain.OrgGroup;
 import com.overnetcontact.dvvs.domain.OrgUser;
+import com.overnetcontact.dvvs.domain.User;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +26,7 @@ public interface OrgUserRepository extends JpaRepository<OrgUser, Long>, JpaSpec
 
     @Query("select distinct orgUser from OrgUser orgUser where orgUser.group = :group")
     List<OrgUser> findByGroup(@Param("group") OrgGroup groups);
+
+    @Query("select distinct orgUser from OrgUser orgUser where orgUser.internalUser in :ids")
+    List<OrgUser> findByIdIn(@Param("ids") List<User> ids);
 }

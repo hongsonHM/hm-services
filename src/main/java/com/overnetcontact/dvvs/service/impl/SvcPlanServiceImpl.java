@@ -1,6 +1,9 @@
 package com.overnetcontact.dvvs.service.impl;
 
-import com.overnetcontact.dvvs.domain.*;
+import com.overnetcontact.dvvs.domain.OrgNotification;
+import com.overnetcontact.dvvs.domain.OrgUser;
+import com.overnetcontact.dvvs.domain.SvcContract;
+import com.overnetcontact.dvvs.domain.SvcPlan;
 import com.overnetcontact.dvvs.domain.enumeration.NotificationStatus;
 import com.overnetcontact.dvvs.repository.*;
 import com.overnetcontact.dvvs.service.SvcPlanService;
@@ -28,6 +31,8 @@ public class SvcPlanServiceImpl implements SvcPlanService {
 
     private final SvcPlanRepository svcPlanRepository;
 
+    private final SvcContractRepository svcContractRepository;
+
     private final SvcPlanMapper svcPlanMapper;
 
     private final OrgUserRepository orgUserRepository;
@@ -40,6 +45,7 @@ public class SvcPlanServiceImpl implements SvcPlanService {
 
     public SvcPlanServiceImpl(
         SvcPlanRepository svcPlanRepository,
+        SvcContractRepository svcContractRepository,
         SvcPlanMapper svcPlanMapper,
         OrgUserRepository orgUserRepository,
         SvcGroupRepository svcGroupRepository,
@@ -47,6 +53,7 @@ public class SvcPlanServiceImpl implements SvcPlanService {
         OrgNotificationRepository orgNotificationRepository
     ) {
         this.svcPlanRepository = svcPlanRepository;
+        this.svcContractRepository = svcContractRepository;
         this.svcPlanMapper = svcPlanMapper;
         this.orgUserRepository = orgUserRepository;
         this.svcGroupRepository = svcGroupRepository;
@@ -59,16 +66,21 @@ public class SvcPlanServiceImpl implements SvcPlanService {
         log.debug("Request to save SvcPlan : {}", svcPlanDTO);
         SvcPlan svcPlan = svcPlanMapper.toEntity(svcPlanDTO);
         svcPlan = svcPlanRepository.save(svcPlan);
-        Optional<OrgUser> orgUser = orgUserRepository.findById(svcPlanDTO.getSuppervisor().getId());
+        Optional<OrgUser> orgUserSuppervisor = orgUserRepository.findById(svcPlanDTO.getSuppervisor().getId());
+        Optional<SvcContract> contract = svcContractRepository.findById(svcPlanDTO.getContractId());
+        List<OrgUser> orgUserManager = orgUserRepository.findByIdIn(contract.get().getManagerBy());
+        orgUserManager.add(orgUserSuppervisor.get());
 
-        OrgNotification orgNotification = new OrgNotification();
-        orgNotification.setStatus(NotificationStatus.PROCESS);
-        orgNotification.setOrgUser(orgUser.get());
-        orgNotification.setIsRead(false);
-        orgNotification.setTitle("Kế hoạch mới được tạo!");
-        orgNotification.setDesc("Kế hoạch mới được tạo!");
-        orgNotification.setData(String.valueOf(svcPlan.getId()) + "| plan");
-        orgNotificationRepository.save(orgNotification);
+        for (OrgUser orgUser : orgUserManager) {
+            OrgNotification orgNotification = new OrgNotification();
+            orgNotification.setStatus(NotificationStatus.PROCESS);
+            orgNotification.setOrgUser(orgUser);
+            orgNotification.setIsRead(false);
+            orgNotification.setTitle("Kế hoạch mới được tạo!");
+            orgNotification.setDesc("Kế hoạch mới được tạo!");
+            orgNotification.setData(String.valueOf(svcPlan.getId()) + "| plan");
+            orgNotificationRepository.save(orgNotification);
+        }
 
         return svcPlanMapper.toDto(svcPlan);
     }
