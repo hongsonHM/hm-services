@@ -15,18 +15,7 @@ public class SvcPlanDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
     private String name;
-
-    @NotNull
-    private Long serviceManagerId;
-
-    private String serviceManagerName;
-
-    @NotNull
-    private Long defaultSuppervisorId;
-
-    private String defaultSuppervisorName;
 
     private UserDTO serviceManager;
 
@@ -58,22 +47,6 @@ public class SvcPlanDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getServiceManagerId() {
-        return serviceManagerId;
-    }
-
-    public void setServiceManagerId(Long serviceManagerId) {
-        this.serviceManagerId = serviceManagerId;
-    }
-
-    public Long getDefaultSuppervisorId() {
-        return defaultSuppervisorId;
-    }
-
-    public void setDefaultSuppervisorId(Long defaultSuppervisorId) {
-        this.defaultSuppervisorId = defaultSuppervisorId;
     }
 
     public Boolean getStatus() {
@@ -124,22 +97,6 @@ public class SvcPlanDTO implements Serializable {
         this.note = note;
     }
 
-    public String getServiceManagerName() {
-        return serviceManagerName;
-    }
-
-    public void setServiceManagerName(String serviceManagerName) {
-        this.serviceManagerName = serviceManagerName;
-    }
-
-    public String getDefaultSuppervisorName() {
-        return defaultSuppervisorName;
-    }
-
-    public void setDefaultSuppervisorName(String defaultSuppervisorName) {
-        this.defaultSuppervisorName = defaultSuppervisorName;
-    }
-
     public UserDTO getServiceManager() {
         return serviceManager;
     }
@@ -183,8 +140,6 @@ public class SvcPlanDTO implements Serializable {
         return "SvcPlanDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", serviceManagerId=" + getServiceManagerId() +
-            ", defaultSuppervisorId=" + getDefaultSuppervisorId() +
             ", status='" + getStatus() + "'" +
             ", startPlan='" + getStartPlan() + "'" +
             ", endPlan='" + getEndPlan() + "'" +
