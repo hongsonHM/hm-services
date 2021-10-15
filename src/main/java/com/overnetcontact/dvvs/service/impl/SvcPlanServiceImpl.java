@@ -59,19 +59,17 @@ public class SvcPlanServiceImpl implements SvcPlanService {
         log.debug("Request to save SvcPlan : {}", svcPlanDTO);
         SvcPlan svcPlan = svcPlanMapper.toEntity(svcPlanDTO);
         svcPlan = svcPlanRepository.save(svcPlan);
-        Optional<OrgGroup> orgGroup = orgGroupRepository.findByName(PHONG_GIAM_SAT);
-        List<OrgUser> orgUsers = orgUserRepository.findByGroup(orgGroup.get());
+        Optional<OrgUser> orgUser = orgUserRepository.findById(svcPlanDTO.getSuppervisor().getId());
 
-        for (OrgUser orgUser : orgUsers) {
-            OrgNotification orgNotification = new OrgNotification();
-            orgNotification.setStatus(NotificationStatus.PROCESS);
-            orgNotification.setOrgUser(orgUser);
-            orgNotification.setIsRead(false);
-            orgNotification.setTitle("Hợp kế hoạch được tạo! Đang chờ phê duyệt");
-            orgNotification.setDesc("Một kế hoạch mới đã được tạo! Đang chờ phê duyệt");
-            orgNotification.setData(String.valueOf(svcPlan.getId()) + "| plan");
-            orgNotificationRepository.save(orgNotification);
-        }
+        OrgNotification orgNotification = new OrgNotification();
+        orgNotification.setStatus(NotificationStatus.PROCESS);
+        orgNotification.setOrgUser(orgUser.get());
+        orgNotification.setIsRead(false);
+        orgNotification.setTitle("Kế hoạch mới được tạo!");
+        orgNotification.setDesc("Kế hoạch mới được tạo!");
+        orgNotification.setData(String.valueOf(svcPlan.getId()) + "| plan");
+        orgNotificationRepository.save(orgNotification);
+
         return svcPlanMapper.toDto(svcPlan);
     }
 
