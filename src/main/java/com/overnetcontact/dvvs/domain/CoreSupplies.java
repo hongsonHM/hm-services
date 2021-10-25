@@ -32,6 +32,9 @@ public class CoreSupplies implements Serializable {
     @Column(name = "effort")
     private String effort;
 
+    @Column(name = "category")
+    private String category;
+
     @ManyToMany(mappedBy = "coreSupplies")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "coreSupplies" }, allowSetters = true)
@@ -58,6 +61,14 @@ public class CoreSupplies implements Serializable {
     public CoreSupplies name(String name) {
         this.name = name;
         return this;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public void setName(String name) {

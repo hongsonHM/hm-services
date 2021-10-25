@@ -16,6 +16,8 @@ public class CoreSuppliesDTO implements Serializable {
 
     private String effort;
 
+    private String category;
+
     public Long getId() {
         return id;
     }
@@ -46,6 +48,14 @@ public class CoreSuppliesDTO implements Serializable {
 
     public void setEffort(String effort) {
         this.effort = effort;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
