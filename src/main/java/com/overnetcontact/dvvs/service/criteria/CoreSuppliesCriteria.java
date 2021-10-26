@@ -34,6 +34,8 @@ public class CoreSuppliesCriteria implements Serializable, Criteria {
 
     private LongFilter coreTaskId;
 
+    private StringFilter category;
+
     public CoreSuppliesCriteria() {}
 
     public CoreSuppliesCriteria(CoreSuppliesCriteria other) {
@@ -42,6 +44,7 @@ public class CoreSuppliesCriteria implements Serializable, Criteria {
         this.unit = other.unit == null ? null : other.unit.copy();
         this.effort = other.effort == null ? null : other.effort.copy();
         this.coreTaskId = other.coreTaskId == null ? null : other.coreTaskId.copy();
+        this.category = other.category == null ? null : other.category.copy();
     }
 
     @Override
@@ -98,11 +101,26 @@ public class CoreSuppliesCriteria implements Serializable, Criteria {
         return effort;
     }
 
+    public StringFilter getCategory() {
+        return category;
+    }
+
+    public void setCategory(StringFilter category) {
+        this.category = category;
+    }
+
     public StringFilter effort() {
         if (effort == null) {
             effort = new StringFilter();
         }
         return effort;
+    }
+
+    public StringFilter category() {
+        if (category == null) {
+            category = new StringFilter();
+        }
+        return category;
     }
 
     public void setEffort(StringFilter effort) {
@@ -138,6 +156,7 @@ public class CoreSuppliesCriteria implements Serializable, Criteria {
             Objects.equals(name, that.name) &&
             Objects.equals(unit, that.unit) &&
             Objects.equals(effort, that.effort) &&
+            Objects.equals(category, that.category) &&
             Objects.equals(coreTaskId, that.coreTaskId)
         );
     }
@@ -155,6 +174,7 @@ public class CoreSuppliesCriteria implements Serializable, Criteria {
             (name != null ? "name=" + name + ", " : "") +
             (unit != null ? "unit=" + unit + ", " : "") +
             (effort != null ? "effort=" + effort + ", " : "") +
+            (category != null ? "category=" + category + ", " : "") +
             (coreTaskId != null ? "coreTaskId=" + coreTaskId + ", " : "") +
             "}";
     }
